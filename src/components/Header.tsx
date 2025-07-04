@@ -5,8 +5,7 @@ import React, { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { BookOpen } from "lucide-react"
-
+import Image from "next/image"
 function NavLink({ href, label }: { href: string; label: string }) {
   const pathname = usePathname()
   const isActive = pathname === href
@@ -87,8 +86,14 @@ export default function Header() {
     <header className="bg-[#1d588a] text-white px-4 py-3 sticky top-0 z-50">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <BookOpen className="h-8 w-8" />
-          <span className="text-xl font-bold">EduGateway</span>
+          <Image
+            src="/favicon.svg" // Path to your favicon.png
+            alt="Logo"
+            width={32} // Specify the width (in pixels)
+            height={32} // Specify the height (in pixels)
+            className="h-10 w-10" // Optional: Add any additional styles
+          />
+          <span className="text-xl font-bold">ReEnvision</span>
         </div>
 
         {/* Desktop Navigation */}

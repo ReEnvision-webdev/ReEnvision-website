@@ -4,8 +4,9 @@ import type React from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Users, Link, User, ChevronDown, Target, Award, Lightbulb } from "lucide-react"
+import { Users,  Link as LucideLink, User, ChevronDown, Target, Award, Lightbulb } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
 function PartnersCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -107,7 +108,9 @@ export default function HomePage() {
               bridging the digital divide and creating equitable access to essential resources.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button className="bg-[#1f639e] hover:bg-[#1d588a] text-white px-8 py-3">Learn More</Button>
+              <Link href="#about">
+                <Button className="bg-[#1f639e] hover:bg-[#1d588a] text-white px-8 py-3">Learn More</Button>
+              </Link>
               <Button
                 variant="outline"
                 className="border-[#1f639e] text-[#1f639e] hover:bg-blue-50 px-8 py-3 bg-transparent"
@@ -153,7 +156,7 @@ export default function HomePage() {
       </section>
 
       {/* Image and Content Section 1 */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-16" id="about">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h2 className="text-3xl font-bold text-[#1d588a]">Empowering Education Through Technology</h2>
@@ -190,10 +193,8 @@ export default function HomePage() {
             />
           </div>
         </div>
-      </section>
 
       {/* Image and Content Section 2 (Flipped) */}
-      <section className="bg-gray-50">
         <div className="container mx-auto px-4 py-16">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Desktop Image */}
@@ -249,7 +250,7 @@ export default function HomePage() {
           </Card>
           <Card className="text-center p-8 border-gray-200">
             <CardContent className="space-y-4">
-              <Link className="h-12 w-12 text-[#1f639e] mx-auto" />
+              <LucideLink className="h-12 w-12 text-[#1f639e] mx-auto" />
               <div className="text-3xl font-bold text-[#1d588a]">250+</div>
               <div className="text-blue-600 font-medium">hours of content</div>
               <p className="text-gray-600 text-sm">We've contributed over 100 hours of service to make an impact.</p>
@@ -340,11 +341,11 @@ function HexagonCard({
           height: 100%;
           backface-visibility: hidden;
           clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-          background: #1e40af;
+          background: #1d588a;
         }
         .hexagon-back {
           transform: rotateY(180deg);
-          background: #1e3a8a;
+          background: #1d588a;
         }
         
         .hexagon-content {

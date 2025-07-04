@@ -1,0 +1,122 @@
+
+"use client"
+
+import React, { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { BookOpen } from "lucide-react"
+
+function NavLink({ href, label }: { href: string; label: string }) {
+  const pathname = usePathname()
+  const isActive = pathname === href
+
+  return (
+    <Link href={href}>
+      <Button
+        variant="ghost"
+        size="sm"
+        className={`hover:bg-[#1f639e] ${isActive ? "bg-white text-[#1d588a]" : "text-white"}`}
+      >
+        {label}
+      </Button>
+    </Link>
+  )
+}
+
+function MobileMenu() {
+  const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
+
+  return (
+    <div className="md:hidden">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="text-white hover:bg-[#1f639e] p-2"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </Button>
+
+      {isOpen && (
+        <div className="absolute top-full left-0 right-0 bg-[#1d588a] border-t border-[#1f639e] shadow-lg z-40">
+          <div className="flex flex-col space-y-2 p-4">
+            {[
+              { href: "/", label: "Home" },
+              { href: "/events", label: "Events" },
+              { href: "/courses", label: "Courses" },
+              { href: "/about", label: "About" },
+              { href: "/contact", label: "Contact Us" },
+            ].map(({ href, label }) => (
+              <Link key={href} href={href}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={`justify-start hover:bg-[#1f639e] ${
+                    pathname === href ? "bg-white text-[#1d588a]" : "text-white"
+                  }`}
+                >
+                  {label}
+                </Button>
+              </Link>
+            ))}
+
+            <Link href="/signin">
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-transparent border-white text-white hover:bg-white hover:text-[#1d588a] mt-2"
+              >
+                Sign In
+              </Button>
+            </Link>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default function Header() {
+  const pathname = usePathname()
+
+  return (
+    <header className="bg-[#1d588a] text-white px-4 py-3 sticky top-0 z-50">
+      <div className="container mx-auto flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <BookOpen className="h-8 w-8" />
+          <span className="text-xl font-bold">EduGateway</span>
+        </div>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-1">
+          <NavLink href="/" label="Home" />
+          <NavLink href="/events" label="Events" />
+          <NavLink href="/courses" label="Courses" />
+          <NavLink href="/about" label="About" />
+          <NavLink href="/contact" label="Contact Us" />
+        </nav>
+
+        <div className="flex items-center space-x-4">
+          <Link href="/signin">
+            <Button
+              variant="outline"
+              size="sm"
+              className={`bg-transparent border-white hover:bg-white hover:text-[#1d588a] hidden md:block ${
+                pathname === "/signin" ? "bg-white text-[#1d588a]" : "text-white"
+              }`}
+            >
+              Sign In
+            </Button>
+          </Link>
+          {/* Mobile Menu Button */}
+          <MobileMenu />
+        </div>
+      </div>
+    </header>
+  )
+}
+

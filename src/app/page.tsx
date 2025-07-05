@@ -225,7 +225,7 @@ export default function HomePage() {
               thousands of learners who have already transformed their lives
               through our comprehensive educational ecosystem.
             </p>
-            <Button className="bg-[#1f639e] hover:bg-[#1d588a] text-[#F0F8FF]">
+            <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">
               Explore Our Platform
             </Button>
           </div>
@@ -280,7 +280,7 @@ export default function HomePage() {
                 connections and resources you need to succeed in your
                 educational journey.
               </p>
-              <Button className="bg-[#1f639e] hover:bg-[#1d588a] text-[#F0F8FF]">
+              <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">
                 Join Our Community
               </Button>
             </div>

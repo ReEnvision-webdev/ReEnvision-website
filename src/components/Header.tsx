@@ -1,14 +1,13 @@
+"use client";
 
-"use client"
-
-import React, { useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import Image from "next/image"
+import React, { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
 function NavLink({ href, label }: { href: string; label: string }) {
-  const pathname = usePathname()
-  const isActive = pathname === href
+  const pathname = usePathname();
+  const isActive = pathname === href;
 
   return (
     <Link href={href}>
@@ -20,12 +19,12 @@ function NavLink({ href, label }: { href: string; label: string }) {
         {label}
       </Button>
     </Link>
-  )
+  );
 }
 
 function MobileMenu() {
-  const [isOpen, setIsOpen] = useState(false)
-  const pathname = usePathname()
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <div className="md:hidden">
@@ -35,8 +34,18 @@ function MobileMenu() {
         className="text-white hover:bg-[#1f639e] p-2"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        <svg
+          className="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 6h16M4 12h16M4 18h16"
+          />
         </svg>
       </Button>
 
@@ -76,11 +85,11 @@ function MobileMenu() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 export default function Header() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <header className="bg-[#1d588a] text-white px-4 py-3 sticky top-0 z-50">
@@ -111,7 +120,9 @@ export default function Header() {
               variant="outline"
               size="sm"
               className={`bg-transparent border-white hover:bg-white hover:text-[#1d588a] hidden md:block ${
-                pathname === "/signin" ? "bg-white text-[#1d588a]" : "text-white"
+                pathname === "/signin"
+                  ? "bg-white text-[#1d588a]"
+                  : "text-white"
               }`}
             >
               Sign In
@@ -122,6 +133,5 @@ export default function Header() {
         </div>
       </div>
     </header>
-  )
+  );
 }
-

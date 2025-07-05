@@ -1,6 +1,5 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { BookOpen } from "lucide-react";
 import Image from "next/image";
 
 export default function Footer() {

@@ -54,9 +54,10 @@ function MobileMenu() {
           <div className="flex flex-col space-y-2 p-4">
             {[
               { href: "/", label: "Home" },
-              { href: "/events", label: "Events" },
-              { href: "/courses", label: "Courses" },
               { href: "/about", label: "About" },
+              { href: "/courses", label: "Courses" },
+              { href: "/events", label: "Events" },
+              { href: "/donate", label: "Donate" },
               { href: "/contact", label: "Contact Us" },
             ].map(({ href, label }) => (
               <Link key={href} href={href}>
@@ -108,9 +109,10 @@ export default function Header() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-1">
           <NavLink href="/" label="Home" />
-          <NavLink href="/events" label="Events" />
-          <NavLink href="/courses" label="Courses" />
           <NavLink href="/about" label="About" />
+          <NavLink href="/courses" label="Courses" />
+          <NavLink href="/events" label="Events" />
+          <NavLink href="/donate" label="Donate" />
           <NavLink href="/contact" label="Contact Us" />
         </nav>
 

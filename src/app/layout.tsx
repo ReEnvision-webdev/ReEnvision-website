@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 // Configure EB Garamond
 const ebGaramond = EB_Garamond({
   subsets: ["latin"], // Specify the character set
-  weight: ["700"], // Include regular and bold weights
+  weight: ["700", "800"], // Include regular and bold weights
   variable: "--font-eb-garamond", // Optional: Define a CSS variable
 });
 

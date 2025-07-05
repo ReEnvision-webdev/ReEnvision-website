@@ -75,7 +75,7 @@ function PartnersCarousel() {
       {/* Navigation Buttons */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#1d588a] text-[#F0F8FF] p-2 rounded-full hover:bg-[#00427A] transition-colors"
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#1f639e] text-[#F0F8FF] p-2 rounded-full hover:bg-[#00427A] transition-colors"
       >
         <svg
           className="h-6 w-6"
@@ -93,7 +93,7 @@ function PartnersCarousel() {
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#1d588a] text-[#F0F8FF] p-2 rounded-full hover:bg-blue-900 transition-colors"
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#1f639e] text-[#F0F8FF] p-2 rounded-full hover:bg-[#00427A] transition-colors"
       >
         <svg
           className="h-6 w-6"
@@ -137,7 +137,7 @@ export default function HomePage() {
             <h1 className="text-4xl lg:text-5xl font-bold text-[#1d588a] leading-tight">
               Your Gateway To
               <br />
-              <span className="text-blue-900">UNLIMITED</span>
+              <span className="text-[#00427A]">UNLIMITED</span>
               <br />
               Educational Resources
             </h1>
@@ -148,13 +148,13 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="#about">
-                <Button className="bg-[#1f639e] hover:bg-[#1d588a] text-[#F0F8FF] px-8 py-3">
+                <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF] px-8 py-3">
                   Learn More
                 </Button>
               </Link>
               <Button
                 variant="outline"
-                className="border-[#1f639e] text-[#1f639e] hover:bg-blue-50 px-8 py-3 bg-transparent"
+                className="border-[#1f639e] text-[#1f639e] hover:text-[#0c0c0c] hover:border-[#0c0c0c] px-8 py-3 bg-transparent"
               >
                 Get Started
               </Button>

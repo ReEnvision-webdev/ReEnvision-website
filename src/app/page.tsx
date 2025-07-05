@@ -125,7 +125,7 @@ function PartnersCarousel() {
       </div>
     </div>
   );
-}
+} 
 
 export default function HomePage() {
   return (

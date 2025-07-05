@@ -14,7 +14,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
       <Button
         variant="ghost"
         size="sm"
-        className={`hover:bg-[#1f639e] ${isActive ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+        className={`hover:bg-[#F0F8FF] hover:text-[#1d588a] ${isActive ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
       >
         {label}
       </Button>
@@ -31,7 +31,7 @@ function MobileMenu() {
       <Button
         variant="ghost"
         size="sm"
-        className="text-[#F0F8FF] hover:bg-[#1f639e] p-2"
+        className="text-[#F0F8FF] hover:bg-[#00427A] p-2"
         onClick={() => setIsOpen(!isOpen)}
       >
         <svg
@@ -50,7 +50,7 @@ function MobileMenu() {
       </Button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 bg-[#1d588a] border-t border-[#1f639e] shadow-lg z-40">
+        <div className="absolute top-full left-0 right-0 bg-[#1d588a] border-t border-[#00427A] shadow-lg z-40">
           <div className="flex flex-col space-y-2 p-4">
             {[
               { href: "/", label: "Home" },
@@ -64,7 +64,7 @@ function MobileMenu() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className={`justify-start hover:bg-[#1f639e] ${
+                  className={`justify-start hover:bg-[#F0F8FF] ${
                     pathname === href ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"
                   }`}
                 >

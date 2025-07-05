@@ -17,7 +17,6 @@ export default function Footer() {
               height={32} // Specify the height (in pixels)
               className="h-10 w-10" // Optional: Add any additional styles
             />
-            <span className="text-xl font-bold">ReEnvision</span>
           </div>
           <div className="text-center">
             <p className="text-blue-200">

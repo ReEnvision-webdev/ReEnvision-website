@@ -14,7 +14,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
       <Button
         variant="ghost"
         size="sm"
-        className={`hover:bg-[#1f639e] ${isActive ? "bg-white text-[#1d588a]" : "text-white"}`}
+        className={`hover:bg-[#1f639e] ${isActive ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
       >
         {label}
       </Button>
@@ -31,7 +31,7 @@ function MobileMenu() {
       <Button
         variant="ghost"
         size="sm"
-        className="text-white hover:bg-[#1f639e] p-2"
+        className="text-[#F0F8FF] hover:bg-[#1f639e] p-2"
         onClick={() => setIsOpen(!isOpen)}
       >
         <svg
@@ -65,7 +65,7 @@ function MobileMenu() {
                   variant="ghost"
                   size="sm"
                   className={`justify-start hover:bg-[#1f639e] ${
-                    pathname === href ? "bg-white text-[#1d588a]" : "text-white"
+                    pathname === href ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"
                   }`}
                 >
                   {label}
@@ -77,7 +77,7 @@ function MobileMenu() {
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-transparent border-white text-white hover:bg-white hover:text-[#1d588a] mt-2"
+                className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2"
               >
                 Sign In
               </Button>
@@ -93,7 +93,7 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="bg-[#1d588a] text-white px-4 py-3 sticky top-0 z-50">
+    <header className="bg-[#1d588a] text-[#F0F8FF] px-4 py-3 sticky top-0 z-50">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Image
@@ -121,10 +121,10 @@ export default function Header() {
             <Button
               variant="outline"
               size="sm"
-              className={`bg-transparent border-white hover:bg-white hover:text-[#1d588a] hidden md:block ${
+              className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block ${
                 pathname === "/signin"
-                  ? "bg-white text-[#1d588a]"
-                  : "text-white"
+                  ? "bg-[#F0F8FF] text-[#1d588a]"
+                  : "text-[#F0F8FF]"
               }`}
             >
               Sign In

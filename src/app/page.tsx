@@ -75,7 +75,7 @@ function PartnersCarousel() {
       {/* Navigation Buttons */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#1d588a] text-[#F0F8FF] p-2 rounded-full hover:bg-blue-900 transition-colors"
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#1d588a] text-[#F0F8FF] p-2 rounded-full hover:bg-[#00427A] transition-colors"
       >
         <svg
           className="h-6 w-6"

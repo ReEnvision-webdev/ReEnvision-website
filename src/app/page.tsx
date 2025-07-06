@@ -439,7 +439,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-gray-50" data-aos="zoom-in">
+      <section className="bg-[#f0f8ff]" data-aos="zoom-in">
         <div className="container mx-auto px-4 py-16">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-[#1d588a] italic mb-8">

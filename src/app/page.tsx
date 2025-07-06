@@ -55,7 +55,7 @@ function PartnersCarousel() {
                     .map(partner => (
                       <div
                         key={partner.id}
-                        className="bg-white rounded-lg shadow-md p-6 h-32 flex items-center justify-center"
+                        className="bg-[#F0F8FF] rounded-lg shadow-md p-6 h-32 flex items-center justify-center"
                       >
                         <Image
                           src={partner.image || "/placeholder.svg"}
@@ -75,7 +75,7 @@ function PartnersCarousel() {
       {/* Navigation Buttons */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#1d588a] text-white p-2 rounded-full hover:bg-blue-900 transition-colors"
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#1f639e] text-[#F0F8FF] p-2 rounded-full hover:bg-[#00427A] transition-colors"
       >
         <svg
           className="h-6 w-6"
@@ -93,7 +93,7 @@ function PartnersCarousel() {
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#1d588a] text-white p-2 rounded-full hover:bg-blue-900 transition-colors"
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#1f639e] text-[#F0F8FF] p-2 rounded-full hover:bg-[#00427A] transition-colors"
       >
         <svg
           className="h-6 w-6"
@@ -125,11 +125,11 @@ function PartnersCarousel() {
       </div>
     </div>
   );
-}
+} 
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#F0F8FF]">
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-16">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -137,7 +137,7 @@ export default function HomePage() {
             <h1 className="text-4xl lg:text-5xl font-bold text-[#1d588a] leading-tight">
               Your Gateway To
               <br />
-              <span className="text-blue-900">UNLIMITED</span>
+              <span className="text-[#00427A]">UNLIMITED</span>
               <br />
               Educational Resources
             </h1>
@@ -148,13 +148,13 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="#about">
-                <Button className="bg-[#1f639e] hover:bg-[#1d588a] text-white px-8 py-3">
+                <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF] px-8 py-3">
                   Learn More
                 </Button>
               </Link>
               <Button
                 variant="outline"
-                className="border-[#1f639e] text-[#1f639e] hover:bg-blue-50 px-8 py-3 bg-transparent"
+                className="border-[#1f639e] text-[#1f639e] hover:text-[#0c0c0c] hover:border-[#0c0c0c] px-8 py-3 bg-transparent"
               >
                 Get Started
               </Button>
@@ -225,7 +225,7 @@ export default function HomePage() {
               thousands of learners who have already transformed their lives
               through our comprehensive educational ecosystem.
             </p>
-            <Button className="bg-[#1f639e] hover:bg-[#1d588a] text-white">
+            <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">
               Explore Our Platform
             </Button>
           </div>
@@ -280,7 +280,7 @@ export default function HomePage() {
                 connections and resources you need to succeed in your
                 educational journey.
               </p>
-              <Button className="bg-[#1f639e] hover:bg-[#1d588a] text-white">
+              <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">
                 Join Our Community
               </Button>
             </div>
@@ -367,7 +367,7 @@ function HexagonCard({
         {/* Front Side */}
         <div className="hexagon-face hexagon-front">
           <div className="hexagon-content">
-            <div className="text-white text-center space-y-2">
+            <div className="text-[#F0F8FF] text-center space-y-2">
               {icon}
               <div className="font-bold text-lg">{frontText}</div>
             </div>
@@ -376,7 +376,7 @@ function HexagonCard({
         {/* Back Side */}
         <div className="hexagon-face hexagon-back">
           <div className="hexagon-content">
-            <div className="text-white text-center space-y-2">
+            <div className="text-[#F0F8FF] text-center space-y-2">
               <div className="font-bold text-sm">{title}</div>
               <div className="text-xs leading-tight">{backText}</div>
             </div>

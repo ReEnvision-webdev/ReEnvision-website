@@ -259,19 +259,19 @@ export default function HomePage() {
               support those in need. Together, we're bridging the digital
               divide and creating equitable access to essential resources.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="#about1">
-                <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF] px-8 py-3">
-                  Learn More
-                </Button>
-              </Link>
-              <Button
-                variant="outline"
-                className="border-[#1f639e] text-[#1f639e] hover:text-[#0c0c0c] hover:border-[#0c0c0c] px-8 py-3 bg-transparent"
-              >
-                Get Started
-              </Button>
-            </div>
+<div className="flex flex-row gap-4">
+  <Link href="#about1">
+    <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF] px-8 py-3 w-fit">
+      Learn More
+    </Button>
+  </Link>
+  <Button
+    variant="outline"
+    className="border-[#1f639e] text-[#1f639e] hover:text-[#0c0c0c] hover:border-[#0c0c0c] px-8 py-3 bg-transparent w-fit"
+  >
+    Get Started
+  </Button>
+</div>
           </div>
 
           <div className="relative justify-center hidden lg:flex">

@@ -60,7 +60,7 @@ function PartnersCarousel() {
                     .map(partner => (
                       <div
                         key={partner.id}
-                        className="bg-[#F0F8FF] rounded-lg shadow-md p-6 h-32 flex items-center justify-center"
+                        className="rounded-lg shadow-md p-6 h-32 flex items-center justify-center"
                       >
                         <img
                           src={partner.image || "/placeholder.svg"}
@@ -439,7 +439,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#f0f8ff]" data-aos="zoom-in">
+      <section data-aos="zoom-in">
         <div className="container mx-auto px-4 py-16">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-[#1d588a] italic mb-8">

@@ -260,7 +260,7 @@ export default function HomePage() {
               divide and creating equitable access to essential resources.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="#about">
+              <Link href="#about1">
                 <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF] px-8 py-3">
                   Learn More
                 </Button>
@@ -308,8 +308,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="container mx-auto px-4 py-16" id="about">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <section className="container mx-auto px-4 py-16" id="about1" data-aos="fade-up">
+        <div className="grid lg:grid-cols-2 gap-12 items-center" data-aos="fade-up">
           <div className="space-y-6">
             <h2 className="text-3xl font-bold text-[#1d588a]">
               Empowering Education Through Technology
@@ -350,7 +350,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-16" data-aos="fade-up">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative lg:order-1 hidden lg:block">
               <img
@@ -394,7 +394,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-16" data-aos="zoom-in">
         <h2 className="text-4xl font-bold text-center text-[#1d588a] mb-12">
           Our Impact
         </h2>
@@ -439,7 +439,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-gray-50">
+      <section className="bg-gray-50" data-aos="zoom-in">
         <div className="container mx-auto px-4 py-16">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-[#1d588a] italic mb-8">

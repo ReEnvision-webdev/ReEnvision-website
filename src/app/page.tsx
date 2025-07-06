@@ -24,12 +24,10 @@ import Image from "next/image";
 function PartnersCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const partners = [
-    { id: 1, name: "Partner 1", image: "/placeholder.svg?height=80&width=120" },
-    { id: 2, name: "Partner 2", image: "/placeholder.svg?height=80&width=120" },
-    { id: 3, name: "Partner 3", image: "/placeholder.svg?height=80&width=120" },
-    { id: 4, name: "Partner 4", image: "/placeholder.svg?height=80&width=120" },
-    { id: 5, name: "Partner 5", image: "/placeholder.svg?height=80&width=120" },
-    { id: 6, name: "Partner 6", image: "/placeholder.svg?height=80&width=120" },
+    { id: 1, name: "International Research Olympiad", image: "/images/home/iro.png?height=80&width=120" },
+    { id: 2, name: "OTHS Ai Club", image: "/images/home/othsai.png?height=80&width=120" },
+    { id: 3, name: "NEOLabs Enterprise", image: "/images/home/nle.png?height=80&width=120" },
+    { id: 4, name: "Pearedco", image: "/images/home/pearedco.png?height=80&width=120" },
   ];
 
   const nextSlide = () => {
@@ -67,7 +65,6 @@ function PartnersCarousel() {
                           alt={partner.name}
                           width={120}
                           height={80}
-                          className="opacity-60"
                         />
                       </div>
                     ))}
@@ -316,7 +313,7 @@ export default function HomePage() {
             </h2>
             <div className="lg:hidden flex justify-center">
               <Image
-                src="/images/empower-through-tech.jpg?height=150&width=250"
+                src="/images/home/empower-through-tech.jpg?height=150&width=250"
                 alt="Students learning with technology"
                 width={250}
                 height={150}
@@ -341,7 +338,7 @@ export default function HomePage() {
           </div>
           <div className="relative hidden lg:block">
             <Image
-              src="/images/empower-through-tech.jpg?height=400&width=600"
+              src="/images/home/empower-through-tech.jpg?height=400&width=600"
               alt="Students learning with technology"
               width={600}
               height={400}
@@ -354,7 +351,7 @@ export default function HomePage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative lg:order-1 hidden lg:block">
               <Image
-                src="/images/building-communities.jpg?height=400&width=600"
+                src="/images/home/building-communities.jpg?height=400&width=600"
                 alt="Global community collaboration"
                 width={600}
                 height={400}
@@ -367,7 +364,7 @@ export default function HomePage() {
               </h2>
               <div className="lg:hidden flex justify-center">
                 <Image
-                  src="/images/building-communities.jpg?height=150&width=250"
+                  src="/images/home/building-communities.jpg?height=150&width=250"
                   alt="Global community collaboration"
                   width={250}
                   height={150}

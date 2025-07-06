@@ -6,7 +6,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#1d588a] text-white py-8">
+    <footer className="bg-[#1d588a] text-[#F0F8FF] py-8">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-3 gap-8">
           <div className="flex items-center space-x-2">
@@ -17,7 +17,6 @@ export default function Footer() {
               height={32} // Specify the height (in pixels)
               className="h-10 w-10" // Optional: Add any additional styles
             />
-            <span className="text-xl font-bold">ReEnvision</span>
           </div>
           <div className="text-center">
             <p className="text-blue-200">
@@ -28,7 +27,7 @@ export default function Footer() {
             <Button
               variant="outline"
               size="sm"
-              className="bg-transparent border-white text-white hover:bg-white hover:text-[#1d588a]"
+              className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a]"
             >
               Contact Us
             </Button>

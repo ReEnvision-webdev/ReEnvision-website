@@ -326,7 +326,7 @@ export default function HomePage() {
           </div>
           <div className="relative hidden lg:block">
             <img
-              src="/placeholder.svg?height=400&width=600"
+              src="/images/empower-through-tech.jpg?height=400&width=600"
               alt="Students learning with technology"
               width={600}
               height={400}
@@ -339,7 +339,7 @@ export default function HomePage() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative lg:order-1 hidden lg:block">
               <img
-                src="/placeholder.svg?height=400&width=600"
+                src="/images/building-communities.jpg?height=400&width=600"
                 alt="Global community collaboration"
                 width={600}
                 height={400}
@@ -352,7 +352,7 @@ export default function HomePage() {
               </h2>
               <div className="lg:hidden flex justify-center">
                 <img
-                  src="/placeholder.svg?height=150&width=250"
+                  src="/?height=150&width=250"
                   alt="Global community collaboration"
                   width={250}
                   height={150}

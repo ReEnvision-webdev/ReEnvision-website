@@ -241,7 +241,7 @@ export default function HomePage() {
   }, []);
   return (
     <div className="min-h-screen bg-[#F0F8FF]">
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-30">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h1 className="text-4xl lg:text-5xl font-bold text-[#1d588a] leading-tight">

@@ -97,7 +97,7 @@ export default function Header() {
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Image
-            src="/favicon.svg" // Path to your favicon.png
+            src="/vectors/favicon.svg" // Path to your favicon.png
             alt="Logo"
             width={32} // Specify the width (in pixels)
             height={32} // Specify the height (in pixels)

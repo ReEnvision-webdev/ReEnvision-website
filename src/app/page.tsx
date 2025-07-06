@@ -150,10 +150,12 @@ function HexagonCard({
       <div className={`hexagon-card ${isFlipped ? 'flipped' : ''}`}>
         <div className="hexagon-face hexagon-front">
           <div className="hexagon-content">
-            <div className="text-[#F0F8FF] text-center space-y-2">
-              {icon}
-              <div className="font-bold text-lg">{frontText}</div>
-            </div>
+        <div className="flex flex-col items-center justify-center h-full space-y-2">
+          {/* Icon */}
+          <div className="text-[#F0F8FF]">{icon}</div>
+          {/* Front Text */}
+          <div className="font-bold text-lg text-center text-[#F0F8FF]">{frontText}</div>
+        </div>
           </div>
         </div>
         <div className="hexagon-face hexagon-back">
@@ -259,7 +261,7 @@ export default function HomePage() {
               <HexagonCard
                 index={0}
                 icon={<Book className="h-8 w-8" />}
-                frontText="Unlock Learning Potential"
+                frontText="Unleash Learning Power"
                 backText="Bridging educational gaps through innovative technology and community partnerships."
               />
               <HexagonCard

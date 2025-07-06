@@ -14,6 +14,12 @@ import {
   Handshake,
 } from "lucide-react";
 import Link from "next/link";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+
+
+
 
 function PartnersCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -227,6 +233,15 @@ function HexagonCard({
 }
 
 export default function HomePage() {
+    useEffect(() => {
+    // Initialize AOS
+    AOS.init({
+      duration: 800, // Animation duration (in milliseconds)
+      easing: 'ease-in-out', // Animation easing
+      once: true, // Whether animation should happen only once
+      offset: 120, // Offset (in pixels) from the element's position
+    });
+  }, []);
   return (
     <div className="min-h-screen bg-[#F0F8FF]">
       <section className="container mx-auto px-4 py-16">

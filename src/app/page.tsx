@@ -13,6 +13,7 @@ import {
   Lock,
   Handshake,
 } from "lucide-react";
+import Link from "next/link";
 
 function PartnersCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -244,9 +245,11 @@ export default function HomePage() {
               divide and creating equitable access to essential resources.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF] px-8 py-3">
-                Learn More
-              </Button>
+              <Link href="#about">
+                <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF] px-8 py-3">
+                  Learn More
+                </Button>
+              </Link>
               <Button
                 variant="outline"
                 className="border-[#1f639e] text-[#1f639e] hover:text-[#0c0c0c] hover:border-[#0c0c0c] px-8 py-3 bg-transparent"

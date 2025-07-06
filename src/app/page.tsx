@@ -16,7 +16,7 @@ import {
 import Link from "next/link";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-
+import Image from "next/image";
 
 
 
@@ -62,7 +62,7 @@ function PartnersCarousel() {
                         key={partner.id}
                         className="rounded-lg shadow-md p-6 h-32 flex items-center justify-center"
                       >
-                        <img
+                        <Image
                           src={partner.image || "/placeholder.svg"}
                           alt={partner.name}
                           width={120}
@@ -315,8 +315,8 @@ export default function HomePage() {
               Empowering Education Through Technology
             </h2>
             <div className="lg:hidden flex justify-center">
-              <img
-                src="/placeholder.svg?height=150&width=250"
+              <Image
+                src="/images/empower-through-tech.jpg?height=150&width=250"
                 alt="Students learning with technology"
                 width={250}
                 height={150}
@@ -340,7 +340,7 @@ export default function HomePage() {
             </Button>
           </div>
           <div className="relative hidden lg:block">
-            <img
+            <Image
               src="/images/empower-through-tech.jpg?height=400&width=600"
               alt="Students learning with technology"
               width={600}
@@ -353,7 +353,7 @@ export default function HomePage() {
         <div className="container mx-auto px-4 py-16" data-aos="fade-up">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative lg:order-1 hidden lg:block">
-              <img
+              <Image
                 src="/images/building-communities.jpg?height=400&width=600"
                 alt="Global community collaboration"
                 width={600}
@@ -366,8 +366,8 @@ export default function HomePage() {
                 Building Global Communities
               </h2>
               <div className="lg:hidden flex justify-center">
-                <img
-                  src="/?height=150&width=250"
+                <Image
+                  src="/images/building-communities.jpg?height=150&width=250"
                   alt="Global community collaboration"
                   width={250}
                   height={150}

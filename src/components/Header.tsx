@@ -65,7 +65,9 @@ function MobileMenu() {
                   variant="ghost"
                   size="sm"
                   className={`justify-start hover:bg-[#F0F8FF] ${
-                    pathname === href ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"
+                    pathname === href
+                      ? "bg-[#F0F8FF] text-[#1d588a]"
+                      : "text-[#F0F8FF]"
                   }`}
                 >
                   {label}

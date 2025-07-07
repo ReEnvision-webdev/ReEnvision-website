@@ -65,7 +65,9 @@ function MobileMenu() {
                   variant="ghost"
                   size="sm"
                   className={`justify-start hover:bg-[#F0F8FF] ${
-                    pathname === href ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"
+                    pathname === href
+                      ? "bg-[#F0F8FF] text-[#1d588a]"
+                      : "text-[#F0F8FF]"
                   }`}
                 >
                   {label}
@@ -93,11 +95,12 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="bg-[#1d588a] text-[#F0F8FF] px-4 py-3 sticky top-0 z-50">
+    <header className="bg-[#1d588a] text-[#F0F8FF] px-4 py-3 fixed top-0 left-0 right-0 z-50">
+      {/* Added `fixed`, `top-0`, `left-0`, `right-0` */}
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Image
-            src="/favicon.svg" // Path to your favicon.png
+            src="/vectors/favicon.svg" // Path to your favicon.png
             alt="Logo"
             width={32} // Specify the width (in pixels)
             height={32} // Specify the height (in pixels)

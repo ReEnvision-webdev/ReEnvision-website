@@ -23,8 +23,6 @@ export default function Custom404() {
           </Link>
         </div>
       </section>
-
-
     </div>
   );
 }

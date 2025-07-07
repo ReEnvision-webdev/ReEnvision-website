@@ -210,7 +210,7 @@ export default function HomePage() {
               bridging the digital divide and creating equitable access to essential resources.
             </p>
             <div className="flex flex-row gap-4" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="900">
-              <Link href="#about1">
+              <Link href="#about">
                 <Button
                   className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF] px-8 py-3 w-fit transform hover:scale-105 transition-all duration-300"
                   data-aos="zoom-in"
@@ -280,7 +280,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="container mx-auto px-4 py-16" id="about1" data-aos="fade-up">
+      <section className="container mx-auto px-4 py-16" id="about" data-aos="fade-up">
         <div className="grid lg:grid-cols-2 gap-12 items-center" data-aos="fade-up">
           <div className="space-y-6">
             <h2 className="text-3xl font-bold text-[#1d588a]">Empowering Education Through Technology</h2>

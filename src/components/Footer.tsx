@@ -21,18 +21,18 @@ export default function Footer() {
           </div>
           <div className="text-center">
             <p className="text-blue-200">
-              © {currentYear} ReEnvision. All rights reserved.
+              &#169; {currentYear} ReEnvision. All rights reserved.
             </p>
           </div>
           <div className="text-right">
-          <Link href="/contact">
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a]"
-            >
-              Contact Us
-            </Button>
+            <Link href="/contact">
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a]"
+              >
+                Contact Us
+              </Button>
             </Link>
           </div>
         </div>

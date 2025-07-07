@@ -220,6 +220,7 @@ export default function HomePage() {
                   Learn More
                 </Button>
               </Link>
+              <Link href="/signin">
               <Button
                 variant="outline"
                 className="border-[#1f639e] text-[#1f639e] hover:text-[#0c0c0c] hover:border-[#0c0c0c] px-8 py-3 bg-transparent w-fit transform hover:scale-105 transition-all duration-300"
@@ -229,6 +230,7 @@ export default function HomePage() {
               >
                 Get Started
               </Button>
+              </Link>
             </div>
           </div>
           <div
@@ -301,7 +303,9 @@ export default function HomePage() {
               a time. Join thousands of learners who have already transformed their lives through our comprehensive
               educational ecosystem.
             </p>
-            <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">Explore Our Platform</Button>
+            <Link href="/about">
+            <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">More About Us</Button>
+            </Link>
           </div>
           <div className="relative hidden lg:block">
             <Image
@@ -344,7 +348,9 @@ export default function HomePage() {
                 Whether you're looking to develop new skills, share your expertise, or find mentorship, our global
                 network provides the connections and resources you need to succeed in your educational journey.
               </p>
-              <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">Join Our Community</Button>
+                <Link href="https://discord.gg/AgyFnhHved">
+              <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">Join Our Discord</Button>
+              </Link>
             </div>
           </div>
         </div>

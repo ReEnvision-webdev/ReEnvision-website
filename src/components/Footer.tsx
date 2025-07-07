@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -24,6 +25,7 @@ export default function Footer() {
             </p>
           </div>
           <div className="text-right">
+          <Link href="/contact">
             <Button
               variant="outline"
               size="sm"
@@ -31,6 +33,7 @@ export default function Footer() {
             >
               Contact Us
             </Button>
+            </Link>
           </div>
         </div>
       </div>

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -19,28 +19,54 @@ import Image from "next/image";
 
 function PartnersCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const partners = [
-    { id: 1, name: "International Research Olympiad", image: "/images/home/iro.png?height=80&width=120" },
-    { id: 2, name: "OTHS Ai Club", image: "/images/home/othsai.png?height=80&width=120" },
-    { id: 3, name: "NEOLabs Enterprise", image: "/images/home/nle.png?height=80&width=120" },
-    { id: 4, name: "Pearedco", image: "/images/home/pearedco.png?height=80&width=120" },
-  ];
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % Math.ceil(partners.length / 2));
-  };
+  // Memoize the partners array to prevent recreation on every render
+  const partners = useMemo(
+    () => [
+      {
+        id: 1,
+        name: "International Research Olympiad",
+        image: "/images/home/iro.png?height=80&width=120",
+      },
+      {
+        id: 2,
+        name: "OTHS Ai Club",
+        image: "/images/home/othsai.png?height=80&width=120",
+      },
+      {
+        id: 3,
+        name: "NEOLabs Enterprise",
+        image: "/images/home/nle.png?height=80&width=120",
+      },
+      {
+        id: 4,
+        name: "Pearedco",
+        image: "/images/home/pearedco.png?height=80&width=120",
+      },
+    ],
+    [],
+  );
 
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + Math.ceil(partners.length / 2)) % Math.ceil(partners.length / 2));
-  };
+  // Memoize the nextSlide function using useCallback
+  const nextSlide = useCallback(() => {
+    setCurrentSlide(prev => (prev + 1) % Math.ceil(partners.length / 2));
+  }, [partners.length]);
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide(
+      prev =>
+        (prev - 1 + Math.ceil(partners.length / 2)) %
+        Math.ceil(partners.length / 2),
+    );
+  }, [partners.length]);
 
   useEffect(() => {
-    // Set up an interval to call nextSlide every 3 seconds (3000 ms)
+    // Set up an interval to call nextSlide every 5 seconds (5000 ms)
     const interval = setInterval(nextSlide, 5000);
 
     // Clear the interval when the component unmounts
     return () => clearInterval(interval);
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, [nextSlide]);
 
   return (
     <div className="relative max-w-4xl mx-auto">
@@ -49,45 +75,79 @@ function PartnersCarousel() {
           className="flex transition-transform duration-300 ease-in-out"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
-          {Array.from({ length: Math.ceil(partners.length / 2) }).map((_, slideIndex) => (
-            <div key={slideIndex} className="w-full flex-shrink-0">
-              <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-                {partners.slice(slideIndex * 2, slideIndex * 2 + 2).map((partner) => (
-                  <div key={partner.id} className="rounded-lg shadow-md p-6 h-32 flex items-center justify-center">
-                    <Image src={partner.image || "/placeholder.svg"} alt={partner.name} width={120} height={80} />
-                  </div>
-                ))}
+          {Array.from({ length: Math.ceil(partners.length / 2) }).map(
+            (_, slideIndex) => (
+              <div key={slideIndex} className="w-full flex-shrink-0">
+                <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+                  {partners
+                    .slice(slideIndex * 2, slideIndex * 2 + 2)
+                    .map(partner => (
+                      <div
+                        key={partner.id}
+                        className="rounded-lg shadow-md p-6 h-32 flex items-center justify-center"
+                      >
+                        <Image
+                          src={partner.image || "/placeholder.svg"}
+                          alt={partner.name}
+                          width={120}
+                          height={80}
+                        />
+                      </div>
+                    ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       </div>
       <button
         onClick={prevSlide}
         className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#1f639e] text-[#F0F8FF] p-2 rounded-full hover:bg-[#00427A] transition-colors"
       >
-        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        <svg
+          className="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
         </svg>
       </button>
       <button
         onClick={nextSlide}
         className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#1f639e] text-[#F0F8FF] p-2 rounded-full hover:bg-[#00427A] transition-colors"
       >
-        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        <svg
+          className="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5l7 7-7 7"
+          />
         </svg>
       </button>
       <div className="flex justify-center mt-6 space-x-2">
-        {Array.from({ length: Math.ceil(partners.length / 2) }).map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-colors ${
-              currentSlide === index ? "bg-[#1d588a]" : "bg-gray-300"
-            }`}
-          />
-        ))}
+        {Array.from({ length: Math.ceil(partners.length / 2) }).map(
+          (_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-3 h-3 rounded-full transition-colors ${
+                currentSlide === index ? "bg-[#1d588a]" : "bg-gray-300"
+              }`}
+            />
+          ),
+        )}
       </div>
     </div>
   );
@@ -193,7 +253,7 @@ export default function HomePage() {
       duration: 1000, // Animation duration (in milliseconds)
       easing: "ease-out-cubic", // Animation easing
       once: true, // Whether animation should happen only once
-      offset: 50, // Offset (in pixels) from the element#39;s position
+      offset: 50, // Offset (in pixels) from the elements position
       delay: 0, // Global delay
     });
   }, []);
@@ -235,7 +295,7 @@ export default function HomePage() {
               data-aos-delay="700"
             >
               Join us in connecting volunteers with meaningful opportunities to
-              support those in need. Together, we#39;re bridging the digital
+              support those in need. Together, we&apos;re bridging the digital
               divide and creating equitable access to essential resources.
             </p>
             <div
@@ -364,10 +424,10 @@ export default function HomePage() {
               for everyone, regardless of their background or location.
             </p>
             <p className="text-gray-600 leading-relaxed">
-              From interactive courses to mentorship programs, we#39;re building
-              the future of education one connection at a time. Join thousands
-              of learners who have already transformed their lives through our
-              comprehensive educational ecosystem.
+              From interactive courses to mentorship programs, we&apos;re
+              building the future of education one connection at a time. Join
+              thousands of learners who have already transformed their lives
+              through our comprehensive educational ecosystem.
             </p>
             <Link href="/about">
               <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">
@@ -416,7 +476,7 @@ export default function HomePage() {
                 guidance, and opportunities for collaboration.
               </p>
               <p className="text-gray-600 leading-relaxed">
-                Whether you#39;re looking to develop new skills, share your
+                Whether you&apos;re looking to develop new skills, share your
                 expertise, or find mentorship, our global network provides the
                 connections and resources you need to succeed in your
                 educational journey.
@@ -455,7 +515,7 @@ export default function HomePage() {
               <div className="text-3xl font-bold text-[#1d588a]">250+</div>
               <div className="text-blue-600 font-medium">hours of content</div>
               <p className="text-gray-600 text-sm">
-                We#39;ve contributed over 100 hours of service to make an
+                We&apos;ve contributed over 100 hours of service to make an
                 impact.
               </p>
             </CardContent>

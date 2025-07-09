@@ -143,7 +143,7 @@ export default function DonatePage() {
                 {/* PayPal Text */}
                 <Link href="#">
                   <p
-                    className="text-center text-gray-500 text-sm mt-4"
+                    className="text-left text-gray-500 text-sm mt-4"
                     data-aos="fade-up"
                     data-aos-delay="700"
                   >

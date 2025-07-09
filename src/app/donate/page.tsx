@@ -21,7 +21,7 @@ export default function DonatePage() {
     })
   }, [])
 
-  const donationAmounts = ["$10", "$20", "$50", "$40"]
+  const donationAmounts = ["$10", "$20", "$40", "$50"]
 
   const handleAmountSelect = (amount: string) => {
     setSelectedAmount(amount)

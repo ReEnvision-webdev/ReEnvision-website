@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -35,20 +34,20 @@ export default function DonatePage() {
   };
 
   return (
-    <div className="bg-[#F0F8FF] pt-20 py-4 px-4">
-      <div className="container mx-auto max-w-6xl">
+    <div className="bg-[#F0F8FF] pt-20 py-4 px-4 min-h-screen flex items-center justify-center">
+      <div className="w-full max-w-6xl mx-auto">
         <div
           className="bg-white rounded-lg shadow-lg overflow-hidden"
           data-aos="fade-up"
         >
           <div className="grid lg:grid-cols-2 gap-0">
             {/* Left Section - Mission Statement */}
-            <div className="p-8 lg:p-12 flex flex-col justify-center bg-gray-50 lg:bg-white">
+            <div className="p-6 sm:p-8 lg:p-12 flex flex-col justify-center bg-gray-50 lg:bg-white">
               <div data-aos="fade-right" data-aos-delay="200">
-                <h1 className="text-2xl lg:text-3xl xl:text-4xl font-bold text-[#1d588a] mb-6 leading-tight">
+                <h1 className="text-2xl sm:text-3xl lg:text-3xl xl:text-4xl font-bold text-[#1d588a] mb-4 sm:mb-6 leading-tight">
                   Power our mission to educate
                 </h1>
-                <p className="text-gray-600 text-base lg:text-lg leading-relaxed">
+                <p className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed">
                   Help us keep education free and accessible for everyone,
                   everywhere. Your support allows us to create more content,
                   improve our platform&apos;s functionality, and reach learners
@@ -61,19 +60,19 @@ export default function DonatePage() {
             </div>
 
             {/* Right Section - Donation Form */}
-            <div className="p-8 lg:p-12 bg-white border-l border-gray-100">
+            <div className="p-6 sm:p-8 lg:p-12 bg-white border-l border-gray-100">
               <div data-aos="fade-left" data-aos-delay="400">
-                <h2 className="text-xl lg:text-2xl font-semibold text-gray-800 mb-6">
+                <h2 className="text-xl lg:text-2xl font-semibold text-gray-800 mb-4 sm:mb-6">
                   Select An Amount
                 </h2>
 
                 {/* Amount Selection Buttons */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-3 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-3 mb-4 sm:mb-6">
                   {donationAmounts.map(amount => (
                     <button
                       key={amount}
                       onClick={() => handleAmountSelect(amount)}
-                      className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
+                      className={`py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                         selectedAmount === amount
                           ? "bg-[#1d588a] text-white shadow-md"
                           : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -85,18 +84,18 @@ export default function DonatePage() {
                 </div>
 
                 {/* Custom Amount Input */}
-                <div className="mb-6">
+                <div className="mb-4 sm:mb-6">
                   <input
                     type="number"
                     placeholder="Enter custom amount"
                     value={customAmount}
                     onChange={e => handleCustomAmount(e.target.value)}
-                    className="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200"
+                    className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                   />
                 </div>
 
                 {/* Name Fields */}
-                <div className="space-y-4 mb-6">
+                <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                   <div>
                     <label
                       htmlFor="firstName"
@@ -110,7 +109,7 @@ export default function DonatePage() {
                       placeholder="Enter your name here..."
                       value={firstName}
                       onChange={e => setFirstName(e.target.value)}
-                      className="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200"
+                      className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                     />
                   </div>
                   <div>
@@ -126,14 +125,14 @@ export default function DonatePage() {
                       placeholder="Enter your last name..."
                       value={lastName}
                       onChange={e => setLastName(e.target.value)}
-                      className="w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200"
+                      className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                     />
                   </div>
                 </div>
 
                 {/* Donate Button */}
                 <button
-                  className="w-full bg-[#1d588a] text-white py-4 px-6 rounded-lg font-semibold text-lg hover:bg-[#164a73] transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                  className="w-full bg-[#1d588a] text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg font-semibold text-base sm:text-lg hover:bg-[#164a73] transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                   data-aos="fade-up"
                   data-aos-delay="600"
                 >
@@ -143,7 +142,7 @@ export default function DonatePage() {
                 {/* PayPal Text */}
                 <Link href="#">
                   <p
-                    className="text-left text-gray-500 text-sm mt-4"
+                    className="text-left text-gray-500 text-sm mt-3 sm:mt-4"
                     data-aos="fade-up"
                     data-aos-delay="700"
                   >

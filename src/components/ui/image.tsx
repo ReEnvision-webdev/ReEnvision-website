@@ -18,7 +18,7 @@ const Image = (props: ImageProps) => {
                 ></div>
             }
         >
-            <DelayedImage src={props.src} width={props.width} height={props.height} alt={props.alt} />
+            <NextImage src={props.src} width={props.width} height={props.height} alt={props.alt} />
         </Suspense>
     );
 };

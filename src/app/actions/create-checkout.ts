@@ -11,7 +11,7 @@ export async function createCheckoutSession(amount: number, customerName: string
   }
 
   const stripe = new Stripe(stripeSecretKey, {
-    apiVersion: "2024-06-20",
+    apiVersion: "2025-06-30.basil",
   })
 
   try {

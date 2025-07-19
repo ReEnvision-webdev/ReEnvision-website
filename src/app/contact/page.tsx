@@ -16,7 +16,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-[#F0F8FF] flex items-center justify-center py-8 px-2">
-      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-8 md:p-12 flex flex-col md:flex-row gap-8 md:gap-0 items-stretch md:items-center justify-center min-h-[70vh]">
+      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-xl px-4 py-16 mt-16 lg:mt-15 md:p-12 md:mt-16 flex flex-col md:flex-row gap-8 md:gap-0 items-stretch md:items-center justify-center min-h-[70vh]">
         {/* Left Column */}
         <div className="flex-1 flex flex-col justify-center items-center md:items-start text-center md:text-left mb-8 md:mb-0 md:pr-10">
           <h1 className="text-3xl md:text-4xl font-bold mb-4 text-[#1d588a]">Get in Touch</h1>

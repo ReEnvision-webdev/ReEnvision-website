@@ -11,7 +11,7 @@ export default function AboutPage() {
             <section>
                 <div id="teams" className="container mx-auto px-4 py-8">
                     <h2 className="text-center text-2xl font-semibold mb-4">Our Teams</h2>
-                    <div className="grid grid-cols-2 grid-rows-2 gap-x-18 gap-y-8 justify-center items-center mx-auto px-4 py-8 border-black">
+                    <div className="flex justify-center items-center mx-auto px-4 py-8 border-black">
                         <Card className="flex flex-col gap-4 justify-evenly items-center">
                             <CardContent>
                                 <Image
@@ -21,7 +21,21 @@ export default function AboutPage() {
                                     alt="Team Member 1"
                                     className="rounded-full"
                                 />
-                                <p className="text-center">Hello, world!</p>
+                                <p className="text-center">President</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+                    <div className="flex gap-x-18 justify-center items-center mx-auto px-4 py-8 border-black">
+                        <Card className="flex flex-col gap-4 justify-evenly items-center">
+                            <CardContent>
+                                <Image
+                                    src="/favicon.png"
+                                    width={200}
+                                    height={200}
+                                    alt="Team Member 1"
+                                    className="rounded-full"
+                                />
+                                <p className="text-center">Head 1</p>
                             </CardContent>
                         </Card>
                         <Card className="flex flex-col gap-4 justify-evenly items-center">
@@ -33,7 +47,21 @@ export default function AboutPage() {
                                     alt="Team Member 1"
                                     className="rounded-full"
                                 />
-                                <p className="text-center">Hello, world!</p>
+                                <p className="text-center">Head 2</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+                    <div className="grid md:grid-cols-4 grid-cols-2 grid-rows-2 gap-x-18 gap-y-8 justify-center items-center mx-auto px-4 py-8 border-black">
+                        <Card className="flex flex-col gap-4 justify-evenly items-center">
+                            <CardContent>
+                                <Image
+                                    src="/favicon.png"
+                                    width={200}
+                                    height={200}
+                                    alt="Team Member 1"
+                                    className="rounded-full"
+                                />
+                                <p className="text-center">Team lead 1</p>
                             </CardContent>
                         </Card>
                         <Card className="flex flex-col gap-4 justify-evenly items-center">
@@ -45,7 +73,7 @@ export default function AboutPage() {
                                     alt="Team Member 1"
                                     className="rounded-full"
                                 />
-                                <p className="text-center">Hello, world!</p>
+                                <p className="text-center">Team lead 2</p>
                             </CardContent>
                         </Card>
                         <Card className="flex flex-col gap-4 justify-evenly items-center">
@@ -57,7 +85,19 @@ export default function AboutPage() {
                                     alt="Team Member 1"
                                     className="rounded-full"
                                 />
-                                <p className="text-center">Hello, world!</p>
+                                <p className="text-center">Team lead 3</p>
+                            </CardContent>
+                        </Card>
+                        <Card className="flex flex-col gap-4 justify-evenly items-center">
+                            <CardContent>
+                                <Image
+                                    src="/favicon.png"
+                                    width={200}
+                                    height={200}
+                                    alt="Team Member 1"
+                                    className="rounded-full"
+                                />
+                                <p className="text-center">Team lead 4</p>
                             </CardContent>
                         </Card>
                     </div>

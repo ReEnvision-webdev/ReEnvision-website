@@ -198,7 +198,7 @@ export default function AboutPage() {
                         <Card className="flex flex-col gap-4 items-center p-4 w-full max-w-xs shadow-md hover:shadow-lg transition-shadow duration-300">
                             <CardContent className="flex flex-col items-center p-0">
                                 <Image
-                                    src="/favicon.png" // Replace with actual image path
+                                    src="/images/about/santi.png" // Replace with actual image path
                                     width={120}
                                     height={120}
                                     alt="Santiago Silva"

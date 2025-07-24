@@ -1,6 +1,6 @@
 // app/about/page.tsx
 "use client";
-import Image from "@/components/ui/image";
+import Image from "@/components/ui/image"; // Assuming this wraps next/image
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect } from "react";
 import AOS from "aos";
@@ -27,6 +27,35 @@ export default function AboutPage() {
             >
                 About Us
             </h1>
+
+            {/* Hero Image - Added Section */}
+            <div 
+                className="container mx-auto px-4 mb-8 flex justify-center"
+                data-aos="fade-up"
+                data-aos-delay="50"
+            >
+                <div className="relative w-full max-w-4xl h-64 md:h-96 rounded-xl overflow-hidden shadow-lg">
+                    {/* Using fill requires width and height to be set on the parent or passed as props */}
+                    {/* Based on your file structure, using about.jpg */}
+                    <Image
+                      src="/images/about/about.png"
+                        alt="ReEnvision Team in Action"
+                        fill
+                        // width and height props are still required by the component even with fill,
+                        // although they might not directly control the rendered size when fill is true.
+                        // Common practice is to provide the intrinsic dimensions of the image or dummy values.
+                        // However, if your custom Image component strictly enforces width/height without fill,
+                        // you might need to set them to match the container or use layout='fill' differently.
+                        // Let's try providing width and height matching the container's max dimensions.
+                        // If that doesn't work, you might need to adjust your ui/Image component or use next/image directly.
+                        width={1200}  // Example width matching max-w-4xl (~1152px) or common large image width
+                        height={500}  // Example height matching h-96 (24rem * 16px = 384px), using 500 for buffer
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1152px" // Match max-w-4xl
+                        className="object-cover"
+                        priority
+                    />
+                </div>
+            </div>
 
             {/* Our Mission Section */}
             <section
@@ -293,7 +322,14 @@ export default function AboutPage() {
             </section>
 
             {/* Footer Note */}
-
+            <footer className="w-full py-6 text-center text-gray-600 text-sm mt-auto">
+                <p>© ReEnvision 2025. All rights reserved.</p>
+                <p className="mt-1">
+                    <a href="#" className="text-[#1f639e] hover:underline">
+                        Design can be found here
+                    </a>
+                </p>
+            </footer>
         </div>
     );
 }

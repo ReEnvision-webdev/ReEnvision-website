@@ -322,14 +322,6 @@ export default function AboutPage() {
             </section>
 
             {/* Footer Note */}
-            <footer className="w-full py-6 text-center text-gray-600 text-sm mt-auto">
-                <p>© ReEnvision 2025. All rights reserved.</p>
-                <p className="mt-1">
-                    <a href="#" className="text-[#1f639e] hover:underline">
-                        Design can be found here
-                    </a>
-                </p>
-            </footer>
         </div>
     );
 }

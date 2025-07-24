@@ -1,43 +1,72 @@
 "use client";
-
-import type React from "react";
-import { useState } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  Users,
-  Link as LucideLink,
+  Laptop,
+  Link2,
   User,
+  Users,
   ChevronDown,
-  Target,
-  Award,
-  Lightbulb,
+  Book,
+  Lock,
+  Handshake,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import Image from "next/image";
 
 function PartnersCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const partners = [
-    { id: 1, name: "Partner 1", image: "/placeholder.svg?height=80&width=120" },
-    { id: 2, name: "Partner 2", image: "/placeholder.svg?height=80&width=120" },
-    { id: 3, name: "Partner 3", image: "/placeholder.svg?height=80&width=120" },
-    { id: 4, name: "Partner 4", image: "/placeholder.svg?height=80&width=120" },
-    { id: 5, name: "Partner 5", image: "/placeholder.svg?height=80&width=120" },
-    { id: 6, name: "Partner 6", image: "/placeholder.svg?height=80&width=120" },
-  ];
 
-  const nextSlide = () => {
+  // Memoize the partners array to prevent recreation on every render
+  const partners = useMemo(
+    () => [
+      {
+        id: 1,
+        name: "International Research Olympiad",
+        image: "/images/home/iro.png?height=80&width=120",
+      },
+      {
+        id: 2,
+        name: "OTHS Ai Club",
+        image: "/images/home/othsai.png?height=80&width=120",
+      },
+      {
+        id: 3,
+        name: "NEOLabs Enterprise",
+        image: "/images/home/nle.png?height=80&width=120",
+      },
+      {
+        id: 4,
+        name: "Pearedco",
+        image: "/images/home/pearedco.png?height=80&width=120",
+      },
+    ],
+    [],
+  );
+
+  // Memoize the nextSlide function using useCallback
+  const nextSlide = useCallback(() => {
     setCurrentSlide(prev => (prev + 1) % Math.ceil(partners.length / 2));
-  };
+  }, [partners.length]);
 
-  const prevSlide = () => {
+  const prevSlide = useCallback(() => {
     setCurrentSlide(
       prev =>
         (prev - 1 + Math.ceil(partners.length / 2)) %
         Math.ceil(partners.length / 2),
     );
-  };
+  }, [partners.length]);
+
+  useEffect(() => {
+    // Set up an interval to call nextSlide every 5 seconds (5000 ms)
+    const interval = setInterval(nextSlide, 5000);
+
+    // Clear the interval when the component unmounts
+    return () => clearInterval(interval);
+  }, [nextSlide]);
 
   return (
     <div className="relative max-w-4xl mx-auto">
@@ -55,14 +84,13 @@ function PartnersCarousel() {
                     .map(partner => (
                       <div
                         key={partner.id}
-                        className="bg-[#F0F8FF] rounded-lg shadow-md p-6 h-32 flex items-center justify-center"
+                        className="rounded-lg shadow-md p-6 h-32 flex items-center justify-center"
                       >
                         <Image
                           src={partner.image || "/placeholder.svg"}
                           alt={partner.name}
                           width={120}
                           height={80}
-                          className="opacity-60"
                         />
                       </div>
                     ))}
@@ -72,7 +100,6 @@ function PartnersCarousel() {
           )}
         </div>
       </div>
-      {/* Navigation Buttons */}
       <button
         onClick={prevSlide}
         className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#1f639e] text-[#F0F8FF] p-2 rounded-full hover:bg-[#00427A] transition-colors"
@@ -109,7 +136,6 @@ function PartnersCarousel() {
           />
         </svg>
       </button>
-      {/* Dots Indicator */}
       <div className="flex justify-center mt-6 space-x-2">
         {Array.from({ length: Math.ceil(partners.length / 2) }).map(
           (_, index) => (
@@ -125,88 +151,266 @@ function PartnersCarousel() {
       </div>
     </div>
   );
-} 
+}
+
+// Hexagon Card Component with Sequential Flip Animation
+function HexagonCard({ index, icon, frontText, backText }) {
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const totalCards = 4;
+      const cycleTime = totalCards * 2000; // 2 seconds per card
+      const currentTime = Date.now() % cycleTime;
+      const currentCard = Math.floor(currentTime / 2000);
+
+      setIsFlipped(currentCard === index);
+    }, 100); // Check every 100ms for smooth transitions
+
+    return () => clearInterval(interval);
+  }, [index]);
+
+  return (
+    <div className="hexagon-container group cursor-pointer">
+      <div className={`hexagon-card ${isFlipped ? "flipped" : ""}`}>
+        <div className="hexagon-face hexagon-front">
+          <div className="hexagon-content">
+            <div className="flex flex-col items-center justify-center h-full space-y-2">
+              {/* Icon */}
+              <div className="text-[#F0F8FF]">{icon}</div>
+              {/* Front Text */}
+              <div className="font-bold text-lg text-center text-[#F0F8FF]">
+                {frontText}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="hexagon-face hexagon-back">
+          <div className="hexagon-content">
+            <div className="text-[#F0F8FF] text-center space-y-2">
+              <div className="text-xs leading-tight">{backText}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <style jsx>{`
+        .hexagon-container {
+          perspective: 1000px;
+          width: 140px;
+          height: 140px;
+        }
+        .hexagon-card {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          transform-style: preserve-3d;
+          transition: transform 0.6s ease-in-out;
+        }
+        .hexagon-card.flipped {
+          transform: rotateY(180deg);
+        }
+        .group:hover .hexagon-card {
+          transform: rotateY(180deg);
+        }
+        .group:hover .hexagon-card.flipped {
+          transform: rotateY(360deg);
+        }
+        .hexagon-face {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          backface-visibility: hidden;
+          clip-path: polygon(
+            50% 0%,
+            100% 25%,
+            100% 75%,
+            50% 100%,
+            0% 75%,
+            0% 25%
+          );
+          background: #1d588a;
+        }
+        .hexagon-back {
+          transform: rotateY(180deg);
+          background: #1d588a;
+        }
+        .hexagon-content {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          padding: 16px;
+        }
+      `}</style>
+    </div>
+  );
+}
 
 export default function HomePage() {
+  useEffect(() => {
+    // Initialize AOS
+    AOS.init({
+      duration: 1000, // Animation duration (in milliseconds)
+      easing: "ease-out-cubic", // Animation easing
+      once: true, // Whether animation should happen only once
+      offset: 50, // Offset (in pixels) from the elements position
+      delay: 0, // Global delay
+    });
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F0F8FF]">
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-30">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
-            <h1 className="text-4xl lg:text-5xl font-bold text-[#1d588a] leading-tight">
+            <h1
+              className="text-4xl lg:text-5xl font-bold text-[#1d588a] leading-tight"
+              data-aos="fade-up"
+              data-aos-duration="1200"
+              data-aos-delay="100"
+            >
               Your Gateway To
               <br />
-              <span className="text-[#00427A]">UNLIMITED</span>
+              <span
+                className="text-[#00427A]"
+                data-aos="fade-up"
+                data-aos-duration="1200"
+                data-aos-delay="300"
+              >
+                UNLIMITED
+              </span>
               <br />
-              Educational Resources
+              <span
+                data-aos="fade-up"
+                data-aos-duration="1200"
+                data-aos-delay="500"
+              >
+                Educational Resources
+              </span>
             </h1>
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p
+              className="text-gray-600 text-lg leading-relaxed"
+              data-aos="fade-up"
+              data-aos-duration="1000"
+              data-aos-delay="700"
+            >
               Join us in connecting volunteers with meaningful opportunities to
               support those in need. Together, we&apos;re bridging the digital
               divide and creating equitable access to essential resources.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="#about">
-                <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF] px-8 py-3">
+            <div
+              className="flex flex-row gap-4"
+              data-aos="fade-up"
+              data-aos-duration="1000"
+              data-aos-delay="900"
+            >
+              <Link href="#about1">
+                <Button
+                  className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF] px-8 py-3 w-fit transform hover:scale-105 transition-all duration-300"
+                  data-aos="zoom-in"
+                  data-aos-duration="800"
+                  data-aos-delay="1100"
+                >
                   Learn More
                 </Button>
               </Link>
-              <Button
-                variant="outline"
-                className="border-[#1f639e] text-[#1f639e] hover:text-[#0c0c0c] hover:border-[#0c0c0c] px-8 py-3 bg-transparent"
-              >
-                Get Started
-              </Button>
+              <Link href="/signin">
+                <Button
+                  variant="outline"
+                  className="border-[#1f639e] text-[#1f639e] hover:text-[#0c0c0c] hover:border-[#0c0c0c] px-8 py-3 bg-transparent w-fit transform hover:scale-105 transition-all duration-300"
+                  data-aos="zoom-in"
+                  data-aos-duration="800"
+                  data-aos-delay="1300"
+                >
+                  Get Started
+                </Button>
+              </Link>
             </div>
           </div>
-
-          {/* Interactive Hexagons */}
-          <div className="relative justify-center hidden lg:flex">
+          <div
+            className="relative justify-center hidden lg:flex"
+            data-aos="fade-left"
+            data-aos-duration="1200"
+            data-aos-delay="600"
+          >
             <div className="grid grid-cols-2 gap-6 max-w-lg">
-              <HexagonCard
-                icon={<Target className="h-8 w-8" />}
-                title="Mission"
-                frontText="Our Goal"
-                backText="Bridging educational gaps through innovative technology and community partnerships."
-              />
-              <HexagonCard
-                icon={<Users className="h-8 w-8" />}
-                title="Community"
-                frontText="Together"
-                backText="Building a network of passionate educators and learners worldwide."
-              />
-              <HexagonCard
-                icon={<Award className="h-8 w-8" />}
-                title="Excellence"
-                frontText="Quality"
-                backText="Delivering premium educational content and resources for all skill levels."
-              />
-              <HexagonCard
-                icon={<Lightbulb className="h-8 w-8" />}
-                title="Innovation"
-                frontText="Future"
-                backText="Pioneering new approaches to digital learning and skill development."
-              />
+              <div
+                data-aos="flip-left"
+                data-aos-duration="800"
+                data-aos-delay="1000"
+              >
+                <HexagonCard
+                  index={0}
+                  icon={<Book className="h-8 w-8" />}
+                  frontText="Unleash Learning Power"
+                  backText="Bridging educational gaps through innovative technology and community partnerships."
+                />
+              </div>
+              <div
+                data-aos="flip-left"
+                data-aos-duration="800"
+                data-aos-delay="1200"
+              >
+                <HexagonCard
+                  index={1}
+                  icon={<Laptop className="h-8 w-8" />}
+                  frontText="Bridging the Tech Divide"
+                  backText="Offering courses, resources, and technology to underdeserved communities"
+                />
+              </div>
+              <div
+                data-aos="flip-left"
+                data-aos-duration="800"
+                data-aos-delay="1400"
+              >
+                <HexagonCard
+                  index={2}
+                  icon={<Lock className="h-8 w-8" />}
+                  frontText="Digital Safety"
+                  backText="Teaching online safety and navigation for responsible use."
+                />
+              </div>
+              <div
+                data-aos="flip-left"
+                data-aos-duration="800"
+                data-aos-delay="1600"
+              >
+                <HexagonCard
+                  index={3}
+                  icon={<Handshake className="h-8 w-8" />}
+                  frontText="Give and Grow"
+                  backText="Join us to volunteer and make an impact in your community."
+                />
+              </div>
             </div>
           </div>
         </div>
-        <div className="flex justify-center mt-12">
+        <div
+          className="flex justify-center mt-12"
+          data-aos="bounce-in"
+          data-aos-duration="1000"
+          data-aos-delay="1800"
+        >
           <ChevronDown className="h-8 w-8 text-[#1d588a] animate-bounce" />
         </div>
       </section>
 
-      {/* Image and Content Section 1 */}
-      <section className="container mx-auto px-4 py-16" id="about">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <section
+        className="container mx-auto px-4 py-16"
+        id="about1"
+        data-aos="fade-up"
+      >
+        <div
+          className="grid lg:grid-cols-2 gap-12 items-center"
+          data-aos="fade-up"
+        >
           <div className="space-y-6">
             <h2 className="text-3xl font-bold text-[#1d588a]">
               Empowering Education Through Technology
             </h2>
-            {/* Mobile Image - positioned between title and paragraph */}
             <div className="lg:hidden flex justify-center">
               <Image
-                src="/placeholder.svg?height=150&width=250"
+                src="/images/home/empower-through-tech.jpg?height=150&width=250"
                 alt="Students learning with technology"
                 width={250}
                 height={150}
@@ -225,14 +429,15 @@ export default function HomePage() {
               thousands of learners who have already transformed their lives
               through our comprehensive educational ecosystem.
             </p>
-            <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">
-              Explore Our Platform
-            </Button>
+            <Link href="/about">
+              <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">
+                More About Us
+              </Button>
+            </Link>
           </div>
-          {/* Desktop Image */}
           <div className="relative hidden lg:block">
             <Image
-              src="/placeholder.svg?height=400&width=600"
+              src="/images/home/empower-through-tech.jpg?height=400&width=600"
               alt="Students learning with technology"
               width={600}
               height={400}
@@ -240,14 +445,11 @@ export default function HomePage() {
             />
           </div>
         </div>
-
-        {/* Image and Content Section 2 (Flipped) */}
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-16" data-aos="fade-up">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Desktop Image */}
             <div className="relative lg:order-1 hidden lg:block">
               <Image
-                src="/placeholder.svg?height=400&width=600"
+                src="/images/home/building-communities.jpg?height=400&width=600"
                 alt="Global community collaboration"
                 width={600}
                 height={400}
@@ -258,10 +460,9 @@ export default function HomePage() {
               <h2 className="text-3xl font-bold text-[#1d588a]">
                 Building Global Communities
               </h2>
-              {/* Mobile Image - positioned between title and paragraph */}
               <div className="lg:hidden flex justify-center">
                 <Image
-                  src="/placeholder.svg?height=150&width=250"
+                  src="/images/home/building-communities.jpg?height=150&width=250"
                   alt="Global community collaboration"
                   width={250}
                   height={150}
@@ -280,16 +481,17 @@ export default function HomePage() {
                 connections and resources you need to succeed in your
                 educational journey.
               </p>
-              <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">
-                Join Our Community
-              </Button>
+              <Link href="https://discord.gg/AgyFnhHved">
+                <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">
+                  Join Our Discord
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Our Impact Section */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-16" data-aos="zoom-in">
         <h2 className="text-4xl font-bold text-center text-[#1d588a] mb-12">
           Our Impact
         </h2>
@@ -309,7 +511,7 @@ export default function HomePage() {
           </Card>
           <Card className="text-center p-8 border-gray-200">
             <CardContent className="space-y-4">
-              <LucideLink className="h-12 w-12 text-[#1f639e] mx-auto" />
+              <Link2 className="h-12 w-12 text-[#1f639e] mx-auto" />
               <div className="text-3xl font-bold text-[#1d588a]">250+</div>
               <div className="text-blue-600 font-medium">hours of content</div>
               <p className="text-gray-600 text-sm">
@@ -334,8 +536,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Our Exclusive Partners Section - Carousel */}
-      <section className="bg-gray-50">
+      <section data-aos="zoom-in">
         <div className="container mx-auto px-4 py-16">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-[#1d588a] italic mb-8">
@@ -345,91 +546,6 @@ export default function HomePage() {
           <PartnersCarousel />
         </div>
       </section>
-    </div>
-  );
-}
-
-// Hexagon Card Component with Flip Animation
-function HexagonCard({
-  icon,
-  title,
-  frontText,
-  backText,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  frontText: string;
-  backText: string;
-}) {
-  return (
-    <div className="hexagon-container group cursor-pointer">
-      <div className="hexagon-card">
-        {/* Front Side */}
-        <div className="hexagon-face hexagon-front">
-          <div className="hexagon-content">
-            <div className="text-[#F0F8FF] text-center space-y-2">
-              {icon}
-              <div className="font-bold text-lg">{frontText}</div>
-            </div>
-          </div>
-        </div>
-        {/* Back Side */}
-        <div className="hexagon-face hexagon-back">
-          <div className="hexagon-content">
-            <div className="text-[#F0F8FF] text-center space-y-2">
-              <div className="font-bold text-sm">{title}</div>
-              <div className="text-xs leading-tight">{backText}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <style jsx>{`
-        .hexagon-container {
-          perspective: 1000px;
-          width: 140px;
-          height: 140px;
-        }
-
-        .hexagon-card {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          transform-style: preserve-3d;
-          transition: transform 0.6s;
-        }
-
-        .group:hover .hexagon-card {
-          transform: rotateY(180deg);
-        }
-
-        .hexagon-face {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          backface-visibility: hidden;
-          clip-path: polygon(
-            50% 0%,
-            100% 25%,
-            100% 75%,
-            50% 100%,
-            0% 75%,
-            0% 25%
-          );
-          background: #1d588a;
-        }
-        .hexagon-back {
-          transform: rotateY(180deg);
-          background: #1d588a;
-        }
-
-        .hexagon-content {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          padding: 16px;
-        }
-      `}</style>
     </div>
   );
 }

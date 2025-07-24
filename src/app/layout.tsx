@@ -29,7 +29,7 @@ export default function RootLayout({
         {/* Favicon Declaration */}
         <link rel="icon" type="image/svg+xml" href="/favicon.png" />
       </head>
-      <body className="antialiased">
+      <body className="antialiased bg-[#F0F8FF]">
         <Header />
         <main className="min-h-screen bg-white">{children}</main>
         <Footer />

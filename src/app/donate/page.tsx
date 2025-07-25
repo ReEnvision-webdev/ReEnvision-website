@@ -110,7 +110,7 @@ export default function DonatePage() {
               {/* Right Section - Donation Form */}
               <div className="p-6 sm:p-8 lg:p-12 bg-white">
                 <div data-aos="fade-left" data-aos-delay="400">
-                  <h2 className="text-3xl font-bold text-[#1d588a] mb-4 md:text-center md:mt-8 md:mb-6 sm:mb-6">Select An Amount</h2>
+                  <h2 className="text-3xl font-bold text-[#1d588a] mb-4 md:text-center">Select An Amount</h2>
 
                   {/* Amount Selection Buttons */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-3 mb-4 sm:mb-6">

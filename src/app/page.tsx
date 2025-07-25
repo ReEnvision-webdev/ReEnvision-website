@@ -154,7 +154,14 @@ function PartnersCarousel() {
 }
 
 // Hexagon Card Component with Sequential Flip Animation
-function HexagonCard({ index, icon, frontText, backText }) {
+interface HexagonCardProps {
+  index: number;
+  icon: React.ReactNode;
+  frontText: string;
+  backText: string;
+}
+
+function HexagonCard({ index, icon, frontText, backText }: HexagonCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   useEffect(() => {

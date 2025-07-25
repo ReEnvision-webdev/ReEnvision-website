@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="en" className={`${ebGaramond.variable}`}>
       <body className="antialiased bg-[#F0F8FF]">
         <Header />
-        <main className="min-h-screen bg-white">{children}</main>
+        <main className="min-h-screen">{children}</main>
         <Footer />
       </body>
     </html>

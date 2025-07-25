@@ -24,7 +24,7 @@ export default function ContactPage() {
         <div className="flex-1 flex flex-col justify-center space-y-8 lg:mb-20">
           <div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 lg:text-left text-center text-[#1d588a]">Get in Touch</h1>
-            <p className="text-gray-600 text-lg md:text-xl lg:text-left text-center leading-relaxed">
+            <p className="text-gray-600 text-lg md:text-lg lg:text-left text-center leading-relaxed">
               We'd love to hear from you. Reach out to us through any of the following ways or fill out the form.
             </p>
           </div>

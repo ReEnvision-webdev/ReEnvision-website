@@ -1,18 +1,20 @@
+"use server";
 
-"use server"
+import Stripe from "stripe";
 
-import Stripe from "stripe"
-
-export async function createCheckoutSession(amount: number, customerName: string) {
-  const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+export async function createCheckoutSession(
+  amount: number,
+  customerName: string,
+) {
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
   if (!stripeSecretKey) {
-    throw new Error("STRIPE_SECRET_KEY is not set in environment variables")
+    throw new Error("STRIPE_SECRET_KEY is not set in environment variables");
   }
 
   const stripe = new Stripe(stripeSecretKey, {
     apiVersion: "2025-06-30.basil",
-  })
+  });
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -23,7 +25,8 @@ export async function createCheckoutSession(amount: number, customerName: string
             currency: "usd",
             product_data: {
               name: "Donation to ReEnvision",
-              description: "Help us keep education free and accessible for everyone",
+              description:
+                "Help us keep education free and accessible for everyone",
             },
             unit_amount: Math.round(amount * 100), // Convert to cents
           },
@@ -37,12 +40,11 @@ export async function createCheckoutSession(amount: number, customerName: string
       metadata: {
         donor_name: customerName,
       },
-    })
+    });
 
-    return { sessionId: session.id, url: session.url }
+    return { sessionId: session.id, url: session.url };
   } catch (error) {
-    console.error("Error creating checkout session:", error)
-    throw new Error("Failed to create checkout session")
+    console.error("Error creating checkout session:", error);
+    throw new Error("Failed to create checkout session");
   }
 }
-

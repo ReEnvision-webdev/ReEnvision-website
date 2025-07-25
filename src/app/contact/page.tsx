@@ -40,9 +40,9 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-[#F0F8FF] flex items-center justify-center pt-30 pb-18 px-4">
-      <div className="w-full max-w-6xl bg-white rounded-2xl shadow-xl p-8 md:p-16 flex flex-col lg:flex-row gap-12 items-stretch justify-center min-h-[80vh]">
+      <div className="w-full max-w-6xl bg-white rounded-2xl shadow-xl py-8 md:py-2 flex flex-col lg:flex-row gap-12 items-stretch justify-center min-h-[80vh]">
         {/* Left Column - Contact Information */}
-        <div className="flex-1 flex flex-col justify-center space-y-8 lg:mb-20">
+        <div className="flex-1 flex flex-col justify-center space-y-4 ml-12 lg:my-10">
           <div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 lg:text-left text-center text-[#1d588a]">Get in Touch</h1>
             <p className="text-gray-600 text-lg md:text-lg lg:text-left text-center leading-relaxed">
@@ -117,7 +117,7 @@ export default function ContactPage() {
         </div>      
 
         {/* Right Column - Contact Form */}
-        <div className="flex-1 flex flex-col justify-center">
+        <div className="flex-1 flex flex-col justify-center mx-4">
           {!submitted ? (
             <div className="rounded-xl p-8">
               <h2 className="text-3xl font-bold text-[#1d588a] mb-6 lg:text-left text-center">Send us a Message</h2>

@@ -90,15 +90,15 @@ export default function DonatePage() {
     <>
       <div className="bg-[#F0F8FF] pt-30 pb-18 px-4 min-h-screen flex items-center justify-center">
         <div className="w-full max-w-6xl mx-auto">
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-up">
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden" data-aos="fade-up">
             <div className="grid lg:grid-cols-2 gap-0">
               {/* Left Section - Mission Statement */}
               <div className="p-6 sm:p-8 lg:p-12 flex flex-col justify-center bg-gray-50 lg:bg-white">
                 <div data-aos="fade-right" data-aos-delay="200">
-                  <h1 className="text-4xl md:text-5xl font-bold text-[#1d588a] mb-4 leading-tight">
+                  <h1 className="text-4xl md:text-5xl md:text-center font-bold text-[#1d588a] mb-4 leading-tight">
                     Power our mission to educate
                   </h1>
-                  <p className="text-gray-600 text-lg md:text-lg leading-relaxed">
+                  <p className="text-gray-600 text-lg md:text-lg md:text-center leading-relaxed">
                     Help us keep education free and accessible for everyone, everywhere. Your support allows us to
                     create more content, improve our platform&apos;s functionality, and reach learners worldwide who
                     can&apos;t afford traditional education. Every donation, no matter the size, helps us build a better
@@ -110,7 +110,7 @@ export default function DonatePage() {
               {/* Right Section - Donation Form */}
               <div className="p-6 sm:p-8 lg:p-12 bg-white">
                 <div data-aos="fade-left" data-aos-delay="400">
-                  <h2 className="text-3xl font-bold text-[#1d588a] mb-4 sm:mb-6">Select An Amount</h2>
+                  <h2 className="text-3xl font-bold text-[#1d588a] mb-4 md:text-center md:mt-8 md:mb-6 sm:mb-6">Select An Amount</h2>
 
                   {/* Amount Selection Buttons */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-3 mb-4 sm:mb-6">

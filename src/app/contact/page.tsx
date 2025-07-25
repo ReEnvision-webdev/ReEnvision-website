@@ -116,12 +116,12 @@ export default function ContactPage() {
               </div>
             </div>*/}
           </div>
-        </div>
+        </div>      
 
         {/* Right Column - Contact Form */}
         <div className="flex-1 flex flex-col justify-center">
           {!submitted ? (
-            <div className="bg-gray-50 rounded-xl p-8">
+            <div className="rounded-xl p-8">
               <h2 className="text-3xl font-bold text-[#1d588a] mb-6 lg:text-left text-center">Send us a Message</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
@@ -136,7 +136,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent bg-white"
-                    placeholder="Your Name"
+                    placeholder="Enter your name here..."
                   />
                 </div>
 
@@ -152,7 +152,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent bg-white"
-                    placeholder="you@email.com"
+                    placeholder="Enter your email here..."
                   />
                 </div>
 

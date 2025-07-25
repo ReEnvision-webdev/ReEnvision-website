@@ -88,7 +88,7 @@ export default function DonatePage() {
 
   return (
     <>
-      <div className="bg-[#F0F8FF] pt-20 py-4 px-4 min-h-screen flex items-center justify-center">
+      <div className="bg-[#F0F8FF] pt-30 pb-18 px-4 min-h-screen flex items-center justify-center">
         <div className="w-full max-w-6xl mx-auto">
           <div className="bg-white rounded-lg shadow-lg overflow-hidden" data-aos="fade-up">
             <div className="grid lg:grid-cols-2 gap-0">
@@ -106,9 +106,9 @@ export default function DonatePage() {
                   </p>
                 </div>
               </div>
-
+                
               {/* Right Section - Donation Form */}
-              <div className="p-6 sm:p-8 lg:p-12 bg-white border-l border-gray-100">
+              <div className="p-6 sm:p-8 lg:p-12 bg-white">
                 <div data-aos="fade-left" data-aos-delay="400">
                   <h2 className="text-xl lg:text-2xl font-semibold text-gray-800 mb-4 sm:mb-6">Select An Amount</h2>
 

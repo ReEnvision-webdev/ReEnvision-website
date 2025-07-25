@@ -21,16 +21,16 @@ export default function ContactPage() {
     <div className="min-h-screen bg-[#F0F8FF] flex items-center justify-center pt-30 pb-18 px-4">
       <div className="w-full max-w-6xl bg-white rounded-2xl shadow-xl p-8 md:p-16 flex flex-col lg:flex-row gap-12 items-stretch justify-center min-h-[80vh]">
         {/* Left Column - Contact Information */}
-        <div className="flex-1 flex flex-col justify-center space-y-8">
+        <div className="flex-1 flex flex-col justify-center space-y-8 lg:mb-20">
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-[#1d588a]">Get in Touch</h1>
-            <p className="text-gray-600 text-lg md:text-xl leading-relaxed">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 lg:text-left text-center text-[#1d588a]">Get in Touch</h1>
+            <p className="text-gray-600 text-lg md:text-xl lg:text-left text-center leading-relaxed">
               We'd love to hear from you. Reach out to us through any of the following ways or fill out the form.
             </p>
           </div>
 
-          <div className="space-y-6">
-            <div className="flex items-start space-x-4">
+          <div className="space-y-6 my-6">
+            <div className="flex items-start space-x-4 justify-center lg:justify-start">
               <div className="w-12 h-12 bg-[#1d588a] rounded-full flex items-center justify-center flex-shrink-0">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -47,7 +47,7 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div className="flex items-start space-x-4">
+            <div className="flex items-start space-x-4 justify-center lg:justify-start">
               <div className="w-12 h-12 bg-[#1d588a] rounded-full flex items-center justify-center flex-shrink-0">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -64,7 +64,7 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div className="flex items-start space-x-4">
+            <div className="flex items-start space-x-4 justify-center lg:justify-start">
               <div className="w-12 h-12 bg-[#1d588a] rounded-full flex items-center justify-center flex-shrink-0">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -93,7 +93,7 @@ export default function ContactPage() {
               </div>
             </div>
 
-            <div className="flex items-start space-x-4">
+            {/*<div className="flex items-start space-x-4 justify-center lg:justify-start">
               <div className="w-12 h-12 bg-[#1d588a] rounded-full flex items-center justify-center flex-shrink-0">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -114,7 +114,7 @@ export default function ContactPage() {
                   Sunday: Closed
                 </p>
               </div>
-            </div>
+            </div>*/}
           </div>
         </div>
 
@@ -122,7 +122,7 @@ export default function ContactPage() {
         <div className="flex-1 flex flex-col justify-center">
           {!submitted ? (
             <div className="bg-gray-50 rounded-xl p-8">
-              <h2 className="text-2xl font-bold text-[#1d588a] mb-6 text-center">Send us a Message</h2>
+              <h2 className="text-3xl font-bold text-[#1d588a] mb-6 lg:text-left text-center">Send us a Message</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">

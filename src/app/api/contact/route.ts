@@ -15,7 +15,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Input validation and length checks
-    if (name.length > 100 || email.length > 254 || message.length > 2000) {
+    if (
+      typeof name !== "string" &&
+      typeof email !== "string" &&
+      typeof message !== "string" &&
+      (name.length > 100 || email.length > 254 || message.length > 2000)
+    ) {
       return new Response(JSON.stringify({ message: "Input too long" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },

@@ -1,11 +1,16 @@
 // src/middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { kv } from "@vercel/kv";
 import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+const redis = new Redis({
+  url: process.env.REDIS_URL,
+  token: process.env.REDIS_TOKEN,
+});
 
 const ratelimit = new Ratelimit({
-  redis: kv,
+  redis: redis,
   limiter: Ratelimit.slidingWindow(100, "3 m"),
   analytics: true,
 });

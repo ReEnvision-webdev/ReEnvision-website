@@ -68,6 +68,7 @@ export async function POST(request: NextRequest) {
         <p><strong>Message:</strong></p>
         <p>${sanitize(message).replace(/\n/g, "<br>")}</p>
       `,
+      replyTo: sanitize(email),
     });
 
     return new Response(

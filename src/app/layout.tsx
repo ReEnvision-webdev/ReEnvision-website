@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "ReEnvision",
   description:
     "ReEnvision is a student-run nonprofit organization dedicated to bridging the digital divide by making technology accessible to underserved communities.",
+  icons: {
+    icon: "/favicon.png", // This tells Next.js to use your PNG favicon
+  },
 };
 
 export default function RootLayout({
@@ -25,10 +28,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${ebGaramond.variable}`}>
-      <head>
-        {/* Favicon Declaration */}
-        <link rel="icon" type="image/svg+xml" href="/favicon.png" />
-      </head>
       <body className="antialiased bg-[#F0F8FF]">
         <Header />
         <main className="min-h-screen">{children}</main>

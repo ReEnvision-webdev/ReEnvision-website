@@ -35,9 +35,10 @@ export async function middleware(request: NextRequest) {
   }
 
   if (pathname.startsWith("/api")) {
+    // Fixed: Removed non-existent request.ip property
     const ip =
-      request.ip ??
-      request.headers.get("X-Forwarded-For")?.split(",")[0]?.trim() ??
+      request.headers.get("x-real-ip") ??
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
       "unknown";
 
     const { success, limit, remaining, reset } = await ratelimit.limit(ip);

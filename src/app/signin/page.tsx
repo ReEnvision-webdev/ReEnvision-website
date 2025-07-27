@@ -15,7 +15,7 @@ export default function SignupPage() {
         {/* Content */}
         <div className="relative z-10">
           <h1 className="text-5xl font-bold text-[#1d588a] mb-2 mt-8">Welcome Back!</h1>
-          <p className="text-gray-600 mb-8">Continue expanding your skills and knwoledge.</p>
+          <p className="text-gray-600 mb-8">Continue expanding your skills and.</p>
           
           <form className="space-y-6">
             <div>
@@ -43,16 +43,17 @@ export default function SignupPage() {
             </div>
             
             <Button className="w-full bg-[#1d588a] hover:bg-[#164a73] text-white rounded-lg font-semibold text-lg py-6 mt-4">
-              Sign Up
+              Log In
             </Button>
           </form>
           
-          <p className="text-center text-gray-600 mt-4">
-            Have an account?{" "}
+          {/*<p className="text-center text-gray-600 mt-4">
+            Need help?{" "}
             <Link href="/signi" className="text-blue-500 hover:text-blue-600">
-              Log In Here
+              Check
             </Link>
-          </p>
+          </p> */}
+
         </div>
       </div>
     </div>

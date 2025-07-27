@@ -47,12 +47,12 @@ export default function SignupPage() {
             </Button>
           </form>
           
-          {/*<p className="text-center text-gray-600 mt-4">
+          <p className="text-center text-gray-600 mt-4">
             Need help?{" "}
-            <Link href="/signi" className="text-blue-500 hover:text-blue-600">
-              Check
+            <Link href="/contact" className="text-blue-500 hover:text-blue-600">
+              Contact Us
             </Link>
-          </p> */}
+          </p>
 
         </div>
       </div>

@@ -136,7 +136,7 @@ html {
 }
 
 .about-hero-img {
-  background-image: url('/images/about/about.png');
+  background-image: url("/images/about/about.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -145,7 +145,7 @@ html {
 
 .about-hero-img::after {
   background-color: rgba(0, 0, 0, 0.65);
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;

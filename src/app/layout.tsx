@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description:
     "ReEnvision is a student-run nonprofit organization dedicated to bridging the digital divide by making technology accessible to underserved communities.",
   icons: {
-    icon: '/favicon.png', // This tells Next.js to use your PNG favicon
+    icon: "/favicon.png", // This tells Next.js to use your PNG favicon
   },
 };
 

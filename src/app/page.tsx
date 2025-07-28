@@ -43,6 +43,11 @@ function PartnersCarousel() {
         name: "Pearedco",
         image: "/images/home/pearedco.png?height=80&width=120",
       },
+      {
+        id: 5,
+        name: "PromotePort",
+        image: "/images/home/pport.png?height=80&width=120",
+      },
     ],
     [],
   );

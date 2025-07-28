@@ -102,7 +102,7 @@ export default function DonatePage() {
                     Power our mission to educate
                   </h1>
                   <p className="text-gray-600 text-lg md:text-lg text-center lg:text-left leading-relaxed">
-                    Help us make tech education free and accessible for everyone, everywhere. Your support enables us to create more cutting-edge content, enhance our platform's functionality, and reach learners worldwide who lack access to quality technology resources. Every donation, no matter the size, helps us build a future where tech literacy is universal and learning opportunities are available to all, regardless of their circumstances.                  </p>
+                    Help us make tech education free and accessible for everyone, everywhere. Your support enables us to create more cutting-edge content, enhance our platform&apos;s functionality, and reach learners worldwide who lack access to quality technology resources. Every donation, no matter the size, helps us build a future where tech literacy is universal and learning opportunities are available to all, regardless of their circumstances.                  </p>
                 </div>
               </div>
 

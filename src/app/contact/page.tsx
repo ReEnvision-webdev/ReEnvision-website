@@ -1,12 +1,23 @@
 "use client";
-
 import type React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      easing: "ease-out-cubic",
+      once: true,
+      offset: 50,
+      delay: 0,
+    });
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -17,7 +28,6 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
@@ -26,11 +36,9 @@ export default function ContactPage() {
         },
         body: JSON.stringify(form),
       });
-
       if (!response.ok) {
         throw new Error("Failed to send message");
       }
-
       setSubmitted(true);
     } catch (error) {
       console.error("Error:", error);
@@ -44,7 +52,7 @@ export default function ContactPage() {
     <div className="min-h-screen bg-[#F0F8FF] flex items-center justify-center pt-30 pb-18 px-4">
       <div className="w-full max-w-6xl bg-white rounded-2xl shadow-xl py-8 md:py-2 flex flex-col lg:flex-row gap-12 items-stretch justify-center min-h-[80vh]">
         {/* Left Column - Contact Information */}
-        <div className="flex-1 flex flex-col justify-center space-y-4 ml-12 lg:my-10">
+        <div className="flex-1 flex flex-col justify-center space-y-4 ml-12 lg:my-10" data-aos="fade-right">
           <div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 lg:text-left text-center text-[#1d588a]">
               Get in Touch
@@ -54,7 +62,6 @@ export default function ContactPage() {
               the following ways or fill out the form.
             </p>
           </div>
-
           <div className="space-y-6 my-6">
             <div className="flex items-start space-x-4 justify-center lg:justify-start">
               <div className="w-12 h-12 bg-[#1d588a] rounded-full flex items-center justify-center flex-shrink-0">
@@ -79,7 +86,6 @@ export default function ContactPage() {
                 <p className="text-gray-600">+1 (281) 505-0184</p>
               </div>
             </div>
-
             <div className="flex items-start space-x-4 justify-center lg:justify-start">
               <div className="w-12 h-12 bg-[#1d588a] rounded-full flex items-center justify-center flex-shrink-0">
                 <svg
@@ -105,16 +111,15 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
-
         {/* Right Column - Contact Form */}
-        <div className="flex-1 flex flex-col justify-center mx-4">
+        <div className="flex-1 flex flex-col justify-center mx-4" data-aos="fade-left">
           {!submitted ? (
             <div className="rounded-xl p-8">
               <h2 className="text-3xl font-bold text-[#1d588a] mb-6 lg:text-left text-center">
                 Send us a Message
               </h2>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
+                <div data-aos="fade-up" data-aos-delay="100">
                   <label
                     htmlFor="name"
                     className="block text-sm font-medium text-gray-700 mb-2"
@@ -132,8 +137,7 @@ export default function ContactPage() {
                     placeholder="Enter your name here..."
                   />
                 </div>
-
-                <div>
+                <div data-aos="fade-up" data-aos-delay="200">
                   <label
                     htmlFor="email"
                     className="block text-sm font-medium text-gray-700 mb-2"
@@ -151,8 +155,7 @@ export default function ContactPage() {
                     placeholder="Enter your email here..."
                   />
                 </div>
-
-                <div>
+                <div data-aos="fade-up" data-aos-delay="300">
                   <label
                     htmlFor="message"
                     className="block text-sm font-medium text-gray-700 mb-2"
@@ -170,11 +173,12 @@ export default function ContactPage() {
                     placeholder="Type your message here..."
                   />
                 </div>
-
                 <button
                   type="submit"
                   disabled={loading}
                   className="w-full bg-[#1d588a] text-white py-4 rounded-lg font-semibold text-lg hover:bg-[#164a73] transition-all duration-200 shadow-md hover:shadow-lg flex items-center justify-center disabled:opacity-70"
+                  data-aos="fade-up"
+                  data-aos-delay="400"
                 >
                   {loading ? (
                     <>
@@ -207,7 +211,7 @@ export default function ContactPage() {
               </form>
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full min-h-[300px] bg-gray-50 rounded-xl p-8">
+            <div className="flex flex-col items-center justify-center h-full min-h-[300px] bg-gray-50 rounded-xl p-8" data-aos="fade-up">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
                 <svg
                   className="w-8 h-8 text-green-600"

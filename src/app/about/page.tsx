@@ -241,7 +241,7 @@ export default function AboutPage() {
                     className="rounded-full border border-gray-300 flex-shrink-0"
                   />
                   <Image
-                    src="/favicon.png"
+                    src="/images/about/maegann.png"
                     width={96}
                     height={96}
                     alt="Maegann Yniguez"

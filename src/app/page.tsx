@@ -297,7 +297,7 @@ export default function HomePage() {
                 data-aos-duration="1200"
                 data-aos-delay="500"
               >
-                Tech Learning Opportunities 
+                Oppurtunites In Technology 
               </span>
             </h1>
             <p

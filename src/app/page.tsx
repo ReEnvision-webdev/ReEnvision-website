@@ -284,7 +284,7 @@ export default function HomePage() {
                 data-aos-duration="1200"
                 data-aos-delay="300"
               >
-                UNLIMITED
+                ENDLESS
               </span>
               <br />
               <span
@@ -292,7 +292,7 @@ export default function HomePage() {
                 data-aos-duration="1200"
                 data-aos-delay="500"
               >
-                Educational Resources
+                Tech Education Resources
               </span>
             </h1>
             <p
@@ -522,7 +522,7 @@ export default function HomePage() {
               <div className="text-3xl font-bold text-[#1d588a]">250+</div>
               <div className="text-blue-600 font-medium">hours of content</div>
               <p className="text-gray-600 text-sm">
-                We&apos;ve contributed over 100 hours of service to make an
+                We&apos;ve contributed over 250 hours of service to make an
                 impact.
               </p>
             </CardContent>

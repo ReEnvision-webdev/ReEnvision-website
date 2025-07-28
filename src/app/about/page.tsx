@@ -135,7 +135,7 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full max-w-xs shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/favicon.png"
+                  src="/images/about/sharvin.png"
                   width={150}
                   height={150}
                   alt="Sharvin Goyal"
@@ -162,7 +162,7 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full max-w-xs shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/favicon.png"
+                  src="/images/about/robert.png"
                   width={120}
                   height={120}
                   alt="Robert Pierson"

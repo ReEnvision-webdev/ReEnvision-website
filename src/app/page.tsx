@@ -493,7 +493,7 @@ export default function HomePage() {
                 connections and resources you need to succeed in your
                 educational journey.
               </p>
-              <Link href="https://discord.gg/AgyFnhHved">
+              <Link href="https://discord.gg/XWVJadkn">
                 <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">
                   Join Our Discord
                 </Button>

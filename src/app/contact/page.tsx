@@ -76,7 +76,7 @@ export default function ContactPage() {
                 <h3 className="text-lg font-semibold text-gray-800 mb-1">
                   Phone
                 </h3>
-                <p className="text-gray-600">+1 (555) 123-4567</p>
+                <p className="text-gray-600">+1 (281) 505-0184</p>
               </div>
             </div>
 
@@ -100,43 +100,7 @@ export default function ContactPage() {
                 <h3 className="text-lg font-semibold text-gray-800 mb-1">
                   Email
                 </h3>
-                <p className="text-gray-600">hello@company.com</p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-4 justify-center lg:justify-start">
-              <div className="w-12 h-12 bg-[#1d588a] rounded-full flex items-center justify-center flex-shrink-0">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-1">
-                  Address
-                </h3>
-                <p className="text-gray-600">
-                  123 Business Street
-                  <br />
-                  Suite 100
-                  <br />
-                  City, State 12345
-                </p>
+                <p className="text-gray-600">contact@re-envision.org</p>
               </div>
             </div>
           </div>

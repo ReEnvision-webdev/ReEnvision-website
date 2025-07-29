@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "cross-env NODE_ENV=development next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "prettier . --write && next lint"
@@ -13,6 +13,8 @@
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@stripe/stripe-js": "^7.4.0",
+    "@upstash/ratelimit": "^2.0.6",
+    "@upstash/redis": "^1.35.1",
     "aos": "^2.3.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -32,6 +34,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
     "prettier": "^3.6.2",

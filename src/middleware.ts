@@ -1,53 +1,77 @@
 // src/middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 
-// Simple rate limiting store (use Redis in production)
-const requestCounts = new Map<string, { count: number; resetTime: number }>();
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL,
+  token: process.env.KV_REST_API_TOKEN,
+});
+
+const ratelimit = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(100, "3 m"),
+  analytics: true,
+});
+
+const ALLOWED_ORIGIN =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000"
+    : "https://re-envision.org";
 
 export async function middleware(request: NextRequest) {
-  // Rate limiting for API routes
-  if (
-    request.method === "POST" &&
-    request.nextUrl.pathname.startsWith("/api/contact")
-  ) {
-    const ip = request.ip ?? "127.0.0.1";
-    const now = Date.now();
-    const windowMs = 15 * 60 * 1000; // 15 minutes
-    const maxRequests = 5;
+  const { pathname } = request.nextUrl;
 
-    let requestData = requestCounts.get(ip);
+  if (request.method === "OPTIONS" && pathname.startsWith("/api")) {
+    return new NextResponse(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
+  }
 
-    if (!requestData || requestData.resetTime < now) {
-      requestData = { count: 0, resetTime: now + windowMs };
-    }
+  if (pathname.startsWith("/api")) {
+    // Fixed: Removed non-existent request.ip property
+    const ip =
+      request.headers.get("x-real-ip") ??
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+      "unknown";
 
-    requestData.count += 1;
-    requestCounts.set(ip, requestData);
+    const { success, limit, remaining, reset } = await ratelimit.limit(ip);
 
-    if (requestData.count > maxRequests) {
+    if (!success) {
       return new NextResponse(
         JSON.stringify({
-          message: "Too many requests, please try again later",
+          message: "Too many requests, please try again later.",
         }),
         {
           status: 429,
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Retry-After": reset
+              ? Math.ceil((reset - Date.now()) / 1000).toString()
+              : "60",
           },
         },
       );
     }
-  }
 
-  // CORS for API routes
-  if (request.nextUrl.pathname.startsWith("/api")) {
     const response = NextResponse.next();
 
-    response.headers.set("Access-Control-Allow-Origin", "*");
-    response.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+    response.headers.set("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
+    response.headers.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
     response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+
+    response.headers.set("X-RateLimit-Limit", limit.toString());
+    response.headers.set("X-RateLimit-Remaining", remaining.toString());
+    response.headers.set("X-RateLimit-Reset", reset.toString());
 
     return response;
   }

@@ -84,13 +84,13 @@ function MobileMenu() {
                 Sign In
               </Button>
             </Link>
-            <Link href="/signin">
+            <Link href="/signup">
               <Button
                 variant="outline"
                 size="sm"
                 className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2"
               >
-                Sign In
+                Sign Up
               </Button>
             </Link>
           </div>

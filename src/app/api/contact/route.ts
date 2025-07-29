@@ -15,7 +15,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Input validation and length checks
-    if (name.length > 100 || email.length > 254 || message.length > 2000) {
+    if (
+      typeof name !== "string" &&
+      typeof email !== "string" &&
+      typeof message !== "string" &&
+      (name.length > 100 || email.length > 254 || message.length > 2000)
+    ) {
       return new Response(JSON.stringify({ message: "Input too long" }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
@@ -63,6 +68,7 @@ export async function POST(request: NextRequest) {
         <p><strong>Message:</strong></p>
         <p>${sanitize(message).replace(/\n/g, "<br>")}</p>
       `,
+      replyTo: sanitize(email),
     });
 
     return new Response(
@@ -76,15 +82,4 @@ export async function POST(request: NextRequest) {
       headers: { "Content-Type": "application/json" },
     });
   }
-}
-
-// Add CORS headers
-export async function OPTIONS() {
-  return new Response(null, {
-    headers: {
-      "Access-Control-Allow-Origin": process.env.ALLOWED_ORIGIN || "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    },
-  });
 }

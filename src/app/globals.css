@@ -134,3 +134,22 @@
 html {
   scroll-behavior: smooth;
 }
+
+.about-hero-img {
+  background-image: url("/images/about/about.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+}
+
+.about-hero-img::after {
+  background-color: rgba(0, 0, 0, 0.65);
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}

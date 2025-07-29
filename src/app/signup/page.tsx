@@ -24,16 +24,17 @@ export default function SignupPage() {
           <form className="space-y-6">
             <div>
               <Label
-                htmlFor="name"
+                htmlFor="fullname"
                 className="text-sm font-medium text-gray-700 mb-2 block"
               >
-                Name
+                Full name
               </Label>
               <input
-                id="name"
+                id="fullname"
                 type="text"
-                placeholder="Enter your name here..."
+                placeholder="John Doe"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                required
               />
             </div>
 
@@ -47,8 +48,9 @@ export default function SignupPage() {
               <input
                 id="email"
                 type="email"
-                placeholder="Enter your email here..."
+                placeholder="john.doe@example.com"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                required
               />
             </div>
 
@@ -62,12 +64,29 @@ export default function SignupPage() {
               <input
                 id="password"
                 type="password"
-                placeholder="Enter your password here..."
+                placeholder="Password123"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                required
               />
             </div>
 
-            <Button className="w-full bg-[#1d588a] hover:bg-[#164a73] text-white rounded-lg font-semibold text-lg py-6 mt-4">
+            <div>
+              <Label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700 mb-2 block"
+              >
+                Confirm password
+              </Label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Password123"
+                className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                required
+              />
+            </div>
+
+            <Button className="w-full bg-[#1d588a] hover:bg-[#164a73] text-white rounded-lg font-semibold text-lg py-6 mt-4" type="submit">
               Sign Up
             </Button>
           </form>

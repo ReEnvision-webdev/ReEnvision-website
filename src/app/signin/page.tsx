@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 
-export default function SignupPage() {
+export default function SigninPage() {
   return (
     <div className="min-h-screen flex items-center justify-center pt-30 pb-18 px-4">
       <div className="bg-white rounded-lg shadow-lg px-8 pt-8 pb-10 w-full max-w-md relative overflow-hidden">
@@ -15,7 +15,7 @@ export default function SignupPage() {
         {/* Content */}
         <div className="relative z-10">
           <h1 className="text-5xl font-bold text-[#1d588a] mb-2 mt-8">Welcome Back!</h1>
-          <p className="text-gray-600 mb-8">Continue expanding your skills and.</p>
+          <p className="text-gray-600 mb-8">Continue expanding your skills and knowledge.</p>
           
           <form className="space-y-6">
             <div>

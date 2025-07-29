@@ -1,6 +1,6 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 export default function SignupPage() {
   return (
@@ -14,12 +14,19 @@ export default function SignupPage() {
 
         {/* Content */}
         <div className="relative z-10">
-          <h1 className="text-5xl font-bold text-[#1d588a] mb-2 mt-4">Welcome!</h1>
-          <p className="text-gray-600 mb-8">Start your journey to free, unlimited learning.</p>
-          
+          <h1 className="text-5xl font-bold text-[#1d588a] mb-2 mt-4">
+            Welcome!
+          </h1>
+          <p className="text-gray-600 mb-8">
+            Start your journey to free, unlimited learning.
+          </p>
+
           <form className="space-y-6">
             <div>
-              <Label htmlFor="name" className="text-sm font-medium text-gray-700 mb-2 block">
+              <Label
+                htmlFor="name"
+                className="text-sm font-medium text-gray-700 mb-2 block"
+              >
                 Name
               </Label>
               <input
@@ -29,9 +36,12 @@ export default function SignupPage() {
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
               />
             </div>
-            
+
             <div>
-              <Label htmlFor="email" className="text-sm font-medium text-gray-700 mb-2 block">
+              <Label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-700 mb-2 block"
+              >
                 Email
               </Label>
               <input
@@ -41,9 +51,12 @@ export default function SignupPage() {
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
               />
             </div>
-            
+
             <div>
-              <Label htmlFor="password" className="text-sm font-medium text-gray-700 mb-2 block">
+              <Label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700 mb-2 block"
+              >
                 Password
               </Label>
               <input
@@ -53,20 +66,27 @@ export default function SignupPage() {
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
               />
             </div>
-            
+
             <Button className="w-full bg-[#1d588a] hover:bg-[#164a73] text-white rounded-lg font-semibold text-lg py-6 mt-4">
               Sign Up
             </Button>
           </form>
-          
+
           <p className="text-center text-gray-600 mt-4">
             Have an account?{" "}
             <Link href="/signin" className="text-blue-500 hover:text-blue-600">
               Log In Here
             </Link>
           </p>
+
+          <p className="text-center text-gray-600 mt-2">
+            Need help?{" "}
+            <Link href="/contact" className="text-blue-500 hover:text-blue-600">
+              Contact Us
+            </Link>
+          </p>
         </div>
       </div>
     </div>
-  )
+  );
 }

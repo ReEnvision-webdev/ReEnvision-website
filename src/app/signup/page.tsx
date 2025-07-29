@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
-export default function SigninPage() {
+export default function SignupPage() {
   return (
     <div className="min-h-screen flex items-center justify-center pt-30 pb-18 px-4">
       <div className="bg-white rounded-lg shadow-lg px-8 pt-8 pb-10 w-full max-w-md relative overflow-hidden">
@@ -14,11 +14,11 @@ export default function SigninPage() {
 
         {/* Content */}
         <div className="relative z-10">
-          <h1 className="text-5xl font-bold text-[#1d588a] mb-2 mt-8">
-            Welcome Back!
+          <h1 className="text-5xl font-bold text-[#1d588a] mb-2 mt-4">
+            Welcome!
           </h1>
           <p className="text-gray-600 mb-8">
-            Continue expanding your skills and knowledge.
+            Start your journey to free, unlimited learning.
           </p>
 
           <form className="space-y-6">
@@ -39,6 +39,21 @@ export default function SigninPage() {
 
             <div>
               <Label
+                htmlFor="email"
+                className="text-sm font-medium text-gray-700 mb-2 block"
+              >
+                Email
+              </Label>
+              <input
+                id="email"
+                type="email"
+                placeholder="Enter your email here..."
+                className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+              />
+            </div>
+
+            <div>
+              <Label
                 htmlFor="password"
                 className="text-sm font-medium text-gray-700 mb-2 block"
               >
@@ -53,26 +68,23 @@ export default function SigninPage() {
             </div>
 
             <Button className="w-full bg-[#1d588a] hover:bg-[#164a73] text-white rounded-lg font-semibold text-lg py-6 mt-4">
-              Log In
+              Sign Up
             </Button>
           </form>
 
-          <div>
-            <p className="text-center text-gray-600 mt-4">
-              Don&apos;t have an account?{" "}
-              <Link
-                href="/signup"
-                className="text-blue-500 hover:text-blue-600"
-              >
-                Sign Up
-              </Link>
-            </p>
-            <p className="text-center text-gray-600 mt-2">
-              <Link href="/reset" className="text-blue-500 hover:text-blue-600">
-                Forgot password?
-              </Link>
-            </p>
-          </div>
+          <p className="text-center text-gray-600 mt-4">
+            Have an account?{" "}
+            <Link href="/signin" className="text-blue-500 hover:text-blue-600">
+              Log In Here
+            </Link>
+          </p>
+
+          <p className="text-center text-gray-600 mt-2">
+            Need help?{" "}
+            <Link href="/contact" className="text-blue-500 hover:text-blue-600">
+              Contact Us
+            </Link>
+          </p>
         </div>
       </div>
     </div>

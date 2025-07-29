@@ -119,7 +119,7 @@ export default function Header() {
           <NavLink href="/contact" label="Contact Us" />
         </nav>
 
-        <div className="flex items-center">
+        <div className="flex items-center space-x-2">
           <Link href="/signin">
             <Button
               variant="outline"
@@ -133,7 +133,6 @@ export default function Header() {
               Sign In
             </Button>
           </Link>
-          {/* Mobile Menu Button */}
           <MobileMenu />
         </div>
       </div>

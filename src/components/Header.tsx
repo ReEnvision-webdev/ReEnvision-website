@@ -84,15 +84,6 @@ function MobileMenu() {
                 Sign In
               </Button>
             </Link>
-            <Link href="/signup">
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2"
-              >
-                Sign Up
-              </Button>
-            </Link>
           </div>
         </div>
       )}
@@ -140,19 +131,6 @@ export default function Header() {
               }`}
             >
               Sign In
-            </Button>
-          </Link>
-          <Link href="/signup">
-            <Button
-              variant="outline"
-              size="sm"
-              className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block ${
-                pathname === "/signup"
-                  ? "bg-[#F0F8FF] text-[#1d588a]"
-                  : "text-[#F0F8FF]"
-              }`}
-            >
-              Sign Up
             </Button>
           </Link>
           <MobileMenu />

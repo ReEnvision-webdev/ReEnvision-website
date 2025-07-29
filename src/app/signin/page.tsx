@@ -1,6 +1,6 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 export default function SigninPage() {
   return (
@@ -14,12 +14,19 @@ export default function SigninPage() {
 
         {/* Content */}
         <div className="relative z-10">
-          <h1 className="text-5xl font-bold text-[#1d588a] mb-2 mt-8">Welcome Back!</h1>
-          <p className="text-gray-600 mb-8">Continue expanding your skills and knowledge.</p>
-          
+          <h1 className="text-5xl font-bold text-[#1d588a] mb-2 mt-8">
+            Welcome Back!
+          </h1>
+          <p className="text-gray-600 mb-8">
+            Continue expanding your skills and knowledge.
+          </p>
+
           <form className="space-y-6">
             <div>
-              <Label htmlFor="name" className="text-sm font-medium text-gray-700 mb-2 block">
+              <Label
+                htmlFor="name"
+                className="text-sm font-medium text-gray-700 mb-2 block"
+              >
                 Name
               </Label>
               <input
@@ -29,9 +36,12 @@ export default function SigninPage() {
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
               />
             </div>
-            
+
             <div>
-              <Label htmlFor="password" className="text-sm font-medium text-gray-700 mb-2 block">
+              <Label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700 mb-2 block"
+              >
                 Password
               </Label>
               <input
@@ -41,21 +51,30 @@ export default function SigninPage() {
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
               />
             </div>
-            
+
             <Button className="w-full bg-[#1d588a] hover:bg-[#164a73] text-white rounded-lg font-semibold text-lg py-6 mt-4">
               Log In
             </Button>
           </form>
-          
-          <p className="text-center text-gray-600 mt-4">
-            Need help?{" "}
-            <Link href="/contact" className="text-blue-500 hover:text-blue-600">
-              Contact Us
-            </Link>
-          </p>
 
+          <div>
+            <p className="text-center text-gray-600 mt-4">
+              Don&apos;t have an account?{" "}
+              <Link
+                href="/signup"
+                className="text-blue-500 hover:text-blue-600"
+              >
+                Sign Up
+              </Link>
+            </p>
+            <p className="text-center text-gray-600 mt-2">
+              <Link href="/reset" className="text-blue-500 hover:text-blue-600">
+                Forgot password?
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

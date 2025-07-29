@@ -65,6 +65,13 @@ export default function SignupPage() {
               Log In Here
             </Link>
           </p>
+
+          <p className="text-center text-gray-600 mt-2">
+            Need help?{" "}
+            <Link href="/contact" className="text-blue-500 hover:text-blue-600">
+              Contact Us
+            </Link>
+          </p>
         </div>
       </div>
     </div>

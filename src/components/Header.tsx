@@ -84,6 +84,15 @@ function MobileMenu() {
                 Sign In
               </Button>
             </Link>
+            <Link href="/signin">
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2"
+              >
+                Sign In
+              </Button>
+            </Link>
           </div>
         </div>
       )}

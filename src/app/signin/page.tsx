@@ -24,15 +24,15 @@ export default function SigninPage() {
           <form className="space-y-6">
             <div>
               <Label
-                htmlFor="name"
+                htmlFor="email"
                 className="text-sm font-medium text-gray-700 mb-2 block"
               >
-                Name
+                Email
               </Label>
               <input
-                id="name"
-                type="text"
-                placeholder="Enter your name here..."
+                id="email"
+                type="email"
+                placeholder="john.doe@example.com"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
               />
             </div>
@@ -47,7 +47,7 @@ export default function SigninPage() {
               <input
                 id="password"
                 type="password"
-                placeholder="Enter your password here..."
+                placeholder="Password123"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
               />
             </div>

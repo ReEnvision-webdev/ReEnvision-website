@@ -25,26 +25,21 @@ function PartnersCarousel() {
     () => [
       {
         id: 1,
-        name: "International Research Olympiad",
-        image: "/images/home/iro.png?height=80&width=120",
-      },
-      {
-        id: 2,
         name: "OTHS Ai Club",
         image: "/images/home/othsai.png?height=80&width=120",
       },
       {
-        id: 3,
+        id: 2,
         name: "NEOLabs Enterprise",
         image: "/images/home/nle.png?height=80&width=120",
       },
       {
-        id: 4,
+        id: 3,
         name: "Pearedco",
         image: "/images/home/pearedco.png?height=80&width=120",
       },
       {
-        id: 5,
+        id: 4,
         name: "PromotePort",
         image: "/images/home/pport.png?height=80&width=120",
       },

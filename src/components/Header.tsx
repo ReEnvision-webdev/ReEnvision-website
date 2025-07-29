@@ -128,7 +128,7 @@ export default function Header() {
           <NavLink href="/contact" label="Contact Us" />
         </nav>
 
-        <div className="flex items-center">
+        <div className="flex items-center space-x-2">
           <Link href="/signin">
             <Button
               variant="outline"
@@ -142,7 +142,19 @@ export default function Header() {
               Sign In
             </Button>
           </Link>
-          {/* Mobile Menu Button */}
+          <Link href="/signup">
+            <Button
+              variant="outline"
+              size="sm"
+              className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block ${
+                pathname === "/signup"
+                  ? "bg-[#F0F8FF] text-[#1d588a]"
+                  : "text-[#F0F8FF]"
+              }`}
+            >
+              Sign Up
+            </Button>
+          </Link>
           <MobileMenu />
         </div>
       </div>

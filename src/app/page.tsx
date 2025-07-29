@@ -25,26 +25,21 @@ function PartnersCarousel() {
     () => [
       {
         id: 1,
-        name: "International Research Olympiad",
-        image: "/images/home/iro.png?height=80&width=120",
-      },
-      {
-        id: 2,
         name: "OTHS Ai Club",
         image: "/images/home/othsai.png?height=80&width=120",
       },
       {
-        id: 3,
+        id: 2,
         name: "NEOLabs Enterprise",
         image: "/images/home/nle.png?height=80&width=120",
       },
       {
-        id: 4,
+        id: 3,
         name: "Pearedco",
         image: "/images/home/pearedco.png?height=80&width=120",
       },
       {
-        id: 5,
+        id: 4,
         name: "PromotePort",
         image: "/images/home/pport.png?height=80&width=120",
       },
@@ -297,7 +292,7 @@ export default function HomePage() {
                 data-aos-duration="1200"
                 data-aos-delay="500"
               >
-                Tech Learning Opportunities 
+                Oppurtunites In Technology 
               </span>
             </h1>
             <p
@@ -493,7 +488,7 @@ export default function HomePage() {
                 connections and resources you need to succeed in your
                 educational journey.
               </p>
-              <Link href="https://discord.gg/AgyFnhHved">
+              <Link href="https://discord.gg/XWVJadkn">
                 <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF]">
                   Join Our Discord
                 </Button>

@@ -46,13 +46,20 @@ export default function SigninPage() {
               Log In
             </Button>
           </form>
-          
-          <p className="text-center text-gray-600 mt-4">
-            Need help?{" "}
-            <Link href="/contact" className="text-blue-500 hover:text-blue-600">
-              Contact Us
-            </Link>
-          </p>
+
+          <div>
+            <p className="text-center text-gray-600 mt-4">
+              Don&apos;t have an account?{" "}
+              <Link href="/signup" className="text-blue-500 hover:text-blue-600">
+                Sign Up
+              </Link>
+            </p>
+            <p className="text-center text-gray-600 mt-2">
+              <Link href="/reset" className="text-blue-500 hover:text-blue-600">
+                Forgot password?
+              </Link>
+            </p>
+          </div>
 
         </div>
       </div>

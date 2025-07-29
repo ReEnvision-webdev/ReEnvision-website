@@ -9,7 +9,7 @@ export default function Footer() {
   return (
     <footer className="bg-[#1d588a] text-[#F0F8FF] py-8">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-3 gap-8 items-center">
           <div className="flex items-center space-x-2">
             <Image
               src="/vectors/favicon.svg" // Path to your favicon.png

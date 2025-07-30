@@ -32,9 +32,7 @@ export const authOptions = {
             .from(usersTable)
             .where(
               and(
-                eq(usersTable.email, email),
-                eq(usersTable.emailVerified, true),
-                eq(usersTable.isBanned, false)
+                eq(usersTable.email, email)
               ),
             )
             .limit(1);

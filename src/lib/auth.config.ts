@@ -28,12 +28,7 @@ export const authOptions = {
 
         try {
           const users = await db
-            .selectDistinct({
-              id: usersTable.id,
-              email: usersTable.email,
-              name: usersTable.name,
-              password: usersTable.password,
-            })
+            .selectDistinct()
             .from(usersTable)
             .where(
               and(
@@ -48,13 +43,15 @@ export const authOptions = {
 
           if (!user) {
             throw new CredentialError("User not found");
+          } else if (!await bcrypt.compare(password, user.password)) {
+            throw new CredentialError("Invalid password");
+          } else if (user.isBanned) {
+            throw new CredentialError("User is banned");
+          } else if (!user.emailVerified) {
+            throw new CredentialError("Email is not verified");
           }
 
-          if (await bcrypt.compare(password, user.password)) {
-            return user;
-          } else {
-            throw new CredentialError("Invalid password");
-          }
+          return user;
         } catch (error) {
           if (error instanceof CredentialError) {
             throw error;

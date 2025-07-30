@@ -23,6 +23,7 @@ const Image = (props: ImageProps) => {
         width={props.width}
         height={props.height}
         alt={props.alt}
+        className={props.className}
       />
     </Suspense>
   );

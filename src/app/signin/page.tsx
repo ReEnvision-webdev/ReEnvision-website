@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
+import { redirect } from "next/navigation";
 
 export default function SigninPage() {
   const [login, setLogin] = useState({
@@ -19,7 +20,7 @@ export default function SigninPage() {
     const res = await signIn("credentials", {
       email: login.email,
       password: login.password,
-      redirect: true,
+      redirect: false,
       callbackUrl: "/dashboard",
     });
 
@@ -28,6 +29,8 @@ export default function SigninPage() {
         res?.error || "An unexpected error occurred. Please try again later."
       );
     }
+
+    redirect("/dashboard");
   };
 
   return (

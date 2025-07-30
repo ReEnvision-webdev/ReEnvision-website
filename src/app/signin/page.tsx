@@ -1,8 +1,35 @@
+"use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
 
 export default function SigninPage() {
+  const [login, setLogin] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+
+    const res = await signIn("credentials", {
+      email: login.email,
+      password: login.password,
+      redirect: true,
+      callbackUrl: "/dashboard",
+    });
+
+    if (!res?.ok) {
+      return setError(
+        res?.error || "An unexpected error occurred. Please try again later."
+      );
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center pt-30 pb-18 px-4">
       <div className="bg-white rounded-lg shadow-lg px-8 pt-8 pb-10 w-full max-w-md relative overflow-hidden">
@@ -21,7 +48,7 @@ export default function SigninPage() {
             Continue expanding your skills and knowledge.
           </p>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <Label
                 htmlFor="email"
@@ -34,6 +61,9 @@ export default function SigninPage() {
                 type="email"
                 placeholder="john.doe@example.com"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                onChange={e => {
+                  setLogin({ ...login, email: e.target.value });
+                }}
               />
             </div>
 
@@ -49,12 +79,21 @@ export default function SigninPage() {
                 type="password"
                 placeholder="Password123"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                onChange={e => {
+                  setLogin({ ...login, password: e.target.value });
+                }}
               />
             </div>
 
             <Button className="w-full bg-[#1d588a] hover:bg-[#164a73] text-white rounded-lg font-semibold text-lg py-6 mt-4">
               Log In
             </Button>
+
+            <p
+              className={`text-center text-red-500 text-sm fade-in ${error ? "opacity-100" : "opacity-0"}`}
+            >
+              {error}
+            </p>
           </form>
 
           <div>

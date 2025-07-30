@@ -153,3 +153,7 @@ html {
   bottom: 0;
   z-index: 0;
 }
+
+.fade-in {
+  transition: opacity 0.2s ease-in-out;
+}

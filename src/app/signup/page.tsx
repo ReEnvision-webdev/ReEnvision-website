@@ -20,6 +20,18 @@ export default function SignupPage() {
     setStatusMessage({ success: null, message: null });
     const formData = new FormData(event.target as HTMLFormElement);
 
+    if (
+      !/^[\p{L} ]+$/u.test(
+        formData.get("fullname")?.toString().trim() as string | "",
+      )
+    ) {
+      setStatusMessage({
+        success: false,
+        message: "Full name can only contain letters and spaces",
+      });
+      return;
+    }
+
     if (formData.get("password") !== formData.get("confirm-password")) {
       setStatusMessage({
         success: false,
@@ -119,6 +131,7 @@ export default function SignupPage() {
                 id="password"
                 type="password"
                 name="password"
+                minLength={6}
                 placeholder="Password123"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                 required

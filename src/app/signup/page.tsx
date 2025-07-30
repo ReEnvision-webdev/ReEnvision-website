@@ -14,10 +14,12 @@ export default function SignupPage() {
     success: null,
     message: null,
   });
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setStatusMessage({ success: null, message: null });
+    setLoading(true);
     const formData = new FormData(event.target as HTMLFormElement);
 
     if (
@@ -29,6 +31,7 @@ export default function SignupPage() {
         success: false,
         message: "Full name can only contain letters and spaces",
       });
+      setLoading(false);
       return;
     }
 
@@ -52,6 +55,8 @@ export default function SignupPage() {
       },
     });
 
+    setLoading(false);
+
     if (!res.ok) {
       const data = await res.json();
       setStatusMessage({
@@ -62,8 +67,11 @@ export default function SignupPage() {
     } else {
       setStatusMessage({
         success: true,
-        message: "Account created successfully! Please check your email to verify your account.",
+        message:
+          "Account created successfully! Please check your email to verify your account.",
       });
+
+      (event.target as HTMLFormElement).reset();
     }
   };
 
@@ -85,7 +93,10 @@ export default function SignupPage() {
             Start your journey to free, unlimited learning.
           </p>
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form
+            className={`space-y-6 ${loading ? "!cursor-wait" : ""}`}
+            onSubmit={handleSubmit}
+          >
             <div>
               <Label
                 htmlFor="fullname"
@@ -99,6 +110,7 @@ export default function SignupPage() {
                 name="fullname"
                 placeholder="John Doe"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                disabled={loading}
                 required
               />
             </div>
@@ -116,6 +128,7 @@ export default function SignupPage() {
                 name="email"
                 placeholder="john.doe@example.com"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                disabled={loading}
                 required
               />
             </div>
@@ -134,6 +147,7 @@ export default function SignupPage() {
                 minLength={6}
                 placeholder="Password123"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                disabled={loading}
                 required
               />
             </div>
@@ -151,12 +165,14 @@ export default function SignupPage() {
                 name="confirm-password"
                 placeholder="Password123"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                disabled={loading}
                 required
               />
             </div>
 
             <Button
               className="w-full bg-[#1d588a] hover:bg-[#164a73] text-white rounded-lg font-semibold text-lg py-6 mt-4"
+              disabled={loading}
               type="submit"
             >
               Sign Up

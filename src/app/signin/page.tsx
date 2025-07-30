@@ -12,10 +12,12 @@ export default function SigninPage() {
     password: "",
   });
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
     const res = await signIn("credentials", {
       email: login.email,
@@ -23,6 +25,8 @@ export default function SigninPage() {
       redirect: false,
       callbackUrl: "/dashboard",
     });
+
+    setLoading(false);
 
     if (!res?.ok) {
       return setError(
@@ -51,7 +55,7 @@ export default function SigninPage() {
             Continue expanding your skills and knowledge.
           </p>
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
+          <form className={`space-y-6 ${loading ? "!cursor-wait" : ""}`} onSubmit={handleSubmit}>
             <div>
               <Label
                 htmlFor="email"
@@ -67,6 +71,8 @@ export default function SigninPage() {
                 onChange={e => {
                   setLogin({ ...login, email: e.target.value });
                 }}
+                disabled={loading}
+                required
               />
             </div>
 
@@ -85,15 +91,17 @@ export default function SigninPage() {
                 onChange={e => {
                   setLogin({ ...login, password: e.target.value });
                 }}
+                disabled={loading}
+                required
               />
             </div>
 
-            <Button className="w-full bg-[#1d588a] hover:bg-[#164a73] text-white rounded-lg font-semibold text-lg py-6 mt-4">
+            <Button className="w-full bg-[#1d588a] hover:bg-[#164a73] text-white rounded-lg font-semibold text-lg py-6 mt-4" disabled={loading}>
               Log In
             </Button>
 
             <p
-              className={`text-center text-red-500 text-sm fade-in ${error ? "opacity-100" : "opacity-0"}`}
+              className={`text-center text-red-500 text-m fade-in ${error ? "opacity-100" : "opacity-0"}`}
             >
               {error}
             </p>

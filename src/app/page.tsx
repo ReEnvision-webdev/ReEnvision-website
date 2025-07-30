@@ -17,11 +17,17 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Image from "next/image";
 
-function PartnersCarousel() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+interface Partner {
+  id: number;
+  name: string;
+  image: string;
+}
 
+function PartnersCarousel() {
+  const [position, setPosition] = useState<number>(0);
+  
   // Memoize the partners array to prevent recreation on every render
-  const partners = useMemo(
+  const partners = useMemo<Partner[]>(
     () => [
       {
         id: 1,
@@ -49,110 +55,70 @@ function PartnersCarousel() {
         image: "/images/home/pport.png?height=80&width=120",
       },
     ],
-    [],
+    []
   );
 
-  // Memoize the nextSlide function using useCallback
-  const nextSlide = useCallback(() => {
-    setCurrentSlide(prev => (prev + 1) % Math.ceil(partners.length / 2));
-  }, [partners.length]);
-
-  const prevSlide = useCallback(() => {
-    setCurrentSlide(
-      prev =>
-        (prev - 1 + Math.ceil(partners.length / 2)) %
-        Math.ceil(partners.length / 2),
-    );
-  }, [partners.length]);
+  // Create extended partners array with unique keys
+  const extendedPartners = useMemo(() => [
+    ...partners.map(p => ({ ...p, id: p.id + '-1' })),
+    ...partners.map(p => ({ ...p, id: p.id + '-2' }))
+  ], [partners]);
 
   useEffect(() => {
-    // Set up an interval to call nextSlide every 5 seconds (5000 ms)
-    const interval = setInterval(nextSlide, 5000);
+    const SCROLL_SPEED = 50; // Milliseconds between updates
+    const SCROLL_AMOUNT = 0.30; // Percentage to move per update
+    const RESET_THRESHOLD = -100; // When to reset position
 
-    // Clear the interval when the component unmounts
-    return () => clearInterval(interval);
-  }, [nextSlide]);
+    let lastTime = 0;
+    let animationFrameId: number | undefined;
+
+    const animate = (currentTime: number) => {
+      if (!lastTime) lastTime = currentTime;
+
+      const delta = currentTime - lastTime;
+
+      if (delta > SCROLL_SPEED) {
+        setPosition(prev => 
+          prev <= RESET_THRESHOLD ? 0 : prev - SCROLL_AMOUNT
+        );
+        lastTime = currentTime;
+      }
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, []);
 
   return (
-    <div className="relative max-w-4xl mx-auto">
-      <div className="overflow-hidden">
-        <div
-          className="flex transition-transform duration-300 ease-in-out"
-          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-        >
-          {Array.from({ length: Math.ceil(partners.length / 2) }).map(
-            (_, slideIndex) => (
-              <div key={slideIndex} className="w-full flex-shrink-0">
-                <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-                  {partners
-                    .slice(slideIndex * 2, slideIndex * 2 + 2)
-                    .map(partner => (
-                      <div
-                        key={partner.id}
-                        className="rounded-lg shadow-md p-6 h-32 flex items-center justify-center"
-                      >
-                        <Image
-                          src={partner.image || "/placeholder.svg"}
-                          alt={partner.name}
-                          width={120}
-                          height={80}
-                        />
-                      </div>
-                    ))}
-                </div>
-              </div>
-            ),
-          )}
+    <div className="max-w-6xl mx-auto overflow-hidden">
+      <div
+        className="flex transition-transform duration-300 ease-linear"
+        style={{ transform: `translateX(${position}%)` }}
+      >
+        <div className="flex gap-4 md:gap-8">
+          {extendedPartners.map(partner => (
+            <div
+              key={partner.id}
+              className="w-[240px] md:w-[280px] flex-shrink-0 rounded-lg shadow-md p-4 h-50 flex items-center justify-center bg-white"
+            >
+              <Image
+                src={partner.image}
+                alt={partner.name}
+                width={120}
+                height={80}
+                className="object-contain"
+                priority
+              />
+            </div>
+          ))}
         </div>
-      </div>
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#1f639e] text-[#F0F8FF] p-2 rounded-full hover:bg-[#00427A] transition-colors"
-      >
-        <svg
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
-      </button>
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#1f639e] text-[#F0F8FF] p-2 rounded-full hover:bg-[#00427A] transition-colors"
-      >
-        <svg
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
-      </button>
-      <div className="flex justify-center mt-6 space-x-2">
-        {Array.from({ length: Math.ceil(partners.length / 2) }).map(
-          (_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-colors ${
-                currentSlide === index ? "bg-[#1d588a]" : "bg-gray-300"
-              }`}
-            />
-          ),
-        )}
       </div>
     </div>
   );

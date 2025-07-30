@@ -186,7 +186,7 @@ function HexagonCard({ index, icon, frontText, backText }: HexagonCardProps) {
               {/* Icon */}
               <div className="text-[#F0F8FF]">{icon}</div>
               {/* Front Text */}
-              <div className="font-bold text-lg text-center text-[#F0F8FF]">
+              <div className="font-bold text-xl text-center text-[#F0F8FF]">
                 {frontText}
               </div>
             </div>
@@ -195,7 +195,7 @@ function HexagonCard({ index, icon, frontText, backText }: HexagonCardProps) {
         <div className="hexagon-face hexagon-back">
           <div className="hexagon-content">
             <div className="text-[#F0F8FF] text-center space-y-2">
-              <div className="text-xs leading-tight">{backText}</div>
+              <div className="text-sm leading-tight">{backText}</div>
             </div>
           </div>
         </div>
@@ -203,8 +203,8 @@ function HexagonCard({ index, icon, frontText, backText }: HexagonCardProps) {
       <style jsx>{`
         .hexagon-container {
           perspective: 1000px;
-          width: 140px;
-          height: 140px;
+          width: 250px;
+          height: 250px;
         }
         .hexagon-card {
           position: relative;
@@ -246,7 +246,7 @@ function HexagonCard({ index, icon, frontText, backText }: HexagonCardProps) {
           align-items: center;
           justify-content: center;
           height: 100%;
-          padding: 16px;
+          padding: 24px;
         }
       `}</style>
     </div>
@@ -267,8 +267,9 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#F0F8FF]">
-      <section className="container mx-auto px-4 py-30">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <section className="min-h-[calc(100vh-64px)] w-full flex items-center justify-center bg-[#F0F8FF]">
+        <div className="container h-full flex flex-col justify-center px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h1
               className="text-4xl lg:text-5xl font-bold text-[#1d588a] leading-tight"
@@ -390,15 +391,16 @@ export default function HomePage() {
                 />
               </div>
             </div>
+            </div>
           </div>
-        </div>
-        <div
-          className="flex justify-center mt-12"
-          data-aos="bounce-in"
-          data-aos-duration="1000"
-          data-aos-delay="1800"
-        >
-          <ChevronDown className="h-8 w-8 text-[#1d588a] animate-bounce" />
+          <div
+            className="flex justify-center absolute bottom-8 left-0 right-0"
+            data-aos="bounce-in"
+            data-aos-duration="1000"
+            data-aos-delay="1800"
+          >
+            <ChevronDown className="h-8 w-8 text-[#1d588a] animate-bounce" />
+          </div>
         </div>
       </section>
 

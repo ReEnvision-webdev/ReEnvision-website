@@ -11,10 +11,6 @@ export default function Page() {
   const [redirected, setRedirected] = useState(false);
 
   useEffect(() => {
-    const email = new URLSearchParams(window.location.search).get("email");
-    const token = new URLSearchParams(window.location.search).get("token");
-    console.log(email, token);
-
     (async () => {
       try {
         const res = await fetch("/api/auth/activate", {
@@ -38,7 +34,6 @@ export default function Page() {
           });
         } else {
           const data = await res.json();
-          console.log("err", data);
 
           setError(data.error);
 

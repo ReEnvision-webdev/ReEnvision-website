@@ -105,9 +105,9 @@ export default function Header() {
           <Image
             src="/vectors/favicon.svg" // Path to your favicon.png
             alt="Logo"
-            width={50} // Specify the width (in pixels)
-            height={50} // Specify the height (in pixels)
-            className="h-15 w-15" // Optional: Add any additional styles
+            width={32} // Specify the width (in pixels)
+            height={32} // Specify the height (in pixels)
+            className="h-10 w-10" // Optional: Add any additional styles
           />
           <span className="text-xl font-bold">ReEnvision</span>
         </div>

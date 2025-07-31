@@ -8,6 +8,7 @@ export const usersTable = pgTable("users", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   resetKey: text("reset_key"),
   resetKeyExpires: timestamp("reset_key_expires"),
+  lastReset: timestamp("last_reset"),
   emailVerified: boolean("email_verified").notNull().default(false),
   emailVerificationKey: text("email_verification_key"),
   emailVerificationKeyExpires: timestamp("email_verification_key_expires"),

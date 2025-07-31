@@ -1,7 +1,7 @@
 import db from "@/db/database";
 import { usersTable } from "@/db/schema";
 import { sendEmail } from "@/lib/send-mail";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import cuid from "cuid";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -12,7 +12,17 @@ export async function POST(request: NextRequest) {
   const { email, name, password } = await request.json();
 
   if (!email || !name || !password) {
-    return new Response("Missing fields", { status: 400 });
+    const response: StandardResponse = {
+      success: false,
+      message: "Email, name, or password is required",
+      error: "Email, name, or password is missing",
+      data: null,
+    };
+
+    return NextResponse.json(response, {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   try {
@@ -30,11 +40,25 @@ export async function POST(request: NextRequest) {
         data: null,
       };
 
-      return new Response(JSON.stringify(response), { status: 409 });
+      return NextResponse.json(response, {
+        status: 409,
+        headers: { "Content-Type": "application/json" },
+      });
     }
   } catch (error) {
     console.error("Error checking for existing user:", error);
-    return new Response("Internal server error", { status: 500 });
+
+    const response: StandardResponse = {
+      success: false,
+      message: "Internal server error",
+      error: "Internal server error",
+      data: null,
+    };
+
+    return NextResponse.json(response, {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   const rawVerifToken = crypto.randomBytes(32).toString("hex");
@@ -60,9 +84,30 @@ export async function POST(request: NextRequest) {
       html: `<h1>Re-envision account verification</h1><p>Please verify your email by clicking this link: <a href="${process.env.BASE_URL}/verify?email=${encodeURIComponent(email)}&token=${rawVerifToken}">Verify Email</a></p><p>Note that this link will expire in 24 hours.</p>`,
     });
 
-    return new Response("User created", { status: 201 });
+    const response: StandardResponse = {
+      success: true,
+      message:
+        "User created successfully. Please check your email to verify your account.",
+      error: null,
+      data: null,
+    };
+
+    return NextResponse.json(response, {
+      status: 201,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
     console.error("Error creating user:", error);
-    return new Response("Internal server error", { status: 500 });
+    const response: StandardResponse = {
+      success: false,
+      message: "Internal server error",
+      error: "Internal server error",
+      data: null,
+    };
+
+    return NextResponse.json(response, {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }

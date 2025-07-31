@@ -65,7 +65,7 @@ export default function Page() {
 
       {redirected && (
         <p>
-          Click <Link href="/signin">here</Link> if you are not redirected
+          Click <Link href="/signin" className="text-blue-600 hover:underline">here</Link> if you are not redirected
           automatically.
         </p>
       )}

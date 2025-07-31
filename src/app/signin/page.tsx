@@ -118,7 +118,7 @@ export default function SigninPage() {
               </Link>
             </p>
             <p className="text-center text-gray-600 mt-2">
-              <Link href="/reset" className="text-blue-500 hover:text-blue-600">
+              <Link href="/request-reset" className="text-blue-500 hover:text-blue-600">
                 Forgot password?
               </Link>
             </p>

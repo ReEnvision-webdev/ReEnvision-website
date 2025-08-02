@@ -86,7 +86,7 @@ function ParticlesBackground() {
       style={{
         position: "absolute",
         left: 0,
-        top: 0,
+        top: "8rem",
         width: "100vw",
         height: "32rem", // matches py-32
         zIndex: 0,

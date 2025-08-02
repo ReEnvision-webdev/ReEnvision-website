@@ -480,7 +480,7 @@ export default function HomePage() {
               <CardContent className="space-y-4">
                 <Users className="h-10 w-10 text-[#1f639e] mx-auto" />
                 <div className="text-3xl font-bold text-[#1d588a]">150+</div>
-                <div className="text-blue-600 font-medium text-base">
+                <div className="text-[#1d588a] font-medium text-base">
                   Active Contributors
                 </div>
                 <p className="text-gray-600 text-sm">
@@ -497,7 +497,7 @@ export default function HomePage() {
               <CardContent className="space-y-4">
                 <Link2 className="h-10 w-10 text-[#1f639e] mx-auto" />
                 <div className="text-3xl font-bold text-[#1d588a]">250+</div>
-                <div className="text-blue-600 font-medium text-base">
+                <div className="text-[#1d588a] font-medium text-base">
                   Hours of Content
                 </div>
                 <p className="text-gray-600 text-sm">
@@ -513,7 +513,7 @@ export default function HomePage() {
               <CardContent className="space-y-4">
                 <User className="h-10 w-10 text-[#1f639e] mx-auto" />
                 <div className="text-3xl font-bold text-[#1d588a]">20</div>
-                <div className="text-blue-600 font-medium text-base">
+                <div className="text-[#1d588a] font-medium text-base">
                   Global Partnerships
                 </div>
                 <p className="text-gray-600 text-sm">

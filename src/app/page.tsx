@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -17,49 +17,115 @@ import Image from "next/image";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-// ... (PartnersCarousel component remains the same)
+// --- Edge-to-Edge (Horizontally), Interactive Particles.js Background for Hero ---
+function ParticlesBackground() {
+  const particlesRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    // particles.js must be loaded via CDN in _document.js or public/index.html:
+    // <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    if (typeof window !== "undefined" && window.particlesJS && particlesRef.current) {
+      window.particlesJS("particles-js", {
+        particles: {
+          number: {
+            value: 160,
+            density: { enable: true, value_area: 800 },
+          },
+          color: { value: "#1d588a" },
+          shape: {
+            type: "circle",
+            stroke: { width: 0, color: "#000000" },
+          },
+          opacity: {
+            value: 1,
+            random: true,
+            anim: { enable: true, speed: 1, opacity_min: 0, sync: false },
+          },
+          size: {
+            value: 3,
+            random: true,
+            anim: { enable: false, speed: 4, size_min: 0.3, sync: false },
+          },
+          line_linked: { enable: false },
+          move: {
+            enable: true,
+            speed: 1,
+            direction: "none",
+            random: true,
+            straight: false,
+            out_mode: "out",
+            bounce: false,
+            attract: { enable: false, rotateX: 600, rotateY: 600 },
+          },
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: {
+            onhover: { enable: true, mode: "bubble" },
+            onclick: { enable: true, mode: "repulse" },
+            resize: true,
+          },
+          modes: {
+            grab: { distance: 400, line_linked: { opacity: 1 } },
+            bubble: { distance: 250, size: 0, duration: 2, opacity: 0, speed: 3 },
+            repulse: { distance: 400, duration: 0.4 },
+            push: { particles_nb: 4 },
+            remove: { particles_nb: 2 },
+          },
+        },
+        retina_detect: true,
+      });
+    }
+  }, []);
+
+  // Edge-to-edge horizontally, height matches the hero section's height (e.g. 32rem)
+  return (
+    <div
+      id="particles-js"
+      ref={particlesRef}
+      style={{
+        position: "absolute",
+        left: 0,
+        top: 0,
+        width: "100vw",
+        height: "32rem", // matches py-32
+        zIndex: 0,
+        pointerEvents: "auto",
+      }}
+    />
+  );
+}
+
+// --- Partners Array ---
+const PARTNERS = [
+  { id: 1, name: "OTHS Ai Club", image: "/images/home/othsai.png?height=80&width=120" },
+  { id: 2, name: "NEOLabs Enterprise", image: "/images/home/nle.png?height=80&width=120" },
+  { id: 3, name: "Pearedco", image: "/images/home/pearedco.png?height=80&width=120" },
+  { id: 4, name: "PromotePort", image: "/images/home/pport.png?height=80&width=120" },
+];
+
+// --- Floating Water Animation for iPad Apps ---
 function IPadWithApps() {
   const apps = [
-    {
-      icon: <Book className="h-8 w-8" />,
-      title: "Unleash Learning",
-      description: "Bridging educational gaps through innovative technology",
-    },
-    {
-      icon: <Laptop className="h-8 w-8" />,
-      title: "Tech Divide",
-      description: "Courses & resources for underserved communities",
-    },
-    {
-      icon: <Lock className="h-8 w-8" />,
-      title: "Digital Safety",
-      description: "Teaching online safety and navigation",
-    },
-    {
-      icon: <Handshake className="h-8 w-8" />,
-      title: "Give and Grow",
-      description: "Volunteer to make an impact in your community",
-    }
+    { icon: <Book className="h-8 w-8" />, title: "Unleash Learning", description: "Bridging educational gaps through innovative technology" },
+    { icon: <Laptop className="h-8 w-8" />, title: "Tech Divide", description: "Courses & resources for underserved communities" },
+    { icon: <Lock className="h-8 w-8" />, title: "Digital Safety", description: "Teaching online safety and navigation" },
+    { icon: <Handshake className="h-8 w-8" />, title: "Give and Grow", description: "Volunteer to make an impact in your community" },
   ];
-
   return (
     <div className="relative w-full max-w-2xl mx-auto">
-      {/* iPad Frame */}
-      <div className="relative bg-white rounded-[30px] shadow-2xl overflow-hidden border-[14px] border-gray-800"
-        style={{ aspectRatio: '4/3' }}>
-        
-        {/* Screen Content */}
+      <div className="relative bg-white rounded-[30px] shadow-2xl overflow-hidden border-[14px] border-gray-800" style={{ aspectRatio: "4/3" }}>
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 p-6 flex flex-col">
-          {/* Home Indicator */}
           <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gray-800 rounded-full"></div>
-          
-          {/* App Grid - Centered */}
           <div className="grid grid-cols-2 grid-rows-2 gap-8 h-full w-full place-items-center p-8">
             {apps.map((app, index) => (
-              <div 
+              <div
                 key={index}
-                className="w-44 h-44 bg-white rounded-xl shadow-lg p-4 flex flex-col items-center justify-center transition-all duration-300 z-10 border border-gray-100 hover:scale-110 hover:shadow-xl"
+                className="w-44 h-44 bg-white rounded-xl shadow-lg p-4 flex flex-col items-center justify-center transition-all duration-300 z-10 border border-gray-100 hover:scale-110 hover:shadow-xl animate-float"
+                style={{
+                  animationDelay: `${index * 0.4}s`,
+                  animationDuration: "3s",
+                }}
               >
                 <div className="text-[#1f639e] mb-3">{app.icon}</div>
                 <h3 className="font-bold text-sm text-center text-[#1d588a] mb-2">{app.title}</h3>
@@ -69,12 +135,63 @@ function IPadWithApps() {
           </div>
         </div>
       </div>
-      {/* Camera */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gray-800 rounded-full"></div>
+      <style jsx>{`
+        @keyframes float {
+          0% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-10px) rotate(1deg); }
+          100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .animate-float {
+          animation: float ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 }
 
+// --- Edge-to-Edge Infinite Partners Carousel ---
+function PartnersCarousel() {
+  return (
+    <div className="w-full overflow-hidden bg-[#E1F0FA] py-8">
+      <div className="flex animate-infinite-scroll items-center">
+        {[...PARTNERS, ...PARTNERS, ...PARTNERS].map((partner, index) => (
+          <div
+            key={`${partner.id}-${index}`}
+            className="flex-shrink-0 px-8 flex flex-col items-center"
+          >
+            <div className="rounded-lg shadow-sm p-6 h-32 w-48 flex items-center justify-center bg-white border border-[#E1F0FA]">
+              <Image
+                src={partner.image}
+                alt={partner.name}
+                width={120}
+                height={80}
+                className="object-contain"
+                loading="lazy"
+              />
+            </div>
+            <p className="text-center text-sm font-medium text-[#1d588a] mt-2">
+              {partner.name}
+            </p>
+          </div>
+        ))}
+      </div>
+      <style jsx>{`
+        @keyframes infinite-scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(calc(-100% / 3)); }
+        }
+        .animate-infinite-scroll {
+          display: flex;
+          width: calc(300%);
+          animation: infinite-scroll 20s linear infinite;
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// --- Main HomePage ---
 export default function HomePage() {
   useEffect(() => {
     AOS.init({
@@ -85,27 +202,36 @@ export default function HomePage() {
     });
   }, []);
 
+  const bgColors = {
+    hero: "bg-[#F0F8FF]",
+    empower: "bg-[#E1F0FA]",
+    community: "bg-[#F0F8FF]",
+    impact: "bg-[#E1F0FA]",
+    partners: "bg-[#F0F8FF]",
+  };
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
       {/* Hero Section */}
-      <section className="bg-[#F0F8FF] relative overflow-hidden container mx-auto px-4 py-32">
-        <div className="grid lg:grid-cols-2 gap-14 items-center relative z-10">
+      <section
+        className={`${bgColors.hero} relative w-full overflow-hidden`}
+        style={{ paddingTop: "8rem", paddingBottom: "8rem" }} // py-32 (32 * 0.25rem)
+      >
+        {/* Edge-to-edge horizontally, interactive particles background */}
+        <ParticlesBackground />
+        <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-14 items-center relative z-10">
           <div className="space-y-6">
             <h1 className="text-4xl lg:text-5xl font-bold text-[#1d588a] leading-tight" data-aos="fade-up">
               Your Gateway To
               <br />
-              <span className="text-[#00427A]">
-                ENDLESS
-              </span>
+              <span className="text-[#00427A]">ENDLESS</span>
               <br />
-              <span>
-                Opportunities In Technology
-              </span>
+              <span>Opportunities In Technology</span>
             </h1>
             <p className="text-gray-600 text-lg leading-relaxed" data-aos="fade-up" data-aos-delay="200">
               Join us in connecting volunteers with meaningful opportunities to
-              support those in need. Together, we're bridging the digital
-              divide and creating equitable access to essential resources.
+              support those in need. Together, we're bridging the digital divide
+              and creating equitable access to essential resources.
             </p>
             <div className="flex flex-row gap-4" data-aos="fade-up" data-aos-delay="400">
               <Link href="#about1">
@@ -132,63 +258,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Building Global Communities Section - IMAGE ON RIGHT */}
-      <section className="bg-[#E1F0FA] py-16">
+      {/* Empowering Education - Converted to direct TSX, Image on Left (Swapped) */}
+      <section className={`${bgColors.empower} py-16`} id="about1"> {/* 2 */}
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center lg:flex-row-reverse">
-            <div className="space-y-6">
-              <h2 className="text-4xl font-bold text-[#1d588a]" data-aos="fade-up">
-                Building Global Communities
-              </h2>
-              <div className="lg:hidden" data-aos="fade-up" data-aos-delay="100">
-                <Image
-                  src="/images/home/building-communities.jpg"
-                  alt="Building Global Communities"
-                  width={600}
-                  height={400}
-                  className="rounded-lg shadow-lg w-full"
-                />
-              </div>
-              <p className="text-gray-600 leading-relaxed" data-aos="fade-up" data-aos-delay="150">
-                Connect with like-minded individuals from around the world who share your passion for learning and growth. Our community-driven approach ensures that every member has access to support, guidance, and opportunities for collaboration.
-              </p>
-              <p className="text-gray-600 leading-relaxed" data-aos="fade-up" data-aos-delay="200">
-                Whether you're looking to develop new skills, share your expertise, or find mentorship, our global network provides the connections and resources you need to succeed in your educational journey.
-              </p>
-              <div data-aos="fade-up" data-aos-delay="300">
-                <Link href="https://discord.gg/XWVJadkn">
-                  <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF] px-5 py-2 text-base">
-                    Join Our Discord
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="hidden lg:block" data-aos="fade-left">
-              <Image
-                src="/images/home/building-communities.jpg"
-                alt="Building Global Communities"
-                width={600}
-                height={400}
-                className="rounded-lg shadow-lg w-full"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Empowering Education Section - IMAGE ON LEFT */}
-      <section className="bg-[#F0F8FF] py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="hidden lg:block" data-aos="fade-right">
-              <Image
-                src="/images/home/empower-through-tech.jpg"
-                alt="Empowering Education Through Technology"
-                width={600}
-                height={400}
-                className="rounded-lg shadow-lg w-full"
-              />
-            </div>
+          <div className="grid lg:grid-cols-2 gap-12 items-center"> {/* Removed lg:flex-row-reverse to put image on left */}
             <div className="space-y-6">
               <h2 className="text-4xl font-bold text-[#1d588a]" data-aos="fade-up">
                 Empowering Education Through Technology
@@ -202,10 +275,18 @@ export default function HomePage() {
                   className="rounded-lg shadow-lg w-full"
                 />
               </div>
-              <p className="text-gray-600 leading-relaxed" data-aos="fade-up" data-aos-delay="150">
+              <p
+                className="text-gray-600 leading-relaxed"
+                data-aos="fade-up"
+                data-aos-delay={150}
+              >
                 Our platform connects educators, students, and volunteers in a seamless digital environment. We provide cutting-edge tools and resources that make learning accessible, engaging, and effective for everyone, regardless of their background or location.
               </p>
-              <p className="text-gray-600 leading-relaxed" data-aos="fade-up" data-aos-delay="200">
+              <p
+                className="text-gray-600 leading-relaxed"
+                data-aos="fade-up"
+                data-aos-delay={200}
+              >
                 From interactive courses to mentorship programs, we're building the future of education one connection at a time. Join thousands of learners who have already transformed their lives through our comprehensive educational ecosystem.
               </p>
               <div data-aos="fade-up" data-aos-delay="300">
@@ -216,11 +297,124 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
+            <div className="hidden lg:block" data-aos="fade-right"> {/* Adjusted AOS direction for left image */}
+              <Image
+                src="/images/home/empower-through-tech.jpg"
+                alt="Empowering Education Through Technology"
+                width={600}
+                height={400}
+                className="rounded-lg shadow-lg w-full"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ... (rest of the sections remain the same) */}
+      {/* Building Global Communities - Converted to direct TSX, Image on Right */}
+      <section className={`${bgColors.community} py-16`}> {/* 3 */}
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center lg:flex-row-reverse"> {/* Image on right using flex-row-reverse */}
+            <div className="space-y-6">
+              <h2 className="text-4xl font-bold text-[#1d588a]" data-aos="fade-up">
+                Building Global Communities
+              </h2>
+              <div className="lg:hidden" data-aos="fade-up" data-aos-delay="100">
+                <Image
+                  src="/images/home/building-communities.jpg"
+                  alt="Building Global Communities"
+                  width={600}
+                  height={400}
+                  className="rounded-lg shadow-lg w-full"
+                />
+              </div>
+              <p
+                className="text-gray-600 leading-relaxed"
+                data-aos="fade-up"
+                data-aos-delay={150}
+              >
+                Connect with like-minded individuals from around the world who share your passion for learning and growth. Our community-driven approach ensures that every member has access to support, guidance, and opportunities for collaboration.
+              </p>
+              <p
+                className="text-gray-600 leading-relaxed"
+                data-aos="fade-up"
+                data-aos-delay={200}
+              >
+                Whether you're looking to develop new skills, share your expertise, or find mentorship, our global network provides the connections and resources you need to succeed in your educational journey.
+              </p>
+              <div data-aos="fade-up" data-aos-delay="300">
+                <Link href="https://discord.gg/XWVJadkn">
+                  <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF] px-5 py-2 text-base">
+                    Join Our Discord
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <div className="hidden lg:block" data-aos="fade-left"> {/* Adjusted AOS direction */}
+              <Image
+                src="/images/home/building-communities.jpg"
+                alt="Building Global Communities"
+                width={600}
+                height={400}
+                className="rounded-lg shadow-lg w-full"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Impact Section */}
+      <section className={`${bgColors.impact} py-16`}> {/* 4 */}
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center text-[#1d588a] mb-10" data-aos="fade-up">
+            Our Impact
+          </h2>
+          <div className="grid md:grid-cols-3 gap-7">
+            <Card className="text-center p-7 border-gray-200" data-aos="fade-up" data-aos-delay="100">
+              <CardContent className="space-y-4">
+                <Users className="h-10 w-10 text-[#1f639e] mx-auto" />
+                <div className="text-3xl font-bold text-[#1d588a]">150+</div>
+                <div className="text-blue-600 font-medium text-base">Active Contributors</div>
+                <p className="text-gray-600 text-sm">
+                  Passionate individuals have joined our mission to bridge the digital divide.
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="text-center p-7 border-gray-200" data-aos="fade-up" data-aos-delay="200">
+              <CardContent className="space-y-4">
+                <Link2 className="h-10 w-10 text-[#1f639e] mx-auto" />
+                <div className="text-3xl font-bold text-[#1d588a]">250+</div>
+                <div className="text-blue-600 font-medium text-base">Hours of Content</div>
+                <p className="text-gray-600 text-sm">
+                  We've contributed over 250 hours of service to make an impact.
+                </p>
+              </CardContent>
+            </Card>
+            <Card className="text-center p-7 border-gray-200" data-aos="fade-up" data-aos-delay="300">
+              <CardContent className="space-y-4">
+                <User className="h-10 w-10 text-[#1f639e] mx-auto" />
+                <div className="text-3xl font-bold text-[#1d588a]">20</div>
+                <div className="text-blue-600 font-medium text-base">Global Partnerships</div>
+                <p className="text-gray-600 text-sm">
+                  Collaborating with local clubs and non-profits to expand outreach.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Partners Carousel - Edge to Edge */}
+      <section className={`${bgColors.partners} py-16`}> {/* 5 - Removed negative margins for edge-to-edge */}
+        <div> {/* Removed px-4 to make content edge-to-edge within the section */}
+          <h2
+            className="text-3xl font-bold text-center text-[#1d588a] mb-8"
+            data-aos="fade-up"
+          >
+            Our Exclusive Partners
+          </h2>
+          <PartnersCarousel />
+        </div>
+      </section>
     </div>
   );
 }

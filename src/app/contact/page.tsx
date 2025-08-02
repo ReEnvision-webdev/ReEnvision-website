@@ -52,7 +52,10 @@ export default function ContactPage() {
     <div className="min-h-screen bg-[#F0F8FF] flex items-center justify-center pt-30 pb-18 px-4">
       <div className="w-full max-w-6xl bg-white rounded-2xl shadow-xl py-8 md:py-2 flex flex-col lg:flex-row gap-12 items-stretch justify-center min-h-[80vh]">
         {/* Left Column - Contact Information */}
-        <div className="flex-1 flex flex-col justify-center space-y-4 ml-12 lg:my-10" data-aos="fade-right">
+        <div
+          className="flex-1 flex flex-col justify-center space-y-4 ml-12 lg:my-10"
+          data-aos="fade-right"
+        >
           <div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 lg:text-left text-center text-[#1d588a]">
               Get in Touch
@@ -112,7 +115,10 @@ export default function ContactPage() {
           </div>
         </div>
         {/* Right Column - Contact Form */}
-        <div className="flex-1 flex flex-col justify-center mx-4" data-aos="fade-left">
+        <div
+          className="flex-1 flex flex-col justify-center mx-4"
+          data-aos="fade-left"
+        >
           {!submitted ? (
             <div className="rounded-xl p-8">
               <h2 className="text-3xl font-bold text-[#1d588a] mb-6 lg:text-left text-center">
@@ -211,7 +217,10 @@ export default function ContactPage() {
               </form>
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full min-h-[300px] bg-gray-50 rounded-xl p-8" data-aos="fade-up">
+            <div
+              className="flex flex-col items-center justify-center h-full min-h-[300px] bg-gray-50 rounded-xl p-8"
+              data-aos="fade-up"
+            >
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
                 <svg
                   className="w-8 h-8 text-green-600"

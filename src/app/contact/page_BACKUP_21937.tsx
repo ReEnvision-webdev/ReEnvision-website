@@ -52,7 +52,14 @@ export default function ContactPage() {
     <div className="min-h-screen bg-[#F0F8FF] flex items-center justify-center pt-30 pb-18 px-4">
       <div className="w-full max-w-6xl bg-white rounded-2xl shadow-xl py-8 md:py-2 flex flex-col lg:flex-row gap-12 items-stretch justify-center min-h-[80vh]">
         {/* Left Column - Contact Information */}
+<<<<<<< HEAD
         <div className="flex-1 flex flex-col justify-center space-y-4 mx-4 lg:px-8 my-10" data-aos="fade-right">
+=======
+        <div
+          className="flex-1 flex flex-col justify-center space-y-4 ml-12 lg:my-10"
+          data-aos="fade-right"
+        >
+>>>>>>> new-portraits
           <div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 lg:text-left text-center text-[#1d588a]">
               Get in Touch

@@ -1,3 +1,4 @@
+// src/app/page.tsx (or your relevant path)
 "use client";
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -17,19 +18,21 @@ import Image from "next/image";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+import 'particles.js';
+
 // --- Edge-to-Edge (Horizontally), Interactive Particles.js Background for Hero ---
 function ParticlesBackground() {
   const particlesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // particles.js must be loaded via CDN in _document.js or public/index.html:
-    // <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    // Ensure we are in the browser environment and the ref is attached
     if (
       typeof window !== "undefined" &&
-      window.particlesJS &&
+      particlesJS && // Now checking the imported object directly
       particlesRef.current
     ) {
-      window.particlesJS("particles-js", {
+      // Call the particlesJS function directly, not via window.particlesJS
+      particlesJS("particles-js", {
         particles: {
           number: {
             value: 160,
@@ -86,9 +89,18 @@ function ParticlesBackground() {
         retina_detect: true,
       });
     }
-  }, []);
 
-  // Edge-to-edge horizontally, height matches the hero section&apos;s height (e.g. 32rem)
+    // Optional: Cleanup function if needed (e.g., destroying particles instance)
+    // This depends on the particles.js API. Check documentation if necessary.
+    // return () => {
+    //   if (window.pJSDom && window.pJSDom.length > 0) {
+    //     window.pJSDom[0].pJS.fn.vendors.destroypJS();
+    //     window.pJSDom = [];
+    //   }
+    // };
+  }, []); // Run only once on mount
+
+  // Edge-to-edge horizontally, height matches the hero section's height (e.g. 32rem)
   return (
     <div
       id="particles-js"
@@ -335,6 +347,7 @@ export default function HomePage() {
           <ChevronDown className="h-7 w-7 text-[#1d588a] animate-bounce" />
         </div>
       </section>
+
       {/* Empowering Education - Image on Left, Text on Right */}
       <section className={`${bgColors.empower} py-16`} id="about1">
         {" "}
@@ -351,7 +364,6 @@ export default function HomePage() {
                 className="rounded-lg shadow-lg w-full"
               />
             </div>
-
             {/* Text Column - Now Second */}
             <div className="space-y-6 order-2">
               <h2
@@ -474,6 +486,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
       {/* Our Impact Section */}
       <section className={`${bgColors.impact} py-16`}>
         {" "}
@@ -540,6 +553,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
       {/* Partners Carousel - Edge to Edge */}
       <section className={`${bgColors.partners} py-16`}>
         {" "}

@@ -4,7 +4,6 @@ import { EB_Garamond } from "next/font/google"; // Import EB Garamond
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Script from "next/script"; // 1. Import the Script component
 
 // Configure EB Garamond
 const ebGaramond = EB_Garamond({
@@ -33,7 +32,6 @@ export default function RootLayout({
         <Header />
         <main className="min-h-screen">{children}</main>
         <Footer />
-        <Script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" />
       </body>
     </html>
   );

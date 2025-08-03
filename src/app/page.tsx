@@ -324,66 +324,15 @@ export default function HomePage() {
             data-aos="fade-left"
             data-aos-delay="600"
           >
-            <div className="grid grid-cols-2 gap-6 max-w-lg">
-              <div
-                data-aos="flip-left"
-                data-aos-duration="800"
-                data-aos-delay="1000"
-              >
-                <HexagonCard
-                  index={0}
-                  icon={<Book className="h-8 w-8" />}
-                  frontText="Unleash Learning Power"
-                  backText="Bridging educational gaps through innovative technology and community partnerships."
-                />
-              </div>
-              <div
-                data-aos="flip-left"
-                data-aos-duration="800"
-                data-aos-delay="1200"
-              >
-                <HexagonCard
-                  index={1}
-                  icon={<Laptop className="h-8 w-8" />}
-                  frontText="Bridging the Tech Divide"
-                  backText="Offering courses, resources, and technology to underdeserved communities"
-                />
-              </div>
-              <div
-                data-aos="flip-left"
-                data-aos-duration="800"
-                data-aos-delay="1400"
-              >
-                <HexagonCard
-                  index={2}
-                  icon={<Lock className="h-8 w-8" />}
-                  frontText="Digital Safety"
-                  backText="Teaching online safety and navigation for responsible use."
-                />
-              </div>
-              <div
-                data-aos="flip-left"
-                data-aos-duration="800"
-                data-aos-delay="1600"
-              >
-                <HexagonCard
-                  index={3}
-                  icon={<Handshake className="h-8 w-8" />}
-                  frontText="Give and Grow"
-                  backText="Join us to volunteer and make an impact in your community."
-                />
-              </div>
-            </div>
-            </div>
+            <IPadWithApps />
           </div>
-          <div
-            className="flex justify-center absolute bottom-8 left-0 right-0"
-            data-aos="bounce-in"
-            data-aos-duration="1000"
-            data-aos-delay="1800"
-          >
-            <ChevronDown className="h-8 w-8 text-[#1d588a] animate-bounce" />
-          </div>
+        </div>
+        <div
+          className="flex justify-center mt-12 relative z-10"
+          data-aos="fade-up"
+          data-aos-delay="800"
+        >
+          <ChevronDown className="h-7 w-7 text-[#1d588a] animate-bounce" />
         </div>
       </section>
 

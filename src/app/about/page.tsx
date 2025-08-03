@@ -135,7 +135,7 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full max-w-xs shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/images/about/sharvin.png"
+                  src="/images/about/sharvin.jpg"
                   width={150}
                   height={150}
                   alt="Sharvin Goyal"
@@ -162,7 +162,7 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full max-w-xs shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/images/about/robert.png"
+                  src="/images/about/robert.jpg"
                   width={120}
                   height={120}
                   alt="Robert Pierson"
@@ -182,7 +182,7 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full max-w-xs shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/images/about/santi.png"
+                  src="/images/about/santi.jpg"
                   width={120}
                   height={120}
                   alt="Santiago Silva"
@@ -211,7 +211,7 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full xl:w-48 xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/images/about/subham.png"
+                  src="/images/about/subham.jpg"
                   width={112} // md:w-28 = 7*4 = 28, 28*4 = 112
                   height={112}
                   alt="Subham Saha"
@@ -234,14 +234,14 @@ export default function AboutPage() {
                 {/* Images for Abram Acevado and Maegann Yniguez */}
                 <div className="flex justify-center gap-4 mb-4">
                   <Image
-                    src="/images/about/abram.png"
+                    src="/images/about/abram.jpg"
                     width={112}
                     height={112}
                     alt="Abram Acevado"
                     className="rounded-full border border-[#1f639e] flex-shrink-0"
                   />
                   <Image
-                    src="/images/about/maegann.png"
+                    src="/images/about/maegann.jpg"
                     width={112}
                     height={112}
                     alt="Maegann Yniguez"
@@ -263,7 +263,7 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full xl:w-48 xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/images/about/azaan.png"
+                  src="/images/about/azaan.jpg"
                   width={112}
                   height={112}
                   alt="Azaan Noman"
@@ -284,7 +284,7 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full xl:w-48 xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/images/about/garret.png"
+                  src="/images/about/garret.jpg"
                   width={112}
                   height={112}
                   alt="Garret Smith"
@@ -305,7 +305,7 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full xl:w-48 xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/images/about/siddhi.png"
+                  src="/images/about/siddhi.jpg"
                   width={112}
                   height={112}
                   alt="Siddhi Jain"
@@ -326,7 +326,7 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full xl:w-48 xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/images/about/lily.png"
+                  src="/images/about/lily.jpg"
                   width={112}
                   height={112}
                   alt="Lily Zhang"

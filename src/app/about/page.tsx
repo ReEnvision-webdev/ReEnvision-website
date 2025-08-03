@@ -241,7 +241,7 @@ export default function AboutPage() {
                     className="rounded-full border border-[#1f639e] flex-shrink-0"
                   />
                   <Image
-                    src="/favicon.png"
+                    src="/images/about/maegann.png"
                     width={112}
                     height={112}
                     alt="Maegann Yniguez"
@@ -305,7 +305,7 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full xl:w-48 xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/favicon.png"
+                  src="/images/about/siddhi.png"
                   width={112}
                   height={112}
                   alt="Siddhi Jain"
@@ -326,7 +326,7 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full xl:w-48 xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/favicon.png"
+                  src="/images/about/lily.png"
                   width={112}
                   height={112}
                   alt="Lily Zhang"

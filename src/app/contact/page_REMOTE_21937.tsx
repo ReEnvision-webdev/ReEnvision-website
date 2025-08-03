@@ -52,7 +52,10 @@ export default function ContactPage() {
     <div className="min-h-screen bg-[#F0F8FF] flex items-center justify-center pt-30 pb-18 px-4">
       <div className="w-full max-w-6xl bg-white rounded-2xl shadow-xl py-8 md:py-2 flex flex-col lg:flex-row gap-12 items-stretch justify-center min-h-[80vh]">
         {/* Left Column - Contact Information */}
-        <div className="flex-1 flex flex-col justify-center space-y-4 mx-4 lg:px-8 my-10" data-aos="fade-right">
+        <div
+          className="flex-1 flex flex-col justify-center space-y-4 ml-12 lg:my-10"
+          data-aos="fade-right"
+        >
           <div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 lg:text-left text-center text-[#1d588a]">
               Get in Touch
@@ -63,11 +66,8 @@ export default function ContactPage() {
             </p>
           </div>
           <div className="space-y-6 my-6">
-            <a
-              href="tel:+12815050184"
-              className="flex items-start space-x-4 justify-left md:justify-start group"
-            >
-              <div className="w-12 h-12 bg-[#1d588a] rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-[#164a73] transition-colors duration-200">
+            <div className="flex items-start space-x-4 justify-center lg:justify-start">
+              <div className="w-12 h-12 bg-[#1d588a] rounded-full flex items-center justify-center flex-shrink-0">
                 <svg
                   className="w-6 h-6 text-white"
                   fill="none"
@@ -86,16 +86,11 @@ export default function ContactPage() {
                 <h3 className="text-lg font-semibold text-gray-800 mb-1">
                   Phone
                 </h3>
-                <p className="text-gray-600 group-hover:text-[#1d588a] transition-colors duration-200">
-                  +1 (281) 505-0184
-                </p>
+                <p className="text-gray-600">+1 (281) 505-0184</p>
               </div>
-            </a>
-            <a
-              href="mailto:contact@re-envision.org"
-              className="flex items-start space-x-4 justify-left md:justify-start group"
-            >
-              <div className="w-12 h-12 bg-[#1d588a] rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-[#164a73] transition-colors duration-200">
+            </div>
+            <div className="flex items-start space-x-4 justify-center lg:justify-start">
+              <div className="w-12 h-12 bg-[#1d588a] rounded-full flex items-center justify-center flex-shrink-0">
                 <svg
                   className="w-6 h-6 text-white"
                   fill="none"
@@ -114,11 +109,9 @@ export default function ContactPage() {
                 <h3 className="text-lg font-semibold text-gray-800 mb-1">
                   Email
                 </h3>
-                <p className="text-gray-600 group-hover:text-[#1d588a] transition-colors duration-200">
-                  contact@re-envision.org
-                </p>
+                <p className="text-gray-600">contact@re-envision.org</p>
               </div>
-            </a>
+            </div>
           </div>
         </div>
         {/* Right Column - Contact Form */}

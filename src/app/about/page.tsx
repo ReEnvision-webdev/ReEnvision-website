@@ -235,7 +235,7 @@ export default function AboutPage() {
                 <div className="flex justify-center gap-4 mb-4">
                   <Image
                     src="/images/about/abram.png"
-                    width={112} 
+                    width={112}
                     height={112}
                     alt="Abram Acevado"
                     className="rounded-full border border-[#1f639e] flex-shrink-0"

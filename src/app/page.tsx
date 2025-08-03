@@ -1,6 +1,6 @@
-// src/app/page.tsx (or your relevant path)
+// src/app/page.tsx
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react"; // Remove useRef if no longer used locally for particles
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -17,106 +17,15 @@ import Link from "next/link";
 import Image from "next/image";
 import AOS from "aos";
 import "aos/dist/aos.css";
+// --- Import ParticlesBackground dynamically ---
+import dynamic from 'next/dynamic';
 
-import 'particles.js';
-
-// --- Edge-to-Edge (Horizontally), Interactive Particles.js Background for Hero ---
-function ParticlesBackground() {
-  const particlesRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Ensure we are in the browser environment and the ref is attached
-    if (
-      typeof window !== "undefined" &&
-      particlesJS && // Now checking the imported object directly
-      particlesRef.current
-    ) {
-      // Call the particlesJS function directly, not via window.particlesJS
-      particlesJS("particles-js", {
-        particles: {
-          number: {
-            value: 160,
-            density: { enable: true, value_area: 800 },
-          },
-          color: { value: "#1d588a" },
-          shape: {
-            type: "circle",
-            stroke: { width: 0, color: "#000000" },
-          },
-          opacity: {
-            value: 1,
-            random: true,
-            anim: { enable: true, speed: 1, opacity_min: 0, sync: false },
-          },
-          size: {
-            value: 3,
-            random: true,
-            anim: { enable: false, speed: 4, size_min: 0.3, sync: false },
-          },
-          line_linked: { enable: false },
-          move: {
-            enable: true,
-            speed: 1,
-            direction: "none",
-            random: true,
-            straight: false,
-            out_mode: "out",
-            bounce: false,
-            attract: { enable: false, rotateX: 600, rotateY: 600 },
-          },
-        },
-        interactivity: {
-          detect_on: "canvas",
-          events: {
-            onhover: { enable: true, mode: "bubble" },
-            onclick: { enable: true, mode: "repulse" },
-            resize: true,
-          },
-          modes: {
-            grab: { distance: 400, line_linked: { opacity: 1 } },
-            bubble: {
-              distance: 250,
-              size: 0,
-              duration: 2,
-              opacity: 0,
-              speed: 3,
-            },
-            repulse: { distance: 400, duration: 0.4 },
-            push: { particles_nb: 4 },
-            remove: { particles_nb: 2 },
-          },
-        },
-        retina_detect: true,
-      });
-    }
-
-    // Optional: Cleanup function if needed (e.g., destroying particles instance)
-    // This depends on the particles.js API. Check documentation if necessary.
-    // return () => {
-    //   if (window.pJSDom && window.pJSDom.length > 0) {
-    //     window.pJSDom[0].pJS.fn.vendors.destroypJS();
-    //     window.pJSDom = [];
-    //   }
-    // };
-  }, []); // Run only once on mount
-
-  // Edge-to-edge horizontally, height matches the hero section's height (e.g. 32rem)
-  return (
-    <div
-      id="particles-js"
-      ref={particlesRef}
-      style={{
-        position: "absolute",
-        left: 0,
-        top: "8rem",
-        width: "100vw",
-        height: "32rem", // matches py-32
-        zIndex: 0,
-        pointerEvents: "auto",
-      }}
-    />
-  );
-}
+// Dynamically import ParticlesBackground with SSR disabled
+// This prevents the component (and particles.js) from running during server-side rendering
+const ParticlesBackground = dynamic(
+  () => import('@/components/ParticlesBackground'), // Adjust the path if your component is elsewhere
+  { ssr: false }
+);
 
 // --- Partners Array ---
 const PARTNERS = [
@@ -288,7 +197,8 @@ export default function HomePage() {
         className={`${bgColors.hero} relative w-full overflow-hidden`}
         style={{ paddingTop: "8rem", paddingBottom: "8rem" }} // py-32 (32 * 0.25rem)
       >
-        {/* Edge-to-edge horizontally, interactive particles background */}
+        {/* Use the dynamically imported component */}
+        {/* This will only render on the client side, avoiding the window error */}
         <ParticlesBackground />
         <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-14 items-center relative z-10">
           <div className="space-y-6">
@@ -416,6 +326,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>{" "}
+
       {/* Building Global Communities - Converted to direct TSX, Image on Right */}
       <section className={`${bgColors.community} py-16`}>
         {" "}

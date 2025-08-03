@@ -88,7 +88,7 @@ function ParticlesBackground() {
     }
   }, []);
 
-  // Edge-to-edge horizontally, height matches the hero section's height (e.g. 32rem)
+  // Edge-to-edge horizontally, height matches the hero section&apos;s height (e.g. 32rem)
   return (
     <div
       id="particles-js"
@@ -296,8 +296,8 @@ export default function HomePage() {
               data-aos-delay="200"
             >
               Join us in connecting volunteers with meaningful opportunities to
-              support those in need. Together, we're bridging the digital divide
-              and creating equitable access to essential resources.
+              support those in need. Together, we&apos;re bridging the digital
+              divide and creating equitable access to essential resources.
             </p>
             <div
               className="flex flex-row gap-4"
@@ -335,9 +335,10 @@ export default function HomePage() {
           <ChevronDown className="h-7 w-7 text-[#1d588a] animate-bounce" />
         </div>
       </section>
-
-{/* Empowering Education - Image on Left, Text on Right */}
-      <section className={`${bgColors.empower} py-16`} id="about1"> {/* 2 */}
+      {/* Empowering Education - Image on Left, Text on Right */}
+      <section className={`${bgColors.empower} py-16`} id="about1">
+        {" "}
+        {/* 2 */}
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Image Column - Now First */}
@@ -350,13 +351,20 @@ export default function HomePage() {
                 className="rounded-lg shadow-lg w-full"
               />
             </div>
-            
+
             {/* Text Column - Now Second */}
             <div className="space-y-6 order-2">
-              <h2 className="text-4xl font-bold text-[#1d588a]" data-aos="fade-up">
+              <h2
+                className="text-4xl font-bold text-[#1d588a]"
+                data-aos="fade-up"
+              >
                 Empowering Education Through Technology
               </h2>
-              <div className="lg:hidden" data-aos="fade-up" data-aos-delay="100">
+              <div
+                className="lg:hidden"
+                data-aos="fade-up"
+                data-aos-delay="100"
+              >
                 <Image
                   src="/images/home/empower-through-tech.jpg"
                   alt="Empowering Education Through Technology"
@@ -370,14 +378,20 @@ export default function HomePage() {
                 data-aos="fade-up"
                 data-aos-delay={150}
               >
-                Our platform connects educators, students, and volunteers in a seamless digital environment. We provide cutting-edge tools and resources that make learning accessible, engaging, and effective for everyone, regardless of their background or location.
+                Our platform connects educators, students, and volunteers in a
+                seamless digital environment. We provide cutting-edge tools and
+                resources that make learning accessible, engaging, and effective
+                for everyone, regardless of their background or location.
               </p>
               <p
                 className="text-gray-600 leading-relaxed"
                 data-aos="fade-up"
                 data-aos-delay={200}
               >
-                From interactive courses to mentorship programs, we're building the future of education one connection at a time. Join thousands of learners who have already transformed their lives through our comprehensive educational ecosystem.
+                From interactive courses to mentorship programs, we&apos;re
+                building the future of education one connection at a time. Join
+                thousands of learners who have already transformed their lives
+                through our comprehensive educational ecosystem.
               </p>
               <div data-aos="fade-up" data-aos-delay="300">
                 <Link href="/about">
@@ -389,7 +403,8 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>      {/* Building Global Communities - Converted to direct TSX, Image on Right */}
+      </section>{" "}
+      {/* Building Global Communities - Converted to direct TSX, Image on Right */}
       <section className={`${bgColors.community} py-16`}>
         {" "}
         {/* 3 */}
@@ -432,7 +447,7 @@ export default function HomePage() {
                 data-aos="fade-up"
                 data-aos-delay={200}
               >
-                Whether you're looking to develop new skills, share your
+                Whether you&apos;re looking to develop new skills, share your
                 expertise, or find mentorship, our global network provides the
                 connections and resources you need to succeed in your
                 educational journey.
@@ -459,7 +474,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Our Impact Section */}
       <section className={`${bgColors.impact} py-16`}>
         {" "}
@@ -501,7 +515,8 @@ export default function HomePage() {
                   Hours of Content
                 </div>
                 <p className="text-gray-600 text-sm">
-                  We've contributed over 250 hours of service to make an impact.
+                  We&apos;ve contributed over 250 hours of service to make an
+                  impact.
                 </p>
               </CardContent>
             </Card>
@@ -525,7 +540,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Partners Carousel - Edge to Edge */}
       <section className={`${bgColors.partners} py-16`}>
         {" "}

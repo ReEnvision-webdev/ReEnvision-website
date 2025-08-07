@@ -4,6 +4,7 @@ import { EB_Garamond } from "next/font/google"; // Import EB Garamond
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AuthProvider from "@/components/AuthProvider";
 
 // Configure EB Garamond
 const ebGaramond = EB_Garamond({
@@ -31,9 +32,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${ebGaramond.variable}`}>
       <body className="antialiased bg-[#F0F8FF]">
-        <Header />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+        <AuthProvider>
+          <Header />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

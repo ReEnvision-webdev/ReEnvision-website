@@ -1,8 +1,80 @@
+"use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
+
+interface StatusMessage {
+  success: boolean | null;
+  message: string | null;
+}
 
 export default function SignupPage() {
+  const [statusMessage, setStatusMessage] = useState<StatusMessage>({
+    success: null,
+    message: null,
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setStatusMessage({ success: null, message: null });
+    setLoading(true);
+    const formData = new FormData(event.target as HTMLFormElement);
+
+    if (
+      !/^[\p{L} ]+$/u.test(
+        formData.get("fullname")?.toString().trim() as string | "",
+      )
+    ) {
+      setStatusMessage({
+        success: false,
+        message: "Full name can only contain letters and spaces",
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (formData.get("password") !== formData.get("confirm-password")) {
+      setStatusMessage({
+        success: false,
+        message: "Passwords do not match",
+      });
+      return;
+    }
+
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      body: JSON.stringify({
+        name: formData.get("fullname")?.toString().trim(),
+        email: formData.get("email")?.toString().trim(),
+        password: formData.get("password")?.toString().trim(),
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    setLoading(false);
+
+    if (!res.ok) {
+      const data = await res.json();
+      setStatusMessage({
+        success: false,
+        message: data.message || "Something went wrong",
+      });
+      return;
+    } else {
+      setStatusMessage({
+        success: true,
+        message:
+          "Account created successfully! Please check your email to verify your account.",
+      });
+
+      (event.target as HTMLFormElement).reset();
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center pt-30 pb-18 px-4">
       <div className="bg-white rounded-lg shadow-lg px-8 pt-8 pb-10 w-full max-w-md relative overflow-hidden">
@@ -21,19 +93,25 @@ export default function SignupPage() {
             Start your journey to free, unlimited learning.
           </p>
 
-          <form className="space-y-6">
+          <form
+            className={`space-y-6 ${loading ? "!cursor-wait" : ""}`}
+            onSubmit={handleSubmit}
+          >
             <div>
               <Label
-                htmlFor="name"
+                htmlFor="fullname"
                 className="text-sm font-medium text-gray-700 mb-2 block"
               >
-                Name
+                Full name
               </Label>
               <input
-                id="name"
+                id="fullname"
                 type="text"
-                placeholder="Enter your name here..."
+                name="fullname"
+                placeholder="John Doe"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                disabled={loading}
+                required
               />
             </div>
 
@@ -47,8 +125,11 @@ export default function SignupPage() {
               <input
                 id="email"
                 type="email"
-                placeholder="Enter your email here..."
+                name="email"
+                placeholder="john.doe@example.com"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                disabled={loading}
+                required
               />
             </div>
 
@@ -62,14 +143,46 @@ export default function SignupPage() {
               <input
                 id="password"
                 type="password"
-                placeholder="Enter your password here..."
+                name="password"
+                minLength={6}
+                placeholder="Password123"
                 className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                disabled={loading}
+                required
               />
             </div>
 
-            <Button className="w-full bg-[#1d588a] hover:bg-[#164a73] text-white rounded-lg font-semibold text-lg py-6 mt-4">
+            <div>
+              <Label
+                htmlFor="confirm-password"
+                className="text-sm font-medium text-gray-700 mb-2 block"
+              >
+                Confirm password
+              </Label>
+              <input
+                id="confirm-password"
+                type="password"
+                name="confirm-password"
+                placeholder="Password123"
+                className="w-full py-2.5 sm:py-3 px-3 sm:px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                disabled={loading}
+                required
+              />
+            </div>
+
+            <Button
+              className="w-full bg-[#1d588a] hover:bg-[#164a73] text-white rounded-lg font-semibold text-lg py-6 mt-4"
+              disabled={loading}
+              type="submit"
+            >
               Sign Up
             </Button>
+
+            <p
+              className={`text-center text-${statusMessage.success ? "green-600" : "red-500"} text-m fade-in ${statusMessage.message ? "opacity-100" : "opacity-0"}`}
+            >
+              {statusMessage.message}
+            </p>
           </form>
 
           <p className="text-center text-gray-600 mt-4">

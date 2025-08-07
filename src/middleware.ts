@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { StandardResponse } from "./lib/types";
 
 const redis = new Redis({
   url: process.env.KV_REST_API_URL,
@@ -12,6 +13,12 @@ const redis = new Redis({
 const ratelimit = new Ratelimit({
   redis: redis,
   limiter: Ratelimit.slidingWindow(100, "3 m"),
+  analytics: true,
+});
+
+const resetPasswordRatelimiter = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(5, "1 h"),
   analytics: true,
 });
 
@@ -34,46 +41,55 @@ export async function middleware(request: NextRequest) {
     });
   }
 
-  if (pathname.startsWith("/api")) {
-    // Fixed: Removed non-existent request.ip property
-    const ip =
-      request.headers.get("x-real-ip") ??
-      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-      "unknown";
+  if (pathname.startsWith("/api/auth/reset")) {
+    const rateLimitResponse = await handleRateLimit(
+      request,
+      resetPasswordRatelimiter,
+    );
 
-    const { success, limit, remaining, reset } = await ratelimit.limit(ip);
-
-    if (!success) {
-      return new NextResponse(
-        JSON.stringify({
-          message: "Too many requests, please try again later.",
-        }),
-        {
-          status: 429,
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Retry-After": reset
-              ? Math.ceil((reset - Date.now()) / 1000).toString()
-              : "60",
-          },
-        },
-      );
+    if (rateLimitResponse) {
+      return rateLimitResponse;
     }
 
-    const response = NextResponse.next();
+    const response: StandardResponse = {
+      success: false,
+      message: "Internal Server Error. Please try again later.",
+      error: "Internal Server Error",
+      data: null,
+    };
 
-    response.headers.set("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
-    response.headers.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
-    response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+    return new NextResponse(JSON.stringify(response), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
+  } else if (pathname.startsWith("/api")) {
+    const rateLimitResponse = await handleRateLimit(request, ratelimit);
 
-    response.headers.set("X-RateLimit-Limit", limit.toString());
-    response.headers.set("X-RateLimit-Remaining", remaining.toString());
-    response.headers.set("X-RateLimit-Reset", reset.toString());
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
 
-    return response;
+    const response: StandardResponse = {
+      success: false,
+      message: "Internal Server Error. Please try again later.",
+      error: "Internal Server Error",
+      data: null,
+    };
+
+    return new NextResponse(JSON.stringify(response), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
   }
 
   return NextResponse.next();
@@ -81,4 +97,48 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: ["/api/:path*"],
+};
+
+const handleRateLimit = async (
+  request: NextRequest,
+  ratelimiter: Ratelimit,
+): Promise<NextResponse> => {
+  const ip =
+    request.headers.get("x-real-ip") ??
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    "unknown";
+
+  const { success, limit, remaining, reset } = await ratelimiter.limit(ip);
+
+  if (!success) {
+    return new NextResponse(
+      JSON.stringify({
+        message: "Too many requests, please try again later.",
+      }),
+      {
+        status: 429,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+          "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Retry-After": reset
+            ? Math.ceil((reset - Date.now()) / 1000).toString()
+            : "60",
+        },
+      },
+    );
+  }
+
+  const response = NextResponse.next();
+
+  response.headers.set("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
+  response.headers.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+  response.headers.set("Access-Control-Allow-Headers", "Content-Type");
+
+  response.headers.set("X-RateLimit-Limit", limit.toString());
+  response.headers.set("X-RateLimit-Remaining", remaining.toString());
+  response.headers.set("X-RateLimit-Reset", reset.toString());
+
+  return response;
 };

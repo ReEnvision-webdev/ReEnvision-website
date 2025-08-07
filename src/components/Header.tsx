@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useSession, signOut } from "next-auth/react";
+
 function NavLink({ href, label }: { href: string; label: string }) {
   const pathname = usePathname();
   const isActive = pathname === href;
@@ -93,6 +95,7 @@ function MobileMenu() {
 
 export default function Header() {
   const pathname = usePathname();
+  const { status } = useSession();
 
   return (
     <header className="bg-[#1d588a] text-[#F0F8FF] px-4 py-3 fixed top-0 left-0 right-0 z-50">
@@ -120,19 +123,26 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center space-x-2">
-          <Link href="/signin">
-            <Button
-              variant="outline"
-              size="sm"
-              className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block ${
-                pathname === "/signin"
-                  ? "bg-[#F0F8FF] text-[#1d588a]"
-                  : "text-[#F0F8FF]"
-              }`}
-            >
-              Sign In
-            </Button>
-          </Link>
+          <Button
+            variant="outline"
+            size="sm"
+            className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block ${
+              pathname === "/signin"
+                ? "bg-[#F0F8FF] text-[#1d588a]"
+                : "text-[#F0F8FF]"
+            }`}
+            onClick={() => {
+              if (status === "authenticated") {
+                signOut();
+              }
+            }}
+          >
+            {status === "authenticated" ? (
+              <p>Log Out</p>
+            ) : (
+              <Link href="/signin">Sign In</Link>
+            )}
+          </Button>
           <MobileMenu />
         </div>
       </div>

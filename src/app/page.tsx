@@ -18,13 +18,13 @@ import Image from "next/image";
 import AOS from "aos";
 import "aos/dist/aos.css";
 // --- Import ParticlesBackground dynamically ---
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 
 // Dynamically import ParticlesBackground with SSR disabled
 // This prevents the component (and particles.js) from running during server-side rendering
 const ParticlesBackground = dynamic(
-  () => import('@/components/ParticlesBackground'), // Adjust the path if your component is elsewhere
-  { ssr: false }
+  () => import("@/components/ParticlesBackground"), // Adjust the path if your component is elsewhere
+  { ssr: false },
 );
 
 // --- Partners Array ---
@@ -257,7 +257,6 @@ export default function HomePage() {
           <ChevronDown className="h-7 w-7 text-[#1d588a] animate-bounce" />
         </div>
       </section>
-
       {/* Empowering Education - Image on Left, Text on Right */}
       <section className={`${bgColors.empower} py-16`} id="about1">
         {" "}
@@ -326,7 +325,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>{" "}
-
       {/* Building Global Communities - Converted to direct TSX, Image on Right */}
       <section className={`${bgColors.community} py-16`}>
         {" "}
@@ -397,7 +395,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Our Impact Section */}
       <section className={`${bgColors.impact} py-16`}>
         {" "}
@@ -464,7 +461,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* Partners Carousel - Edge to Edge */}
       <section className={`${bgColors.partners} py-16`}>
         {" "}

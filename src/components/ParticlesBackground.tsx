@@ -4,7 +4,7 @@
 import { useEffect, useRef } from "react";
 
 // --- Import particlesJS for its side effects ---
-import 'particles.js';
+import "particles.js";
 
 export default function ParticlesBackground() {
   const particlesRef = useRef<HTMLDivElement>(null);
@@ -12,7 +12,11 @@ export default function ParticlesBackground() {
   useEffect(() => {
     // --- Access particlesJS via the window object ---
     // Type assertion is used because the library doesn't provide built-in TS types.
-    const pJS = (window as unknown as { particlesJS?: (tagId: string, params: object) => void }).particlesJS;
+    const pJS = (
+      window as unknown as {
+        particlesJS?: (tagId: string, params: object) => void;
+      }
+    ).particlesJS;
 
     // The typeof window check isn't strictly necessary here anymore
     // because this code only runs on the client due to "use client"

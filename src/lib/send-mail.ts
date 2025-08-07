@@ -18,8 +18,7 @@ interface SendEmailParams {
   html?: string;
 }
 
-export async function sendEmail(
-  params: SendEmailParams) {
+export async function sendEmail(params: SendEmailParams) {
   await emailTransporter.sendMail({
     from: process.env.SMTP_USER,
     to: params.to,

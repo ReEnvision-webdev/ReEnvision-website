@@ -30,18 +30,14 @@ export const authOptions = {
           const users = await db
             .selectDistinct()
             .from(usersTable)
-            .where(
-              and(
-                eq(usersTable.email, email)
-              ),
-            )
+            .where(and(eq(usersTable.email, email)))
             .limit(1);
 
           const user = users[0];
 
           if (!user) {
             throw new CredentialError("User not found");
-          } else if (!await bcrypt.compare(password, user.password)) {
+          } else if (!(await bcrypt.compare(password, user.password))) {
             throw new CredentialError("Invalid password");
           } else if (user.isBanned) {
             throw new CredentialError("User is banned");

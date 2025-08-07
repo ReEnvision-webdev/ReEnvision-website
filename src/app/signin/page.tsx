@@ -30,7 +30,7 @@ export default function SigninPage() {
 
     if (!res?.ok) {
       return setError(
-        res?.error || "An unexpected error occurred. Please try again later."
+        res?.error || "An unexpected error occurred. Please try again later.",
       );
     }
 
@@ -55,7 +55,10 @@ export default function SigninPage() {
             Continue expanding your skills and knowledge.
           </p>
 
-          <form className={`space-y-6 ${loading ? "!cursor-wait" : ""}`} onSubmit={handleSubmit}>
+          <form
+            className={`space-y-6 ${loading ? "!cursor-wait" : ""}`}
+            onSubmit={handleSubmit}
+          >
             <div>
               <Label
                 htmlFor="email"
@@ -96,7 +99,10 @@ export default function SigninPage() {
               />
             </div>
 
-            <Button className="w-full bg-[#1d588a] hover:bg-[#164a73] text-white rounded-lg font-semibold text-lg py-6 mt-4" disabled={loading}>
+            <Button
+              className="w-full bg-[#1d588a] hover:bg-[#164a73] text-white rounded-lg font-semibold text-lg py-6 mt-4"
+              disabled={loading}
+            >
               Log In
             </Button>
 
@@ -118,7 +124,10 @@ export default function SigninPage() {
               </Link>
             </p>
             <p className="text-center text-gray-600 mt-2">
-              <Link href="/request-reset" className="text-blue-500 hover:text-blue-600">
+              <Link
+                href="/request-reset"
+                className="text-blue-500 hover:text-blue-600"
+              >
                 Forgot password?
               </Link>
             </p>

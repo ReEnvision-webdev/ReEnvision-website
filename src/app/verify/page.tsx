@@ -38,7 +38,9 @@ export default function Page() {
           setError(data.error);
 
           if (res.status === 409) {
-            setError("Email is already verified. You will be redirected to the signin page in 2 seconds.");
+            setError(
+              "Email is already verified. You will be redirected to the signin page in 2 seconds.",
+            );
 
             delay(2000).then(() => {
               setRedirected(true);
@@ -65,8 +67,11 @@ export default function Page() {
 
       {redirected && (
         <p>
-          Click <Link href="/signin" className="text-blue-600 hover:underline">here</Link> if you are not redirected
-          automatically.
+          Click{" "}
+          <Link href="/signin" className="text-blue-600 hover:underline">
+            here
+          </Link>{" "}
+          if you are not redirected automatically.
         </p>
       )}
     </h1>

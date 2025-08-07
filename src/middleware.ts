@@ -42,7 +42,10 @@ export async function middleware(request: NextRequest) {
   }
 
   if (pathname.startsWith("/api/auth/reset")) {
-    const rateLimitResponse = await handleRateLimit(request, resetPasswordRatelimiter);
+    const rateLimitResponse = await handleRateLimit(
+      request,
+      resetPasswordRatelimiter,
+    );
 
     if (rateLimitResponse) {
       return rateLimitResponse;

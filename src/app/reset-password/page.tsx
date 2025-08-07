@@ -35,7 +35,7 @@ export default function Page() {
 
     (async () => {
       const res = await fetch("/api/auth/reset/validate-reset", {
-        method: "POST", 
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -187,8 +187,10 @@ export default function Page() {
 
         {redirected && (
           <p className="text-center text-gray-600 mt-2">
-             <Link href="/signin" className="text-blue-600 hover:underline">here</Link> if you are not redirected
-            automatically.
+            <Link href="/signin" className="text-blue-600 hover:underline">
+              here
+            </Link>{" "}
+            if you are not redirected automatically.
           </p>
         )}
       </div>

@@ -13,6 +13,7 @@ const ebGaramond = EB_Garamond({
   variable: "--font-eb-garamond", // Optional: Define a CSS variable
 });
 
+// --- Fixed metadata definition ---
 export const metadata: Metadata = {
   title: "ReEnvision",
   description:
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
     icon: "/favicon.png", // This tells Next.js to use your PNG favicon
   },
 };
+// --- End of fix ---
 
 export default function RootLayout({
   children,

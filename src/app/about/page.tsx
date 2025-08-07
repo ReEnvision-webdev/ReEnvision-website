@@ -135,7 +135,7 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full max-w-xs shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/favicon.png"
+                  src="/images/about/sharvin.jpg"
                   width={150}
                   height={150}
                   alt="Sharvin Goyal"
@@ -162,11 +162,11 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full max-w-xs shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/favicon.png"
+                  src="/images/about/robert.jpg"
                   width={120}
                   height={120}
                   alt="Robert Pierson"
-                  className="rounded-full mb-3 border border-gray-300"
+                  className="rounded-full mb-3 border border-[#1f639e]"
                 />
                 <h3 className="text-lg font-semibold text-[#1f639e]">
                   Robert Pierson
@@ -182,11 +182,11 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full max-w-xs shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/images/about/santi.png"
+                  src="/images/about/santi.jpg"
                   width={120}
                   height={120}
                   alt="Santiago Silva"
-                  className="rounded-full mb-3 border border-gray-300"
+                  className="rounded-full mb-3 border border-[#1f639e]"
                 />
                 <h3 className="text-lg font-semibold text-[#1f639e]">
                   Santiago Silva
@@ -211,11 +211,11 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full xl:w-48 xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/images/about/subham.png"
+                  src="/images/about/subham.jpg"
                   width={112} // md:w-28 = 7*4 = 28, 28*4 = 112
                   height={112}
                   alt="Subham Saha"
-                  className="rounded-full mb-3 border border-gray-300"
+                  className="rounded-full mb-3 border border-[#1f639e]"
                 />
                 <h3 className="text-md font-semibold text-[#1f639e] text-center">
                   Subham Saha
@@ -232,20 +232,20 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full xl:w-96 xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300 sm:col-span-2">
               <CardContent className="flex flex-col items-center p-0">
                 {/* Images for Abram Acevado and Maegann Yniguez */}
-                <div className="flex justify-center gap-4 mb-2">
+                <div className="flex justify-center gap-4 mb-4">
                   <Image
-                    src="/images/about/abram.png"
-                    width={96} // md:w-24 = 6*4 = 24, 24*4 = 96
-                    height={96}
+                    src="/images/about/abram.jpg"
+                    width={112}
+                    height={112}
                     alt="Abram Acevado"
-                    className="rounded-full border border-gray-300 flex-shrink-0"
+                    className="rounded-full border border-[#1f639e] flex-shrink-0"
                   />
                   <Image
-                    src="/favicon.png"
-                    width={96}
-                    height={96}
+                    src="/images/about/maegann.jpg"
+                    width={112}
+                    height={112}
                     alt="Maegann Yniguez"
-                    className="rounded-full border border-gray-300 flex-shrink-0"
+                    className="rounded-full border border-[#1f639e] flex-shrink-0"
                   />
                 </div>
                 <h3 className="text-md font-semibold text-[#1f639e] text-center">
@@ -263,11 +263,11 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full xl:w-48 xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/images/about/azaan.png"
+                  src="/images/about/azaan.jpg"
                   width={112}
                   height={112}
                   alt="Azaan Noman"
-                  className="rounded-full mb-3 border border-gray-300"
+                  className="rounded-full mb-3 border border-[#1f639e]"
                 />
                 <h3 className="text-md font-semibold text-[#1f639e] text-center">
                   Azaan Noman
@@ -284,11 +284,11 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full xl:w-48 xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/images/about/garret.png"
+                  src="/images/about/garret.jpg"
                   width={112}
                   height={112}
                   alt="Garret Smith"
-                  className="rounded-full mb-3 border border-gray-300"
+                  className="rounded-full mb-3 border border-[#1f639e]"
                 />
                 <h3 className="text-md font-semibold text-[#1f639e] text-center">
                   Garret Smith
@@ -305,11 +305,11 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full xl:w-48 xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/favicon.png"
+                  src="/images/about/siddhi.jpg"
                   width={112}
                   height={112}
                   alt="Siddhi Jain"
-                  className="rounded-full mb-3 border border-gray-300"
+                  className="rounded-full mb-3 border border-[#1f639e]"
                 />
                 <h3 className="text-md font-semibold text-[#1f639e] text-center">
                   Siddhi Jain
@@ -326,11 +326,11 @@ export default function AboutPage() {
             <Card className="flex flex-col gap-4 items-center p-4 w-full xl:w-48 xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300">
               <CardContent className="flex flex-col items-center p-0">
                 <Image
-                  src="/favicon.png"
+                  src="/images/about/lily.jpg"
                   width={112}
                   height={112}
                   alt="Lily Zhang"
-                  className="rounded-full mb-3 border border-gray-300"
+                  className="rounded-full mb-3 border border-[#1f639e]"
                 />
                 <h3 className="text-md font-semibold text-[#1f639e] text-center">
                   Lily Zhang

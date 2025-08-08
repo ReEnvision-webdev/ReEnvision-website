@@ -5,6 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { VALUES } from "./about-values";
+import ValueCard from "@/components/ui/ValueCard";
 export default function AboutPage() {
   useEffect(() => {
     // Initialize AOS - Matching DonatePage style
@@ -88,34 +90,35 @@ export default function AboutPage() {
           Everything we do at ReEnvision is guided by a core set of principles
           that reflect our commitment to meaningful and sustainable change:
         </p>
-        <ul className="list-disc list-inside text-lg text-gray-600 space-y-2 max-w-2xl mx-auto pl-5">
-          <li className="pl-2">
-            <span className="font-medium">Inclusivity:</span> We actively work
-            to ensure our programs and services are welcoming and accessible to
-            everyone, regardless of background, age, or ability.
-          </li>
-          <li className="pl-2">
-            <span className="font-medium">Empowerment:</span> Our focus is on
-            providing people with the knowledge and tools they need to become
-            self-sufficient and confident in using technology.
-          </li>
-          <li className="pl-2">
-            <span className="font-medium">Collaboration:</span> We believe the
-            best solutions come from working together. We foster strong
-            partnerships and encourage teamwork both within our organization and
-            with the communities we serve.
-          </li>
-          <li className="pl-2">
-            <span className="font-medium">Equity:</span> We are committed to
-            fairness and strive to provide opportunities that help level the
-            playing field in the digital world.
-          </li>
-          <li className="pl-2">
-            <span className="font-medium">Innovation:</span> We embrace creative
-            and forward-thinking approaches to solve challenges and deliver
-            impactful solutions.
-          </li>
-        </ul>
+        <div className="grid grid-cols-2 gap-4 lg:[grid-template-columns:repeat(6,minmax(0,1fr))]">
+          {VALUES.map((value, idx) => {
+            const smallSpan =
+              idx === VALUES.length - 1 ? "col-span-2" : "col-span-1";
+
+            const lgSpan = "lg:col-span-2";
+            const lgStarts = [
+              "lg:col-start-1",
+              "lg:col-start-3",
+              "lg:col-start-5",
+              "lg:col-start-2",
+              "lg:col-start-4",
+            ];
+            const lgStart = lgStarts[idx];
+
+            return (
+              <div
+                key={value.title}
+                className={`${smallSpan} ${lgSpan} ${lgStart}`}
+              >
+                <ValueCard
+                  title={value.title}
+                  description={value.description}
+                  aosDelay={100 + idx * 50}
+                />
+              </div>
+            );
+          })}
+        </div>
       </section>
       {/* Our Teams Section */}
       <section id="teams" className="w-full py-8 mt-4">

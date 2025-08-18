@@ -45,7 +45,12 @@ export const authOptions = {
             throw new CredentialError("Email is not verified");
           }
 
-          return user;
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            isAdmin: user.isAdmin,
+          };
         } catch (error) {
           if (error instanceof CredentialError) {
             throw error;
@@ -57,4 +62,18 @@ export const authOptions = {
       },
     }),
   ],
+  callbacks: {
+    async session({ session, token }) {
+      if (token && session.user) {
+        session.user.isAdmin = token.isAdmin as boolean;
+      }
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.isAdmin = user.isAdmin;
+      }
+      return token;
+    },
+  },
 };

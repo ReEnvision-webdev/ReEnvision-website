@@ -1,5 +1,7 @@
 "use client";
 
+"use client";
+
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -27,7 +29,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
 function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const { status } = useSession();
+  const { data: session, status } = useSession();
 
   return (
     <div className="md:hidden">
@@ -90,7 +92,7 @@ function MobileMenu() {
                         : "text-[#F0F8FF]"
                     }`}
                   >
-                    Dashboard
+                    {session?.user?.isAdmin ? "Admin Dashboard" : "Dashboard"}
                   </Button>
                 </Link>
                 <Button
@@ -126,7 +128,7 @@ function MobileMenu() {
 
 export default function Header() {
   const pathname = usePathname();
-  const { status } = useSession();
+  const { data: session, status } = useSession();
 
   return (
     <header className="bg-[#1d588a] text-[#F0F8FF] px-4 py-3 fixed top-0 left-0 right-0 z-50">
@@ -165,7 +167,9 @@ export default function Header() {
                     : "text-[#F0F8FF]"
                 }`}
               >
-                <Link href="/dashboard">Dashboard</Link>
+                <Link href="/dashboard">
+                  {session?.user?.isAdmin ? "Admin Dashboard" : "Dashboard"}
+                </Link>
               </Button>
               <Button
                 variant="outline"

@@ -3,6 +3,8 @@ import db from "@/db/database";
 import { usersTable } from "@/db/schema";
 import bcrypt from "bcryptjs";
 import { and, eq } from "drizzle-orm";
+import { Session, User } from "next-auth";
+import { JWT } from "next-auth/jwt";
 
 class CredentialError extends Error {
   constructor(message: string) {
@@ -63,13 +65,13 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (token && session.user) {
         session.user.isAdmin = token.isAdmin as boolean;
       }
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user: User }) {
       if (user) {
         token.isAdmin = user.isAdmin;
       }

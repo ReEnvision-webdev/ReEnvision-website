@@ -27,6 +27,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
 function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const { status } = useSession();
 
   return (
     <div className="md:hidden">
@@ -77,15 +78,45 @@ function MobileMenu() {
               </Link>
             ))}
 
-            <Link href="/signin">
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2"
-              >
-                Sign In
-              </Button>
-            </Link>
+            {status === "authenticated" ? (
+              <>
+                <Link href="/dashboard">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2 ${
+                      pathname === "/dashboard"
+                        ? "bg-[#F0F8FF] text-[#1d588a]"
+                        : "text-[#F0F8FF]"
+                    }`}
+                  >
+                    Dashboard
+                  </Button>
+                </Link>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2 w-full"
+                  onClick={() => {
+                    if (confirm("Are you sure you want to sign out?")) {
+                      signOut();
+                    }
+                  }}
+                >
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <Link href="/signin">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2"
+                >
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       )}
@@ -123,26 +154,45 @@ export default function Header() {
         </nav>
 
         <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block ${
-              pathname === "/signin"
-                ? "bg-[#F0F8FF] text-[#1d588a]"
-                : "text-[#F0F8FF]"
-            }`}
-            onClick={() => {
-              if (status === "authenticated") {
-                signOut();
-              }
-            }}
-          >
-            {status === "authenticated" ? (
-              <p>Log Out</p>
-            ) : (
+          {status === "authenticated" ? (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block ${
+                  pathname === "/dashboard"
+                    ? "bg-[#F0F8FF] text-[#1d588a]"
+                    : "text-[#F0F8FF]"
+                }`}
+              >
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block"
+                onClick={() => {
+                  if (confirm("Are you sure you want to sign out?")) {
+                    signOut();
+                  }
+                }}
+              >
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block ${
+                pathname === "/signin"
+                  ? "bg-[#F0F8FF] text-[#1d588a]"
+                  : "text-[#F0F8FF]"
+              }`}
+            >
               <Link href="/signin">Sign In</Link>
-            )}
-          </Button>
+            </Button>
+          )}
           <MobileMenu />
         </div>
       </div>

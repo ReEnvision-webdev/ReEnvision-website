@@ -84,7 +84,11 @@ function MobileMenu() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2"
+                    className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2 ${
+                      pathname === "/dashboard"
+                        ? "bg-[#F0F8FF] text-[#1d588a]"
+                        : "text-[#F0F8FF]"
+                    }`}
                   >
                     Dashboard
                   </Button>
@@ -155,7 +159,11 @@ export default function Header() {
               <Button
                 variant="outline"
                 size="sm"
-                className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block"
+                className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block ${
+                  pathname === "/dashboard"
+                    ? "bg-[#F0F8FF] text-[#1d588a]"
+                    : "text-[#F0F8FF]"
+                }`}
               >
                 <Link href="/dashboard">Dashboard</Link>
               </Button>

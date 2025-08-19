@@ -67,26 +67,36 @@ export default function EventManagement() {
 
   const createBlankEvent = async () => {
     try {
+      const eventData = {
+        title: "New Event",
+        content: "",
+        event_date: new Date().toISOString(),
+        image_url: null,
+        user_id: "admin-user",
+      }
+      
+      console.log("Sending event data:", eventData)
+      
       const response = await fetch("/api/events", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: "New Event",
-          content: "",
-          event_date: new Date().toISOString(),
-          image_url: null,
-          user_id: "admin-user",
-        }),
+        body: JSON.stringify(eventData),
       })
 
-      if (!response.ok) throw new Error("Failed to create event")
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        console.error("Failed to create event:", response.status, errorData)
+        throw new Error(`Failed to create event: ${response.status} ${JSON.stringify(errorData)}`)
+      }
+      
       const newEvent = await response.json()
+      console.log("Created event:", newEvent)
 
       setEvents([newEvent, ...events])
       toast.success("Blank event created successfully")
     } catch (error) {
       console.error("Error creating event:", error)
-      toast.error("Failed to create event")
+      toast.error(`Failed to create event: ${error.message}`)
     }
   }
 

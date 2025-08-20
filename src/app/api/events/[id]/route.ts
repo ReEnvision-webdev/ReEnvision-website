@@ -1,74 +1,187 @@
+import db from "@/db/database";
+import { eventsTable } from "@/db/schema";
+import { StandardResponse } from "@/lib/types";
+import { eq } from "drizzle-orm";
+import { NextRequest, NextResponse } from "next/server";
 
-const API_URL = process.env.SUPABASE_URL
-const API_KEY = process.env.SUPABASE_ANON_KEY
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+interface GetParams {
+  id: string;
+}
+
+export async function GET(req: NextRequest, { params }: { params: GetParams }) {
+  const { id } = await params;
+
   try {
-    const response = await fetch(`${API_URL}/rest/v1/events?id=eq.${params.id}&select=*`, {
-      headers: {
-        apikey: API_KEY,
-        Authorization: `Bearer ${API_KEY}`,
-        "Content-Type": "application/json",
-      },
-    })
+    const events = await db
+      .select()
+      .from(eventsTable)
+      .where(eq(eventsTable.id, id))
+      .limit(1);
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch event")
-    }
-
-    const events = await response.json()
     if (events.length === 0) {
-      return Response.json({ error: "Event not found" }, { status: 404 })
+      const response: StandardResponse = {
+        success: false,
+        message: null,
+        error: "Event not found",
+        data: null,
+      };
+
+      return NextResponse.json(response, {
+        status: 404,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
     }
 
-    return Response.json(events[0])
+    const response: StandardResponse = {
+      success: true,
+      message: null,
+      error: null,
+      data: events[0],
+    };
+
+    return NextResponse.json(response, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   } catch (error) {
-    return Response.json({ error: "Failed to fetch event" }, { status: 500 })
+    console.error("Error fetching events:", error);
+
+    const response: StandardResponse = {
+      success: false,
+      message: "Internal server error",
+      error: "Failed to fetch events",
+      data: null,
+    };
+
+    return NextResponse.json(response, {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: GetParams }) {
+  const { id } = await params;
+
   try {
-    const body = await request.json()
+    const body = await req.json();
 
-    const response = await fetch(`${API_URL}/rest/v1/events?id=eq.${params.id}`, {
-      method: "PATCH",
+    const events = await db
+      .update(eventsTable)
+      .set(body)
+      .where(eq(eventsTable.id, id))
+      .returning();
+
+    if (events.length === 0) {
+      const response: StandardResponse = {
+        success: false,
+        message: null,
+        error: "Event not found",
+        data: null,
+      };
+
+      return NextResponse.json(response, {
+        status: 404,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } 
+
+    const response: StandardResponse = {
+      success: true,
+      message: null,
+      error: null,
+      data: events[0],
+    };
+
+    return NextResponse.json(response, {
+      status: 200,
       headers: {
-        apikey: API_KEY,
-        Authorization: `Bearer ${API_KEY}`,
         "Content-Type": "application/json",
-        Prefer: "return=representation",
       },
-      body: JSON.stringify(body),
-    })
+    });
+  } catch (error) {
+    if (
+      error instanceof SyntaxError &&
+      error.message.includes("Unexpected end of JSON input")
+    ) {
+      const response: StandardResponse = {
+        success: false,
+        message: null,
+        error: "Missing fields",
+        data: null,
+      };
 
-    if (!response.ok) {
-      throw new Error("Failed to update event")
+      return NextResponse.json(response, {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
     }
 
-    const event = await response.json()
-    return Response.json(event[0])
-  } catch (error) {
-    return Response.json({ error: "Failed to update event" }, { status: 500 })
+    console.error("Error fetching events:", error);
+
+    const response: StandardResponse = {
+      success: false,
+      message: "Internal server error",
+      error: "Failed to update event",
+      data: null,
+    };
+
+    return NextResponse.json(response, {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: GetParams },
+) {
+  const { id } = await params;
+
   try {
-    const response = await fetch(`${API_URL}/rest/v1/events?id=eq.${params.id}`, {
-      method: "DELETE",
+    await db.delete(eventsTable).where(eq(eventsTable.id, id));
+
+    const response: StandardResponse = {
+      success: true,
+      message: null,
+      error: null,
+      data: null,
+    };
+
+    return NextResponse.json(response, {
+      status: 200,
       headers: {
-        apikey: API_KEY,
-        Authorization: `Bearer ${API_KEY}`,
         "Content-Type": "application/json",
       },
-    })
-
-    if (!response.ok) {
-      throw new Error("Failed to delete event")
-    }
-
-    return Response.json({ success: true })
+    });
   } catch (error) {
-    return Response.json({ error: "Failed to delete event" }, { status: 500 })
+    console.error("Error fetching events:", error);
+
+    const response: StandardResponse = {
+      success: false,
+      message: "Internal server error",
+      error: "Failed to fetch events",
+      data: null,
+    };
+
+    return NextResponse.json(response, {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 }

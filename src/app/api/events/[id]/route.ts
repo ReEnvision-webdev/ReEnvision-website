@@ -3,6 +3,7 @@ import { eventsTable } from "@/db/schema";
 import { StandardResponse } from "@/lib/types";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+import { restrictAdmin } from "@/lib/jwt";
 
 interface GetParams {
   id: string;
@@ -67,6 +68,12 @@ export async function GET(req: NextRequest, { params }: { params: GetParams }) {
 }
 
 export async function PUT(req: NextRequest, { params }: { params: GetParams }) {
+  const res = await restrictAdmin(req);
+
+  if (res) {
+    return res;
+  }
+
   const { id } = await params;
 
   try {
@@ -92,7 +99,7 @@ export async function PUT(req: NextRequest, { params }: { params: GetParams }) {
           "Content-Type": "application/json",
         },
       });
-    } 
+    }
 
     const response: StandardResponse = {
       success: true,
@@ -149,6 +156,12 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: GetParams },
 ) {
+  const res = await restrictAdmin(req);
+
+  if (res) {
+    return res;
+  }
+
   const { id } = await params;
 
   try {

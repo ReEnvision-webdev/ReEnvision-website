@@ -67,6 +67,7 @@ export const authOptions = {
   callbacks: {
     async session({ session, token }: { session: Session; token: JWT }) {
       if (token && session.user) {
+        session.user.id = token.userId as string;
         session.user.isAdmin = token.isAdmin as boolean;
       }
       return session;

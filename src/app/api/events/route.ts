@@ -1,13 +1,12 @@
 import db from "@/db/database";
 import { eventsTable } from "@/db/schema";
+import { restrictAdmin } from "@/lib/jwt";
 import { StandardResponse } from "@/lib/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   try {
     const events = await db.select().from(eventsTable);
-
-    console.log("events", events);
 
     const response: StandardResponse = {
       success: true,
@@ -41,10 +40,16 @@ export async function GET() {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
+  const res = await restrictAdmin(req);
+
+  if (res) {
+    return res;
+  }
+
   try {
     const { user_id, event_title, event_desc, event_date, image_url } =
-      await request.json();
+      await req.json();
 
     if (!user_id || !event_title || !event_desc || !event_date) {
       const response: StandardResponse = {
@@ -121,25 +126,4 @@ export async function POST(request: NextRequest) {
       },
     });
   }
-
-  // try {
-  //   const body = await request.json()
-  //   const response = await fetch(`${API_URL}/rest/v1/events`, {
-  //     method: "POST",
-  //     headers: {
-  //       apikey: API_KEY,
-  //       Authorization: `Bearer ${API_KEY}`,
-  //       "Content-Type": "application/json",
-  //       Prefer: "return=representation",
-  //     },
-  //     body: JSON.stringify(body),
-  //   })
-  //   if (!response.ok) {
-  //     throw new Error("Failed to create event")
-  //   }
-  //   const event = await response.json()
-  //   return Response.json(event[0])
-  // } catch (error) {
-  //   return Response.json({ error: "Failed to create event" }, { status: 500 })
-  // }
 }

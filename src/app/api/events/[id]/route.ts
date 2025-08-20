@@ -81,7 +81,7 @@ export async function PUT(req: NextRequest, { params }: { params: GetParams }) {
 
     const events = await db
       .update(eventsTable)
-      .set(body)
+      .set({ ...body, updatedAt: new Date() })
       .where(eq(eventsTable.id, id))
       .returning();
 

@@ -24,7 +24,7 @@ export const usersTable = pgTable("users", {
 });
 
 export const eventsTable = pgTable("events", {
-  id: text().notNull().primaryKey().default(cuid()),
+  id: text().notNull().primaryKey().$defaultFn(() => cuid()),
   imageUrl: text("image_url"),
   eventTitle: text("event_title").notNull(),
   eventDate: timestamp("event_date").notNull(),

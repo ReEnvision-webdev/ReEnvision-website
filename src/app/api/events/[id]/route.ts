@@ -78,10 +78,37 @@ export async function PUT(req: NextRequest, { params }: { params: GetParams }) {
 
   try {
     const body = await req.json();
+    
+    // Validate required fields if they are provided
+    if (body.event_title !== undefined && body.event_title === "") {
+      const response: StandardResponse = {
+        success: false,
+        message: null,
+        error: "Event title cannot be empty",
+        data: null,
+      };
+
+      return NextResponse.json(response, {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+    
+    // Map API field names to database field names
+    const updateData: any = {
+      updatedAt: new Date()
+    };
+    
+    if (body.event_title !== undefined) updateData.eventTitle = body.event_title;
+    if (body.event_desc !== undefined) updateData.eventDesc = body.event_desc;
+    if (body.event_date !== undefined) updateData.eventDate = new Date(body.event_date);
+    if (body.image_url !== undefined) updateData.imageUrl = body.image_url;
 
     const events = await db
       .update(eventsTable)
-      .set({ ...body, updatedAt: new Date() })
+      .set(updateData)
       .where(eq(eventsTable.id, id))
       .returning();
 
@@ -134,12 +161,12 @@ export async function PUT(req: NextRequest, { params }: { params: GetParams }) {
       });
     }
 
-    console.error("Error fetching events:", error);
+    console.error("Error updating event:", error);
 
     const response: StandardResponse = {
       success: false,
       message: "Internal server error",
-      error: "Failed to update event",
+      error: "Failed to update event: " + (error.message || "Unknown error"),
       data: null,
     };
 
@@ -181,7 +208,7 @@ export async function DELETE(
       },
     });
   } catch (error) {
-    console.error("Error fetching events:", error);
+    console.error("Error updating event:", error);
 
     const response: StandardResponse = {
       success: false,

@@ -51,11 +51,11 @@ export async function POST(req: NextRequest) {
     const { user_id, event_title, event_desc, event_date, image_url } =
       await req.json();
 
-    if (!user_id || !event_title || !event_desc || !event_date) {
+    if (event_title == null || event_desc == null || event_date == null) {
       const response: StandardResponse = {
         success: false,
         message:
-          "User ID, event title, event description, or event date is missing",
+          "event title, event description, or event date is null or undefined",
         error: "Missing fields",
         data: null,
       };
@@ -68,19 +68,19 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    await db.insert(eventsTable).values({
+    const newEvents = await db.insert(eventsTable).values({
       imageUrl: image_url ?? null,
       eventTitle: event_title,
       eventDate: new Date(event_date),
       eventDesc: event_desc,
       createdBy: user_id,
-    });
+    }).returning();
 
     const response: StandardResponse = {
       success: true,
       message: null,
       error: null,
-      data: null,
+      data: newEvents[0],
     };
 
     return NextResponse.json(response, {
@@ -90,6 +90,8 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error) {
+    console.error("Error creating event:", error);
+    
     if (
       error instanceof SyntaxError &&
       error.message.includes("Unexpected end of JSON input")
@@ -97,7 +99,7 @@ export async function POST(req: NextRequest) {
       const response: StandardResponse = {
         success: false,
         message:
-          "User ID, event title, event description, or event date is missing",
+          "User ID, event title, event description, or event date is null or undefined",
         error: "Missing fields",
         data: null,
       };
@@ -110,12 +112,10 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    console.error("Error fetching events:", error);
-
     const response: StandardResponse = {
       success: false,
       message: "Internal server error",
-      error: "Failed to create event",
+      error: "Failed to create event: " + (error.message || "Unknown error"),
       data: null,
     };
 

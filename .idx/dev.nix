@@ -13,6 +13,9 @@
           "npm"
           "run"
           "dev"
+          "--"
+          "-p"
+          "$PORT"
         ];
         manager = "web";
       };

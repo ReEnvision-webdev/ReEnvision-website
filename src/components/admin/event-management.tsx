@@ -1,14 +1,15 @@
-
 "use client"
 
 import type React from "react"
 import { useState, useEffect } from "react"
+import { getSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import Image from "../ui/image"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,17 +23,18 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Plus, Edit, Trash2, Calendar, ImageIcon } from "lucide-react"
 import { toast } from "sonner"
+import { StandardResponse } from "@/lib/types"
 
 type Event = {
-  id: string
-  event_title: string
-  event_desc: string
-  event_date: string
-  image_url: string | null
-  created_at: string
-  updated_at: string
-  created_by: string
-}
+  id: string;
+  eventTitle: string;
+  eventDesc: string;
+  eventDate: string;
+  imageUrl: string | null;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string | null;
+};
 
 export default function EventManagement() {
   const [events, setEvents] = useState<Event[]>([])
@@ -56,6 +58,7 @@ export default function EventManagement() {
       const response = await fetch("/api/events")
       if (!response.ok) throw new Error("Failed to fetch events")
       const result = await response.json()
+      console.log(result);
       setEvents(result.data)
     } catch (error) {
       console.error("Error fetching events:", error)
@@ -65,59 +68,26 @@ export default function EventManagement() {
     }
   }
 
-  const createBlankEvent = async () => {
-    try {
-      const eventData = {
-        user_id: null,
-        event_title: "New Event",
-        event_desc: "Event description",
-        event_date: new Date().toISOString(),
-        image_url: null,
-      }
-      
-      console.log("Sending event data:", JSON.stringify(eventData))
-      
-      const response = await fetch("/api/events", {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(eventData),
-      })
-
-      console.log("Response status:", response.status)
-      console.log("Response headers:", [...response.headers.entries()])
-
-      if (!response.ok) {
-        const errorText = await response.text()
-        console.error("Failed to create event:", response.status, errorText)
-        throw new Error(`Failed to create event: ${response.status} ${errorText}`)
-      }
-      
-      const result = await response.json()
-      console.log("Created event result:", result)
-
-      // Open the edit dialog for the newly created event
-      openEditDialog(result.data)
-      
-      // Fetch all events to update the list
-      await fetchEvents()
-      toast.success("Blank event created successfully")
-    } catch (error) {
-      console.error("Error creating event:", error)
-      toast.error(`Failed to create event: ${error.message}`)
-    }
-  }
+  const openCreateDialog = () => {
+    setEditingEvent(null);
+    setTitle("");
+    setContent("");
+    const formattedDate = new Date().toISOString().slice(0, 16);
+    setEventDate(formattedDate);
+    setImageFile(null);
+    setImagePreview(null);
+    setIsDialogOpen(true);
+  };
 
   const openEditDialog = (event: Event) => {
     console.log("Opening edit dialog for event:", event);
     setEditingEvent(event)
-    setTitle(event.event_title || "")
-    setContent(event.event_desc || "")
+    setTitle(event.eventTitle || "")
+    setContent(event.eventDesc || "")
     
     // Handle date parsing more robustly
     try {
-      const date = new Date(event.event_date)
+      const date = new Date(event.eventDate)
       if (!isNaN(date.getTime())) {
         // datetime-local input expects YYYY-MM-DDTHH:mm format
         const formattedDate = date.toISOString().slice(0, 16)
@@ -129,129 +99,140 @@ export default function EventManagement() {
         console.log("Setting fallback event date to:", formattedDate);
         setEventDate(formattedDate)
       }
-    } catch (error) {
+    } catch {
       // Fallback to current date if parsing fails
       const formattedDate = new Date().toISOString().slice(0, 16)
       console.log("Setting error fallback event date to:", formattedDate);
       setEventDate(formattedDate)
     }
     
-    setImagePreview(event.image_url || null)
+    setImagePreview(event.imageUrl || null)
     setImageFile(null)
     setIsDialogOpen(true)
   }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    // Validate file type
-    if (!file.type.includes("jpeg") && !file.type.includes("jpg")) {
-      toast.error("Please select a JPEG image")
-      return
+    const file = e.target.files?.[0];
+    if (file) {
+      toast("Image uploads are temporarily disabled; ignoring selected file.");
     }
-
-    // Validate file size (400KB = 400 * 1024 bytes)
-    if (file.size > 400 * 1024) {
-      toast.error("Image must be 400KB or smaller")
-      return
-    }
-
-    setImageFile(file)
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      setImagePreview(e.target?.result as string)
-    }
-    reader.readAsDataURL(file)
+    setImageFile(null);
+    setImagePreview(null);
   }
 
-  const uploadImage = async (file: File): Promise<string> => {
-    const formData = new FormData()
-    formData.append("file", file)
+  const createEvent = async ({
+    title,
+    content,
+    eventDate,
+  }: {
+    title: string;
+    content: string;
+    eventDate: string;
+  }): Promise<StandardResponse> => {
+    const isoDate = new Date(eventDate).toISOString();
 
-    const response = await fetch("/api/upload", {
+    const payload: Record<string, unknown> = {
+      event_title: title.trim(),
+      event_desc: content.trim(),
+      event_date: isoDate,
+      image_url: null,
+      user_id: (await getSession())?.user.id,
+    };
+
+    const res = await fetch("/api/events", {
       method: "POST",
-      body: formData,
-    })
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(payload),
+    });
 
-    if (!response.ok) throw new Error("Failed to upload image")
-    const data = await response.json()
-    return data.url
-  }
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Create failed: ${res.status} ${text}`);
+    }
+
+    return res.json();
+  };
+
+  const updateEvent = async ({
+    id,
+    title,
+    content,
+    eventDate,
+  }: {
+    id: string;
+    title: string;
+    content: string;
+    eventDate: string;
+  }): Promise<StandardResponse> => {
+    const isoDate = new Date(eventDate).toISOString();
+
+    const payload = {
+      event_title: title.trim(),
+      event_desc: content.trim(),
+      event_date: isoDate,
+      image_url: null,
+    };
+
+    const res = await fetch(`/api/events/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`Update failed: ${res.status} ${text}`);
+    }
+
+    return res.json();
+  };
 
   const saveEvent = async () => {
-    console.log("Save event clicked");
-    console.log("Editing event:", editingEvent);
-    console.log("Title:", title);
-    console.log("Content:", content);
-    console.log("Event date:", eventDate);
-    
-    if (!editingEvent) {
-      console.log("No editing event, returning");
-      return;
-    }
-
-    // Validate required fields
     if (!title.trim() || !content.trim() || !eventDate) {
-      console.log("Validation failed - Title:", title.trim(), "Content:", content.trim(), "EventDate:", eventDate);
       toast.error("All fields are required");
       return;
     }
 
     try {
-      console.log("Starting save process");
-      let imageUrl = editingEvent.image_url;
+      if (editingEvent) {
+        const result = await updateEvent({
+          id: editingEvent.id,
+          title,
+          content,
+          eventDate,
+        });
+        if (!result?.data) throw new Error("Invalid response from server");
 
-      // Upload new image if selected
-      if (imageFile) {
-        console.log("Uploading image");
-        imageUrl = await uploadImage(imageFile);
+        const updated = result.data as Event;
+        setEvents(events.map((e) => (e.id === editingEvent.id ? updated : e)));
+        setIsDialogOpen(false);
+        resetForm();
+        toast.success("Event updated successfully");
+      } else {
+        const result = await createEvent({
+          title,
+          content,
+          eventDate,
+        });
+        if (!result?.data) throw new Error("Invalid response from server");
+
+        await fetchEvents();
+        setIsDialogOpen(false);
+        resetForm();
+        toast.success("Event created successfully");
       }
-
-      const eventData = {
-        event_title: title.trim() || "Untitled Event",
-        event_desc: content.trim() || "No description provided",
-        event_date: new Date(eventDate).toISOString(),
-        image_url: imageUrl,
-      }
-
-      console.log("Updating event with data:", JSON.stringify(eventData));
-
-      const response = await fetch(`/api/events/${editingEvent.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(eventData),
-      })
-
-      console.log("Update response status:", response.status);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Failed to update event:", response.status, errorText);
-        throw new Error(`Failed to update event: ${response.status} ${errorText}`);
-      }
-      
-      const result = await response.json();
-      console.log("Update result:", result);
-      
-      // Check if we have data in the response
-      if (!result || !result.data) {
-        throw new Error("Invalid response from server");
-      }
-      
-      const updatedEvent = result.data;
-
-      // Update local state
-      setEvents(events.map((event) => (event.id === editingEvent.id ? updatedEvent : event)));
-
-      setIsDialogOpen(false);
-      resetForm();
-      toast.success("Event updated successfully");
-    } catch (error) {
-      console.error("Error saving event:", error);
-      toast.error(`Failed to save event: ${error.message}`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error("Error saving event:", err);
+      toast.error(`Failed to save event: ${msg}`);
     }
-  }
+  };
 
   const deleteEvent = async (eventId: string) => {
     try {
@@ -260,9 +241,6 @@ export default function EventManagement() {
       })
 
       if (!response.ok) throw new Error("Failed to delete event")
-      
-      // Parse the response to ensure it's successful
-      const result = await response.json()
       
       setEvents(events.filter((event) => event.id !== eventId))
       toast.success("Event deleted successfully")
@@ -289,7 +267,7 @@ export default function EventManagement() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Event Management</h2>
-        <Button onClick={createBlankEvent} className="flex items-center gap-2">
+        <Button onClick={openCreateDialog} className="flex items-center gap-2">
           <Plus className="w-4 h-4" />
           Add New Event
         </Button>
@@ -300,18 +278,18 @@ export default function EventManagement() {
           <Card key={event.id} className="p-4">
             <div className="flex justify-between items-start">
               <div className="flex-1">
-                <h3 className="font-semibold text-lg">{event.event_title}</h3>
+                <h3 className="font-semibold text-lg">{event.eventTitle}</h3>
                 <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
                   <Calendar className="w-4 h-4" />
                   {(() => {
                     try {
-                      return new Date(event.event_date).toLocaleDateString()
-                    } catch (error) {
+                      return new Date(event.eventDate).toLocaleDateString()
+                    } catch {
                       return "Invalid Date"
                     }
                   })()}
                 </p>
-                {event.image_url && (
+                {event.imageUrl && (
                   <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
                     <ImageIcon className="w-4 h-4" />
                     Image attached
@@ -333,7 +311,7 @@ export default function EventManagement() {
                     <AlertDialogHeader>
                       <AlertDialogTitle>Delete Event</AlertDialogTitle>
                       <AlertDialogDescription>
-                        Are you sure you want to delete "{event.event_title}"? This action cannot be undone.
+                        Are you sure you want to delete &quot;{event.eventTitle}&quot;? This action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -392,10 +370,12 @@ export default function EventManagement() {
               <Input id="image" type="file" accept=".jpg,.jpeg" onChange={handleImageChange} />
               {imagePreview && (
                 <div className="mt-2">
-                  <img
+                  <Image
                     src={imagePreview || "/placeholder.svg"}
                     alt="Preview"
-                    className="w-32 h-32 object-cover rounded border"
+                    width={128}
+                    height={128}
+                    // className="w-32 h-32 object-cover rounded border"
                   />
                 </div>
               )}
@@ -424,4 +404,3 @@ export default function EventManagement() {
     </div>
   )
 }
-

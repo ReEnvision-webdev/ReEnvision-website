@@ -67,13 +67,14 @@ export const authOptions = {
   callbacks: {
     async session({ session, token }: { session: Session; token: JWT }) {
       if (token && session.user) {
-        session.user.id = token.userId as string;
+        session.user.id = token.id as string;
         session.user.isAdmin = token.isAdmin as boolean;
       }
       return session;
     },
     async jwt({ token, user }: { token: JWT; user: User }) {
       if (user) {
+        token.id = user.id;
         token.isAdmin = user.isAdmin;
       }
       return token;

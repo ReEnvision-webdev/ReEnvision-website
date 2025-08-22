@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       const response: StandardResponse = {
         success: false,
         message:
-          "event title, event description, or event date is null or undefined",
+          "User ID, event title, event description, or event date is null or undefined",
         error: "Missing fields",
         data: null,
       };

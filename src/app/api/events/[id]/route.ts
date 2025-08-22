@@ -9,6 +9,14 @@ interface GetParams {
   id: string;
 }
 
+interface EventPutBody {
+  eventTitle?: string;
+  eventDesc?: string;
+  eventDate?: Date;
+  imageUrl?: string;
+  updatedAt: Date;
+}
+
 export async function GET(req: NextRequest, { params }: { params: GetParams }) {
   const { id } = await params;
 
@@ -97,7 +105,7 @@ export async function PUT(req: NextRequest, { params }: { params: GetParams }) {
     }
     
     // Map API field names to database field names
-    const updateData: any = {
+    const updateData: EventPutBody = {
       updatedAt: new Date()
     };
     
@@ -166,7 +174,7 @@ export async function PUT(req: NextRequest, { params }: { params: GetParams }) {
     const response: StandardResponse = {
       success: false,
       message: "Internal server error",
-      error: "Failed to update event: " + (error.message || "Unknown error"),
+      error: "Failed to update event",
       data: null,
     };
 

@@ -7,7 +7,7 @@ export default async function Page() {
 
   if (isAdmin) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto p-6 py-25">
         <div className="mb-8">
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
           <p className="text-muted-foreground">Welcome, administrator! You have special access privileges.</p>

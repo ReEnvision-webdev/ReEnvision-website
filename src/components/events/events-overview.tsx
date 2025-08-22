@@ -74,7 +74,7 @@ export default function EventsOverview() {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-lg">Loading events...</div>
+        <div className="text-lg text-[#1f639e]">Loading events...</div>
       </div>
     )
   }
@@ -84,7 +84,7 @@ export default function EventsOverview() {
       {/* Calendar Section */}
       <section>
         <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">Event Calendar</h2>
+          <h2 className="text-2xl font-bold mb-2 text-[#1f639e]">Event Calendar</h2>
           <p className="text-muted-foreground">View all upcoming events in calendar format</p>
         </div>
         <EventCalendar events={events} onEventClick={handleEventClick} />
@@ -93,7 +93,7 @@ export default function EventsOverview() {
       {/* Latest Events Section */}
       <section>
         <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2">Latest Events</h2>
+          <h2 className="text-2xl font-bold mb-2 text-[#1f639e]">Latest Events</h2>
           <p className="text-muted-foreground">Discover our most recently added events</p>
         </div>
 

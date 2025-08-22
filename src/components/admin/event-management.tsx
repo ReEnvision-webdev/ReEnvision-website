@@ -352,7 +352,7 @@ export default function EventManagement() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-[#1f639e]">Event Management</h2>
+        <h2 className="text-2xl font-bold text-[#1f639e] pr-5">Event Management</h2>
         <Button onClick={openCreateDialog} className="flex items-center gap-2 bg-[#1f639e] hover:bg-[#1681DB]">
           <Plus className="w-4 h-4" />
           Add New Event

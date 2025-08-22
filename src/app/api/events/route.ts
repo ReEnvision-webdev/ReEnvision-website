@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     const { user_id, event_title, event_desc, event_date, image_url } =
       await req.json();
 
-    if (event_title == null || event_desc == null || event_date == null) {
+    if (!user_id || !event_title || !event_desc || !event_date) {
       const response: StandardResponse = {
         success: false,
         message:
@@ -68,13 +68,16 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const newEvents = await db.insert(eventsTable).values({
-      imageUrl: image_url ?? null,
-      eventTitle: event_title,
-      eventDate: new Date(event_date),
-      eventDesc: event_desc,
-      createdBy: user_id,
-    }).returning();
+    const newEvents = await db
+      .insert(eventsTable)
+      .values({
+        imageUrl: image_url ?? null,
+        eventTitle: event_title,
+        eventDate: new Date(event_date),
+        eventDesc: event_desc,
+        createdBy: user_id,
+      })
+      .returning();
 
     const response: StandardResponse = {
       success: true,
@@ -91,7 +94,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("Error creating event:", error);
-    
+
     if (
       error instanceof SyntaxError &&
       error.message.includes("Unexpected end of JSON input")
@@ -115,7 +118,7 @@ export async function POST(req: NextRequest) {
     const response: StandardResponse = {
       success: false,
       message: "Internal server error",
-      error: "Failed to create event: " + (error.message || "Unknown error"),
+      error: "Failed to create event",
       data: null,
     };
 

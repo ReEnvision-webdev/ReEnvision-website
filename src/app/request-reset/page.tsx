@@ -52,9 +52,9 @@ export default function Page() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center justify-center h-screen py-50 pt-70">
       <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-center mb-4">
+        <h1 className="text-2xl font-bold text-center mb-4 text-[#1f639e]">
           Request a password reset
         </h1>
         <p className="text-gray-600 text-center mb-6">

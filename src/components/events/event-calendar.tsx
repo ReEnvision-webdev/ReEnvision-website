@@ -110,11 +110,11 @@ export default function EventCalendar({ events, onEventClick }: EventCalendarPro
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex text-[#1f639e] items-center gap-2">
             <Calendar className="w-5 h-5" />
             {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
           </CardTitle>
-          <div className="flex gap-2">
+          <div className="flex gap-2 text-[#1f639e]">
             <Button variant="outline" size="sm" onClick={() => navigateMonth("prev")}>
               <ChevronLeft className="w-4 h-4" />
             </Button>
@@ -135,7 +135,7 @@ export default function EventCalendar({ events, onEventClick }: EventCalendarPro
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-7 gap-0">{renderCalendarDays()}</div>
+        <div className="grid grid-cols-7 gap-0 text-[#1f639e]">{renderCalendarDays()}</div>
       </CardContent>
     </Card>
   )

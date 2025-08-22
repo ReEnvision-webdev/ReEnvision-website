@@ -346,13 +346,13 @@ export default function EventManagement() {
   };
 
   if (loading) {
-    return <div className="flex justify-center p-8">Loading events...</div>;
+    return <div className="flex justify-center p-8 text-[#1f639e]">Loading events...</div>;
   }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Event Management</h2>
+        <h2 className="text-2xl font-bold text-[#1f639e]">Event Management</h2>
         <Button onClick={openCreateDialog} className="flex items-center gap-2 bg-[#1f639e] hover:bg-[#1681DB]">
           <Plus className="w-4 h-4" />
           Add New Event
@@ -364,7 +364,7 @@ export default function EventManagement() {
           <Card key={event.id} className="p-4">
             <div className="flex justify-between items-start">
               <div className="flex-1">
-                <h3 className="font-semibold text-lg">{event.eventTitle}</h3>
+                <h3 className="font-semibold text-lg text-[#1f639e]">{event.eventTitle}</h3>
                 <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
                   <Calendar className="w-4 h-4" />
                   {(() => {

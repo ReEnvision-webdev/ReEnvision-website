@@ -82,7 +82,7 @@ export default function Page() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"
+            className="w-full bg-[#1f639e] hover:bg-[#164a73] text-white py-2 rounded-md transition duration-200"
           >
             Send reset link
           </button>

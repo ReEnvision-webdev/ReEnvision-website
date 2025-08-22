@@ -353,7 +353,7 @@ export default function EventManagement() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-[#1f639e] pr-5">Event Management</h2>
-        <Button onClick={openCreateDialog} className="flex items-center gap-2 bg-[#1f639e] hover:bg-[#1681DB]">
+        <Button onClick={openCreateDialog} className="flex items-center gap-2 bg-[#1f639e] hover:bg-[#164a73]">
           <Plus className="w-4 h-4" />
           Add New Event
         </Button>
@@ -385,7 +385,7 @@ export default function EventManagement() {
               <div className="flex gap-2">
                 <Button
                   size="sm"
-                  className="bg-[#1f639e] hover:bg-[#1681DB]"
+                  className="bg-[#1f639e] hover:bg-[#164a73]"
                   onClick={() => openEditDialog(event)}
                 >
                   <Edit className="w-4 h-4" />
@@ -393,7 +393,7 @@ export default function EventManagement() {
 
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button size="sm" className="bg-[#1f639e] hover:bg-[#1681DB]">
+                    <Button size="sm" className="bg-[#1f639e] hover:bg-[#164a73]">
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </AlertDialogTrigger>
@@ -498,10 +498,10 @@ export default function EventManagement() {
             </div>
 
             <div className="flex justify-end gap-2">
-              <Button className="bg-[#1f639e] hover:bg-[#1681DB]" onClick={() => setIsDialogOpen(false)}>
+              <Button className="bg-[#1f639e] hover:bg-[#164a73]" onClick={() => setIsDialogOpen(false)}>
                 Cancel
               </Button>
-              <Button className="bg-[#1f639e] hover:bg-[#1681DB]" onClick={saveEvent} disabled={uploading}>
+              <Button className="bg-[#1f639e] hover:bg-[#164a73]" onClick={saveEvent} disabled={uploading}>
                 Save Event
               </Button>
             </div>

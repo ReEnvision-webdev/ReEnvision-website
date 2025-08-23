@@ -130,7 +130,7 @@ export default function EventsOverview() {
                   </div>
                 )}
                 <CardHeader className="pb-3">
-                  <CardTitle className="line-clamp-2 text-lg">{event.title}</CardTitle>
+                  <CardTitle className="line-clamp-2 text-lg text-[#1f639e]">{event.title}</CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
                   <div className="space-y-2">
@@ -143,7 +143,7 @@ export default function EventsOverview() {
                       <span>{formatTime(event.event_date)}</span>
                     </div>
                     {new Date(event.event_date) > new Date() && (
-                      <Badge variant="secondary" className="w-fit">
+                      <Badge variant="secondary" className="w-fit text-[#1f639e]">
                         Upcoming
                       </Badge>
                     )}

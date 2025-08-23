@@ -33,7 +33,18 @@ export default function EventsOverview() {
     try {
       const response = await fetch("/api/events")
       if (!response.ok) throw new Error("Failed to fetch events")
-      const allEvents = await response.json()
+      const result = await response.json()
+      // Map database fields to frontend expected fields
+      const allEvents = (result.data || []).map((event: any) => ({
+        id: event.id,
+        title: event.eventTitle,
+        content: event.eventDesc,
+        event_date: event.eventDate,
+        image_url: event.imageUrl,
+        created_at: event.createdAt,
+        updated_at: event.updatedAt,
+        user_id: event.createdBy,
+      }))
 
       // Sort events by date for calendar and by created_at for latest
       const sortedByDate = [...allEvents].sort(
@@ -119,7 +130,7 @@ export default function EventsOverview() {
                   </div>
                 )}
                 <CardHeader className="pb-3">
-                  <CardTitle className="line-clamp-2 text-lg">{event.title}</CardTitle>
+                  <CardTitle className="line-clamp-2 text-lg text-[#1f639e]">{event.title}</CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
                   <div className="space-y-2">
@@ -132,7 +143,7 @@ export default function EventsOverview() {
                       <span>{formatTime(event.event_date)}</span>
                     </div>
                     {new Date(event.event_date) > new Date() && (
-                      <Badge variant="secondary" className="w-fit">
+                      <Badge variant="secondary" className="w-fit text-[#1f639e]">
                         Upcoming
                       </Badge>
                     )}

@@ -33,7 +33,18 @@ export default function EventsOverview() {
     try {
       const response = await fetch("/api/events")
       if (!response.ok) throw new Error("Failed to fetch events")
-      const allEvents = await response.json()
+      const result = await response.json()
+      // Map database fields to frontend expected fields
+      const allEvents = (result.data || []).map((event: any) => ({
+        id: event.id,
+        title: event.eventTitle,
+        content: event.eventDesc,
+        event_date: event.eventDate,
+        image_url: event.imageUrl,
+        created_at: event.createdAt,
+        updated_at: event.updatedAt,
+        user_id: event.createdBy,
+      }))
 
       // Sort events by date for calendar and by created_at for latest
       const sortedByDate = [...allEvents].sort(

@@ -53,7 +53,18 @@ export default function EventsSearch() {
     try {
       const response = await fetch("/api/events")
       if (!response.ok) throw new Error("Failed to fetch events")
-      let allEvents = await response.json()
+      const result = await response.json()
+      // Map database fields to frontend expected fields
+      let allEvents = (result.data || []).map((event: any) => ({
+        id: event.id,
+        title: event.eventTitle,
+        content: event.eventDesc,
+        event_date: event.eventDate,
+        image_url: event.imageUrl,
+        created_at: event.createdAt,
+        updated_at: event.updatedAt,
+        user_id: event.createdBy,
+      }))
 
       // Apply search filter if query exists
       if (query.trim()) {

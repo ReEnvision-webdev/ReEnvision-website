@@ -42,11 +42,21 @@ export default function EventCalendar({ events, onEventClick }: EventCalendarPro
   }
 
   const getEventsForDate = (date: Date) => {
-    const dateString = date.toISOString().split("T")[0]
-    return events.filter((event) => {
-      const eventDate = new Date(event.event_date).toISOString().split("T")[0]
-      return eventDate === dateString
-    })
+    try {
+      const dateString = date.toISOString().split("T")[0]
+      return events.filter((event) => {
+        try {
+          const eventDate = new Date(event.event_date).toISOString().split("T")[0]
+          return eventDate === dateString
+        } catch (error) {
+          console.error("Error parsing event date:", event.event_date, error)
+          return false
+        }
+      })
+    } catch (error) {
+      console.error("Error processing date:", date, error)
+      return []
+    }
   }
 
   const navigateMonth = (direction: "prev" | "next") => {

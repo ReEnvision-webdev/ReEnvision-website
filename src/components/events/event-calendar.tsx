@@ -97,7 +97,7 @@ export default function EventCalendar({ events, onEventClick }: EventCalendarPro
             {dayEvents.slice(0, 2).map((event) => (
               <div
                 key={event.id}
-                className="text-xs bg-primary/20 text-primary px-1 py-0.5 rounded cursor-pointer hover:bg-primary/30 transition-colors truncate"
+                className="text-xs bg-primary/20 text-[#1f639e] px-1 py-0.5 rounded cursor-pointer hover:bg-primary/30 transition-colors truncate"
                 onClick={(e) => {
                   e.stopPropagation()
                   onEventClick(event.id)

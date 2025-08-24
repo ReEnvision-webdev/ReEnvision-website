@@ -10,7 +10,9 @@ export const getDecodedJwt = async (req: NextRequest) => {
   });
 };
 
-export const restrictAdmin = async (req: NextRequest): Promise<NextResponse | void> => {
+export const restrictAdmin = async (
+  req: NextRequest,
+): Promise<NextResponse | void> => {
   const token = await getDecodedJwt(req);
 
   if (!token) {

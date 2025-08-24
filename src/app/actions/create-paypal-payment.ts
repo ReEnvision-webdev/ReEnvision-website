@@ -1,15 +1,21 @@
-"use server"
+"use server";
 
-export async function createPayPalPayment(amount: number, customerName: string) {
-  const paypalClientId = process.env.PAYPAL_CLIENT_ID
-  const paypalClientSecret = process.env.PAYPAL_CLIENT_SECRET
-  const paypalEnvironment = process.env.PAYPAL_ENVIRONMENT || "sandbox" // sandbox or live
+export async function createPayPalPayment(
+  amount: number,
+  customerName: string,
+) {
+  const paypalClientId = process.env.PAYPAL_CLIENT_ID;
+  const paypalClientSecret = process.env.PAYPAL_CLIENT_SECRET;
+  const paypalEnvironment = process.env.PAYPAL_ENVIRONMENT || "sandbox"; // sandbox or live
 
   if (!paypalClientId || !paypalClientSecret) {
-    throw new Error("PayPal credentials are not set in environment variables")
+    throw new Error("PayPal credentials are not set in environment variables");
   }
 
-  const baseUrl = paypalEnvironment === "sandbox" ? "https://api-m.sandbox.paypal.com" : "https://api-m.paypal.com"
+  const baseUrl =
+    paypalEnvironment === "sandbox"
+      ? "https://api-m.sandbox.paypal.com"
+      : "https://api-m.paypal.com";
 
   try {
     // Get access token
@@ -20,14 +26,14 @@ export async function createPayPalPayment(amount: number, customerName: string) 
         Authorization: `Basic ${Buffer.from(`${paypalClientId}:${paypalClientSecret}`).toString("base64")}`,
       },
       body: "grant_type=client_credentials",
-    })
+    });
 
     if (!tokenResponse.ok) {
-      throw new Error("Failed to get PayPal access token")
+      throw new Error("Failed to get PayPal access token");
     }
 
-    const tokenData = await tokenResponse.json()
-    const accessToken = tokenData.access_token
+    const tokenData = await tokenResponse.json();
+    const accessToken = tokenData.access_token;
 
     // Create payment
     const paymentResponse = await fetch(`${baseUrl}/v2/checkout/orders`, {
@@ -44,7 +50,8 @@ export async function createPayPalPayment(amount: number, customerName: string) 
               currency_code: "USD",
               value: amount.toFixed(2),
             },
-            description: "Donation to ReEnvision - Help us keep education free and accessible for everyone",
+            description:
+              "Donation to ReEnvision - Help us keep education free and accessible for everyone",
             custom_id: customerName,
           },
         ],
@@ -56,12 +63,12 @@ export async function createPayPalPayment(amount: number, customerName: string) 
           user_action: "PAY_NOW",
         },
       }),
-    })
+    });
 
     if (!paymentResponse.ok) {
-      const errorData = await paymentResponse.json()
-      console.error("PayPal API Error:", errorData)
-      throw new Error("Failed to create PayPal payment")
+      const errorData = await paymentResponse.json();
+      console.error("PayPal API Error:", errorData);
+      throw new Error("Failed to create PayPal payment");
     }
 
     interface PayPalLink {
@@ -76,21 +83,23 @@ export async function createPayPalPayment(amount: number, customerName: string) 
       // Add other properties as needed
     }
 
-    const paymentData: PayPalPaymentResponse = await paymentResponse.json()
+    const paymentData: PayPalPaymentResponse = await paymentResponse.json();
 
     // Find the approval URL
-    const approvalUrl = paymentData.links.find((link: PayPalLink) => link.rel === "approve")?.href
+    const approvalUrl = paymentData.links.find(
+      (link: PayPalLink) => link.rel === "approve",
+    )?.href;
 
     if (!approvalUrl) {
-      throw new Error("No approval URL found in PayPal response")
+      throw new Error("No approval URL found in PayPal response");
     }
 
     return {
       orderId: paymentData.id,
       approvalUrl: approvalUrl,
-    }
+    };
   } catch (error) {
-    console.error("Error creating PayPal payment:", error)
-    throw new Error("Failed to create PayPal payment")
+    console.error("Error creating PayPal payment:", error);
+    throw new Error("Failed to create PayPal payment");
   }
 }

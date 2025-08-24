@@ -27,11 +27,12 @@ function NavLink({ href, label }: { href: string; label: string }) {
 function EventsDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  
-  const isEventsActive = pathname === "/events" || pathname === "/events/search";
+
+  const isEventsActive =
+    pathname === "/events" || pathname === "/events/search";
 
   return (
-    <div 
+    <div
       className="relative"
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
@@ -42,16 +43,21 @@ function EventsDropdown() {
         className={`hover:bg-[#F0F8FF] hover:text-[#1d588a] ${isEventsActive ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"} `}
       >
         Events
-        <svg 
-          className={`ml-1 h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
-          fill="none" 
-          viewBox="0 0 24 24" 
+        <svg
+          className={`ml-1 h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          fill="none"
+          viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </Button>
-      
+
       {isOpen && (
         <div className="absolute left-0 mt-0 w-48 bg-[#1d588a] border border-[#00427A] shadow-lg z-50">
           <Link href="/events">
@@ -140,13 +146,18 @@ function MobileMenu() {
                 onClick={() => setIsEventsOpen(!isEventsOpen)}
               >
                 Events
-                <svg 
-                  className={`h-4 w-4 transition-transform ${isEventsOpen ? 'rotate-180' : ''}`} 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
+                <svg
+                  className={`h-4 w-4 transition-transform ${isEventsOpen ? "rotate-180" : ""}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </Button>
               {isEventsOpen && (

@@ -13,7 +13,10 @@ interface EventPutBody {
   updatedAt: Date;
 }
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   const { id } = await params;
 
   try {
@@ -71,7 +74,10 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   const res = await restrictAdmin(req);
 
   if (res) {
@@ -82,7 +88,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
   try {
     const body = await req.json();
-    
+
     // Validate required fields if they are provided
     if (body.event_title !== undefined && body.event_title === "") {
       const response: StandardResponse = {
@@ -99,15 +105,17 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         },
       });
     }
-    
+
     // Map API field names to database field names
     const updateData: EventPutBody = {
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
-    
-    if (body.event_title !== undefined) updateData.eventTitle = body.event_title;
+
+    if (body.event_title !== undefined)
+      updateData.eventTitle = body.event_title;
     if (body.event_desc !== undefined) updateData.eventDesc = body.event_desc;
-    if (body.event_date !== undefined) updateData.eventDate = new Date(body.event_date);
+    if (body.event_date !== undefined)
+      updateData.eventDate = new Date(body.event_date);
     if (body.image_url !== undefined) updateData.imageUrl = body.image_url;
 
     const events = await db

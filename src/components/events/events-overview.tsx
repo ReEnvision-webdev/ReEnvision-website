@@ -1,105 +1,108 @@
+"use client";
 
-"use client"
-
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Calendar, Clock } from "lucide-react"
-import { useRouter } from "next/navigation"
-import EventCalendar from "./event-calendar"
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Calendar, Clock } from "lucide-react";
+import { useRouter } from "next/navigation";
+import EventCalendar from "./event-calendar";
 
 type Event = {
-  id: string
-  title: string
-  content: string
-  event_date: string
-  image_url: string | null
-  created_at: string
-  updated_at: string
-  user_id: string
-}
+  id: string;
+  title: string;
+  content: string;
+  event_date: string;
+  image_url: string | null;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
+};
 
 export default function EventsOverview() {
-  const [events, setEvents] = useState<Event[]>([])
-  const [latestEvents, setLatestEvents] = useState<Event[]>([])
-  const [loading, setLoading] = useState(true)
-  const router = useRouter()
+  const [events, setEvents] = useState<Event[]>([]);
+  const [latestEvents, setLatestEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    fetchEvents()
-  }, [])
+    fetchEvents();
+  }, []);
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch("/api/events")
-      if (!response.ok) throw new Error("Failed to fetch events")
-      const result = await response.json()
+      const response = await fetch("/api/events");
+      if (!response.ok) throw new Error("Failed to fetch events");
+      const result = await response.json();
       // Map database fields to frontend expected fields
-      const allEvents = (result.data || []).map((event: {
-        id: string;
-        eventTitle: string;
-        eventDesc: string;
-        eventDate: string;
-        imageUrl: string | null;
-        createdAt: string;
-        updatedAt: string;
-        createdBy: string;
-      }) => ({
-        id: event.id,
-        title: event.eventTitle,
-        content: event.eventDesc,
-        event_date: event.eventDate,
-        image_url: event.imageUrl,
-        created_at: event.createdAt,
-        updated_at: event.updatedAt,
-        user_id: event.createdBy,
-      }))
+      const allEvents = (result.data || []).map(
+        (event: {
+          id: string;
+          eventTitle: string;
+          eventDesc: string;
+          eventDate: string;
+          imageUrl: string | null;
+          createdAt: string;
+          updatedAt: string;
+          createdBy: string;
+        }) => ({
+          id: event.id,
+          title: event.eventTitle,
+          content: event.eventDesc,
+          event_date: event.eventDate,
+          image_url: event.imageUrl,
+          created_at: event.createdAt,
+          updated_at: event.updatedAt,
+          user_id: event.createdBy,
+        }),
+      );
 
       // Sort events by date for calendar and by created_at for latest
       const sortedByDate = [...allEvents].sort(
-        (a, b) => new Date(a.event_date).getTime() - new Date(b.event_date).getTime(),
-      )
+        (a, b) =>
+          new Date(a.event_date).getTime() - new Date(b.event_date).getTime(),
+      );
       const sortedByCreated = [...allEvents].sort(
-        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-      )
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      );
 
-      setEvents(sortedByDate)
-      setLatestEvents(sortedByCreated.slice(0, 6))
+      setEvents(sortedByDate);
+      setLatestEvents(sortedByCreated.slice(0, 6));
     } catch (error) {
-      console.error("Error fetching events:", error)
+      console.error("Error fetching events:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleEventClick = (eventId: string) => {
     // Ensure we have a valid event ID before navigating
-    if (eventId && typeof eventId === 'string' && eventId.length > 0) {
-      router.push(`/events/${eventId}`)
+    if (eventId && typeof eventId === "string" && eventId.length > 0) {
+      router.push(`/events/${eventId}`);
     }
-  }
+  };
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
-    })
-  }
+    });
+  };
 
   const formatTime = (dateString: string) => {
     return new Date(dateString).toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
-    })
-  }
+    });
+  };
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <div className="text-lg text-[#1f639e]">Loading events...</div>
       </div>
-    )
+    );
   }
 
   return (
@@ -107,8 +110,12 @@ export default function EventsOverview() {
       {/* Calendar Section */}
       <section>
         <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2 text-[#1f639e]">Event Calendar</h2>
-          <p className="text-muted-foreground">View all upcoming events in calendar format</p>
+          <h2 className="text-2xl font-bold mb-2 text-[#1f639e]">
+            Event Calendar
+          </h2>
+          <p className="text-muted-foreground">
+            View all upcoming events in calendar format
+          </p>
         </div>
         <EventCalendar events={events} onEventClick={handleEventClick} />
       </section>
@@ -116,17 +123,23 @@ export default function EventsOverview() {
       {/* Latest Events Section */}
       <section>
         <div className="mb-6">
-          <h2 className="text-2xl font-bold mb-2 text-[#1f639e]">Latest Events</h2>
-          <p className="text-muted-foreground">Discover our most recently added events</p>
+          <h2 className="text-2xl font-bold mb-2 text-[#1f639e]">
+            Latest Events
+          </h2>
+          <p className="text-muted-foreground">
+            Discover our most recently added events
+          </p>
         </div>
 
         {latestEvents.length === 0 ? (
           <Card className="p-8 text-center">
-            <p className="text-muted-foreground">No events available at the moment.</p>
+            <p className="text-muted-foreground">
+              No events available at the moment.
+            </p>
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {latestEvents.map((event) => (
+            {latestEvents.map(event => (
               <Card
                 key={event.id}
                 className="cursor-pointer hover:shadow-lg transition-shadow duration-200 overflow-hidden"
@@ -143,7 +156,9 @@ export default function EventsOverview() {
                   </div>
                 )}
                 <CardHeader className="pb-3">
-                  <CardTitle className="line-clamp-2 text-lg text-[#1f639e]">{event.title}</CardTitle>
+                  <CardTitle className="line-clamp-2 text-lg text-[#1f639e]">
+                    {event.title}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
                   <div className="space-y-2">
@@ -156,7 +171,10 @@ export default function EventsOverview() {
                       <span>{formatTime(event.event_date)}</span>
                     </div>
                     {new Date(event.event_date) > new Date() && (
-                      <Badge variant="secondary" className="w-fit text-[#1f639e]">
+                      <Badge
+                        variant="secondary"
+                        className="w-fit text-[#1f639e]"
+                      >
                         Upcoming
                       </Badge>
                     )}
@@ -168,6 +186,5 @@ export default function EventsOverview() {
         )}
       </section>
     </div>
-  )
+  );
 }
-

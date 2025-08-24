@@ -1,16 +1,16 @@
-"use client"
-import { useEffect, useState } from "react"
-import AOS from "aos"
-import "aos/dist/aos.css"
-import PaymentModal from "@/components/PaymentModal"
-import { createPayPalPayment } from "@/app/actions/create-paypal-payment"
+"use client";
+import { useEffect, useState } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import PaymentModal from "@/components/PaymentModal";
+import { createPayPalPayment } from "@/app/actions/create-paypal-payment";
 
 export default function DonatePage() {
-  const [selectedAmount, setSelectedAmount] = useState<string>("")
-  const [customAmount, setCustomAmount] = useState<string>("")
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [approvalUrl, setApprovalUrl] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [selectedAmount, setSelectedAmount] = useState<string>("");
+  const [customAmount, setCustomAmount] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [approvalUrl, setApprovalUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Initialize AOS
@@ -20,68 +20,71 @@ export default function DonatePage() {
       once: true,
       offset: 50,
       delay: 0,
-    })
-  }, [])
+    });
+  }, []);
 
-  const donationAmounts = ["$10", "$20", "$40", "$50"]
+  const donationAmounts = ["$10", "$20", "$40", "$50"];
 
   const handleAmountSelect = (amount: string) => {
-    setSelectedAmount(amount)
-    setCustomAmount("")
-  }
+    setSelectedAmount(amount);
+    setCustomAmount("");
+  };
 
   const handleCustomAmount = (value: string) => {
-    setCustomAmount(value)
-    setSelectedAmount("Other")
-  }
+    setCustomAmount(value);
+    setSelectedAmount("Other");
+  };
 
   const getDonationAmount = (): number => {
     if (selectedAmount === "Other" && customAmount) {
-      return Number.parseFloat(customAmount)
+      return Number.parseFloat(customAmount);
     } else if (selectedAmount && selectedAmount !== "Other") {
-      return Number.parseFloat(selectedAmount.replace("$", ""))
+      return Number.parseFloat(selectedAmount.replace("$", ""));
     }
-    return 0
-  }
+    return 0;
+  };
 
   const handleDonate = async () => {
-    const amount = getDonationAmount()
+    const amount = getDonationAmount();
 
     // Validation
     if (amount <= 0) {
-      alert("Please select or enter a valid donation amount")
-      return
+      alert("Please select or enter a valid donation amount");
+      return;
     }
 
     if (amount < 1) {
-      alert("Minimum donation amount is $1")
-      return
+      alert("Minimum donation amount is $1");
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
-      const result = await createPayPalPayment(amount, "Anonymous Donor")
-      setApprovalUrl(result.approvalUrl)
-      setIsModalOpen(true)
+      const result = await createPayPalPayment(amount, "Anonymous Donor");
+      setApprovalUrl(result.approvalUrl);
+      setIsModalOpen(true);
     } catch (error) {
-      console.error("Error creating PayPal payment:", error)
-      alert("There was an error processing your donation. Please try again.")
+      console.error("Error creating PayPal payment:", error);
+      alert("There was an error processing your donation. Please try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const closeModal = () => {
-    setIsModalOpen(false)
-    setApprovalUrl(null)
-  }
+    setIsModalOpen(false);
+    setApprovalUrl(null);
+  };
 
   return (
     <>
       <div className="bg-[#F0F8FF] pt-30 pb-18 px-4 min-h-screen flex items-center justify-center">
         <div className="w-full max-w-6xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden" data-aos="fade-up">
+          <div
+            className="bg-white rounded-2xl shadow-xl overflow-hidden"
+            data-aos="fade-up"
+          >
             <div className="grid lg:grid-cols-2 gap-0">
               {/* Left Section - Mission Statement */}
               <div className="p-6 sm:p-8 lg:p-12 flex flex-col justify-center bg-gray-50 lg:bg-white">
@@ -90,10 +93,13 @@ export default function DonatePage() {
                     Power our mission to educate
                   </h1>
                   <p className="text-gray-600 text-lg md:text-lg text-center lg:text-left leading-relaxed">
-                    Help us make tech education free and accessible for everyone, everywhere. Your support enables us to
-                    create more cutting-edge content, enhance our platform&apos;s functionality, and reach learners
-                    worldwide who lack access to quality technology resources. Every donation, no matter the size, helps
-                    us build a future where tech literacy is universal and learning opportunities are available to all,
+                    Help us make tech education free and accessible for
+                    everyone, everywhere. Your support enables us to create more
+                    cutting-edge content, enhance our platform&apos;s
+                    functionality, and reach learners worldwide who lack access
+                    to quality technology resources. Every donation, no matter
+                    the size, helps us build a future where tech literacy is
+                    universal and learning opportunities are available to all,
                     regardless of their circumstances.{" "}
                   </p>
                 </div>
@@ -102,11 +108,13 @@ export default function DonatePage() {
               {/* Right Section - Donation Form */}
               <div className="p-6 sm:p-8 lg:p-12 bg-white">
                 <div data-aos="fade-left" data-aos-delay="400">
-                  <h2 className="text-3xl font-bold text-[#1d588a] mb-6 text-center lg:text-left">Select An Amount</h2>
+                  <h2 className="text-3xl font-bold text-[#1d588a] mb-6 text-center lg:text-left">
+                    Select An Amount
+                  </h2>
 
                   {/* Amount Selection Buttons */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-3 mb-6 sm:mb-8">
-                    {donationAmounts.map((amount) => (
+                    {donationAmounts.map(amount => (
                       <button
                         key={amount}
                         onClick={() => handleAmountSelect(amount)}
@@ -127,7 +135,7 @@ export default function DonatePage() {
                       type="number"
                       placeholder="Enter custom amount"
                       value={customAmount}
-                      onChange={(e) => handleCustomAmount(e.target.value)}
+                      onChange={e => handleCustomAmount(e.target.value)}
                       className="w-full py-3 sm:py-4 px-4 sm:px-5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1d588a] focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                       min="1"
                       step="0.01"
@@ -138,7 +146,8 @@ export default function DonatePage() {
                   {getDonationAmount() > 0 && (
                     <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                       <p className="text-sm text-blue-800">
-                        <span className="font-medium">Donation Amount: </span>${getDonationAmount().toFixed(2)}
+                        <span className="font-medium">Donation Amount: </span>$
+                        {getDonationAmount().toFixed(2)}
                       </p>
                     </div>
                   )}
@@ -162,7 +171,6 @@ export default function DonatePage() {
                   </button>
 
                   {/* Alternative PayPal Link */}
- 
                 </div>
               </div>
             </div>
@@ -170,7 +178,11 @@ export default function DonatePage() {
         </div>
       </div>
 
-      <PaymentModal isOpen={isModalOpen} onClose={closeModal} approvalUrl={approvalUrl} />
+      <PaymentModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        approvalUrl={approvalUrl}
+      />
     </>
-  )
+  );
 }

@@ -1,30 +1,29 @@
+"use client";
 
-"use client"
-
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Calendar, Clock, ArrowLeft } from "lucide-react"
-import { useRouter } from "next/navigation"
-import MarkdownRenderer from "./markdown-renderer"
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Calendar, Clock, ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import MarkdownRenderer from "./markdown-renderer";
 
 interface Event {
-  id: string
-  title: string
-  content: string
-  event_date: string
-  image_url: string | null
-  created_at: string
-  updated_at: string
-  user_id: string
+  id: string;
+  title: string;
+  content: string;
+  event_date: string;
+  image_url: string | null;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
 }
 
 interface EventDetailProps {
-  event: Event
+  event: Event;
 }
 
 export default function EventDetail({ event }: EventDetailProps) {
-  const router = useRouter()
+  const router = useRouter();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -32,23 +31,27 @@ export default function EventDetail({ event }: EventDetailProps) {
       year: "numeric",
       month: "long",
       day: "numeric",
-    })
-  }
+    });
+  };
 
   const formatTime = (dateString: string) => {
     return new Date(dateString).toLocaleTimeString("en-US", {
       hour: "2-digit",
       minute: "2-digit",
-    })
-  }
+    });
+  };
 
-  const isUpcoming = new Date(event.event_date) > new Date()
-  const isPast = new Date(event.event_date) < new Date()
+  const isUpcoming = new Date(event.event_date) > new Date();
+  const isPast = new Date(event.event_date) < new Date();
 
   return (
     <div className="container mx-auto p-6 max-w-4xl pt-30">
       {/* Back Button */}
-      <Button variant="ghost" onClick={() => router.back()} className="mb-6 flex items-center gap-2 text-[#1f639e] hover:text-[#164a73]">
+      <Button
+        variant="ghost"
+        onClick={() => router.back()}
+        className="mb-6 flex items-center gap-2 text-[#1f639e] hover:text-[#164a73]"
+      >
         <ArrowLeft className="w-4 h-4" />
         Back to Events
       </Button>
@@ -56,10 +59,15 @@ export default function EventDetail({ event }: EventDetailProps) {
       {/* Event Header */}
       <div className="mb-8">
         <div className="flex items-start justify-between mb-4">
-          <h1 className="text-4xl font-bold leading-tight text-[#1f639e]">{event.title}</h1>
+          <h1 className="text-4xl font-bold leading-tight text-[#1f639e]">
+            {event.title}
+          </h1>
           <div className="flex gap-2">
             {isUpcoming && (
-              <Badge variant="default" className="bg-green-100 text-green-800 hover:bg-green-200">
+              <Badge
+                variant="default"
+                className="bg-green-100 text-green-800 hover:bg-green-200"
+              >
                 Upcoming
               </Badge>
             )}
@@ -89,10 +97,10 @@ export default function EventDetail({ event }: EventDetailProps) {
         <div className="mb-8">
           <div className="w-full overflow-hidden rounded-lg shadow-lg">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src={event.image_url || "/placeholder.svg"} 
-              alt={event.title} 
-              className="w-full h-auto object-contain max-h-[600px]" 
+            <img
+              src={event.image_url || "/placeholder.svg"}
+              alt={event.title}
+              className="w-full h-auto object-contain max-h-[600px]"
             />
           </div>
         </div>
@@ -101,7 +109,9 @@ export default function EventDetail({ event }: EventDetailProps) {
       {/* Event Description */}
       <Card>
         <CardContent className="p-8">
-          <h2 className="text-2xl font-semibold mb-6 text-[#1f639e]">About This Event</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-[#1f639e]">
+            About This Event
+          </h2>
           <div className="prose prose-lg max-w-none text-muted-foreground">
             <MarkdownRenderer content={event.content} />
           </div>
@@ -132,6 +142,5 @@ export default function EventDetail({ event }: EventDetailProps) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
-

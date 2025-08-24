@@ -36,9 +36,9 @@ export default function EventDetail({ event }: EventDetailProps) {
   const isPast = new Date(event.event_date) < new Date()
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
+    <div className="container mx-auto p-6 max-w-4xl pt-30">
       {/* Back Button */}
-      <Button variant="ghost" onClick={() => router.back()} className="mb-6 flex items-center gap-2">
+      <Button variant="ghost" onClick={() => router.back()} className="mb-6 flex items-center gap-2 text-[#1f639e] hover:text-[#164a73]">
         <ArrowLeft className="w-4 h-4" />
         Back to Events
       </Button>
@@ -46,7 +46,7 @@ export default function EventDetail({ event }: EventDetailProps) {
       {/* Event Header */}
       <div className="mb-8">
         <div className="flex items-start justify-between mb-4">
-          <h1 className="text-4xl font-bold leading-tight">{event.title}</h1>
+          <h1 className="text-4xl font-bold leading-tight text-[#1f639e]">{event.title}</h1>
           <div className="flex gap-2">
             {isUpcoming && (
               <Badge variant="default" className="bg-green-100 text-green-800 hover:bg-green-200">
@@ -86,8 +86,8 @@ export default function EventDetail({ event }: EventDetailProps) {
       {/* Event Description */}
       <Card>
         <CardContent className="p-8">
-          <h2 className="text-2xl font-semibold mb-6">About This Event</h2>
-          <div className="prose prose-lg max-w-none">
+          <h2 className="text-2xl font-semibold mb-6 text-[#1f639e]">About This Event</h2>
+          <div className="prose prose-lg max-w-none text-muted-foreground">
             <MarkdownRenderer content={event.content} />
           </div>
         </CardContent>

@@ -77,8 +77,12 @@ export default function EventDetail({ event }: EventDetailProps) {
       {/* Event Image */}
       {event.image_url && (
         <div className="mb-8">
-          <div className="aspect-video overflow-hidden rounded-lg shadow-lg">
-            <img src={event.image_url || "/placeholder.svg"} alt={event.title} className="w-full h-full object-cover" />
+          <div className="w-full overflow-hidden rounded-lg shadow-lg">
+            <img 
+              src={event.image_url || "/placeholder.svg"} 
+              alt={event.title} 
+              className="w-full h-auto object-contain max-h-[600px]" 
+            />
           </div>
         </div>
       )}

@@ -35,7 +35,16 @@ export default function EventsOverview() {
       if (!response.ok) throw new Error("Failed to fetch events")
       const result = await response.json()
       // Map database fields to frontend expected fields
-      const allEvents = (result.data || []).map((event: any) => ({
+      const allEvents = (result.data || []).map((event: {
+        id: string;
+        eventTitle: string;
+        eventDesc: string;
+        eventDate: string;
+        imageUrl: string | null;
+        createdAt: string;
+        updatedAt: string;
+        createdBy: string;
+      }) => ({
         id: event.id,
         title: event.eventTitle,
         content: event.eventDesc,
@@ -125,6 +134,7 @@ export default function EventsOverview() {
               >
                 {event.image_url && (
                   <div className="aspect-video overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={event.image_url || "/placeholder.svg"}
                       alt={event.title}

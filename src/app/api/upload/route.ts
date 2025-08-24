@@ -33,8 +33,8 @@ export async function POST(request: Request) {
     const response = await fetch(`${API_URL}/storage/v1/object/event-images/${filename}`, {
       method: "POST",
       headers: {
-        apikey: API_KEY,
-        Authorization: `Bearer ${API_KEY}`,
+        "apikey": API_KEY || "",
+        "Authorization": `Bearer ${API_KEY}`,
         "Content-Type": file.type,
       },
       body: buffer,
@@ -49,6 +49,7 @@ export async function POST(request: Request) {
 
     return Response.json({ url: publicUrl })
   } catch (error) {
+    console.error("Upload error:", error)
     return Response.json({ error: "Failed to upload image" }, { status: 500 })
   }
 }

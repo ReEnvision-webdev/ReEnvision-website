@@ -6,11 +6,21 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react"
-import type { Event as SupabaseEvent } from "@/lib/supabase"
+
+interface Event {
+  id: string
+  title: string
+  content: string
+  event_date: string
+  image_url: string | null
+  created_at: string
+  updated_at: string
+  user_id: string
+}
 
 interface EventCalendarProps {
-  events: SupabaseEvent[]
-  onEventClick: (eventId: number) => void
+  events: Event[]
+  onEventClick: (eventId: string) => void
 }
 
 export default function EventCalendar({ events, onEventClick }: EventCalendarProps) {

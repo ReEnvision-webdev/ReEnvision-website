@@ -3,13 +3,13 @@ import { notFound } from "next/navigation"
 import EventDetail from "@/components/events/event-detail"
 
 interface EventPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default async function EventPage({ params }: EventPageProps) {
-  const { id } = params
+  const { id } = await params
 
   // Basic validation for cuid format (starts with 'c' and has reasonable length)
   if (!id || id.length < 20 || !id.startsWith('c')) {
@@ -55,8 +55,13 @@ export default async function EventPage({ params }: EventPageProps) {
       user_id: eventData.createdBy,
     }
     return <EventDetail event={event} />
-  } catch (error) {
-    console.error("Error fetching event:", error)
+  } catch (error: unknown) {
+    // Log the error for debugging purposes
+    if (error instanceof Error) {
+      console.error("Error fetching event:", error.message)
+    } else {
+      console.error("Unknown error fetching event:", error)
+    }
     notFound()
   }
 }

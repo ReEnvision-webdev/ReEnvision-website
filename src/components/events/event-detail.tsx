@@ -6,8 +6,18 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, Clock, ArrowLeft } from "lucide-react"
 import { useRouter } from "next/navigation"
-import type { Event } from "@/lib/supabase"
 import MarkdownRenderer from "./markdown-renderer"
+
+interface Event {
+  id: string
+  title: string
+  content: string
+  event_date: string
+  image_url: string | null
+  created_at: string
+  updated_at: string
+  user_id: string
+}
 
 interface EventDetailProps {
   event: Event
@@ -78,6 +88,7 @@ export default function EventDetail({ event }: EventDetailProps) {
       {event.image_url && (
         <div className="mb-8">
           <div className="w-full overflow-hidden rounded-lg shadow-lg">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
               src={event.image_url || "/placeholder.svg"} 
               alt={event.title} 

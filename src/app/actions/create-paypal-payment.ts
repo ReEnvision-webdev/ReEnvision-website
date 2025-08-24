@@ -64,10 +64,22 @@ export async function createPayPalPayment(amount: number, customerName: string) 
       throw new Error("Failed to create PayPal payment")
     }
 
-    const paymentData = await paymentResponse.json()
+    interface PayPalLink {
+      href: string;
+      rel: string;
+      method?: string;
+    }
+
+    interface PayPalPaymentResponse {
+      id: string;
+      links: PayPalLink[];
+      // Add other properties as needed
+    }
+
+    const paymentData: PayPalPaymentResponse = await paymentResponse.json()
 
     // Find the approval URL
-    const approvalUrl = paymentData.links.find((link: any) => link.rel === "approve")?.href
+    const approvalUrl = paymentData.links.find((link: PayPalLink) => link.rel === "approve")?.href
 
     if (!approvalUrl) {
       throw new Error("No approval URL found in PayPal response")

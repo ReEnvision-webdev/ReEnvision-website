@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react"
 import AOS from "aos"
 import "aos/dist/aos.css"
-import Link from "next/link"
 import PaymentModal from "@/components/PaymentModal"
 import { createPayPalPayment } from "@/app/actions/create-paypal-payment"
 

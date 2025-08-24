@@ -5,10 +5,6 @@ import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { restrictAdmin } from "@/lib/jwt";
 
-interface GetParams {
-  id: string;
-}
-
 interface EventPutBody {
   eventTitle?: string;
   eventDesc?: string;
@@ -17,7 +13,7 @@ interface EventPutBody {
   updatedAt: Date;
 }
 
-export async function GET(req: NextRequest, { params }: { params: GetParams }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   try {
@@ -75,7 +71,7 @@ export async function GET(req: NextRequest, { params }: { params: GetParams }) {
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: GetParams }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const res = await restrictAdmin(req);
 
   if (res) {
@@ -189,7 +185,7 @@ export async function PUT(req: NextRequest, { params }: { params: GetParams }) {
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: GetParams },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const res = await restrictAdmin(req);
 

@@ -11,7 +11,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { useDebounce } from "@/hooks/use-debounce"
 
 type Event = {
-  id: number
+  id: string
   title: string
   content: string
   event_date: string
@@ -55,7 +55,16 @@ export default function EventsSearch() {
       if (!response.ok) throw new Error("Failed to fetch events")
       const result = await response.json()
       // Map database fields to frontend expected fields
-      let allEvents = (result.data || []).map((event: any) => ({
+      let allEvents = (result.data || []).map((event: {
+        id: string;
+        eventTitle: string;
+        eventDesc: string;
+        eventDate: string;
+        imageUrl: string | null;
+        createdAt: string;
+        updatedAt: string;
+        createdBy: string;
+      }) => ({
         id: event.id,
         title: event.eventTitle,
         content: event.eventDesc,
@@ -102,7 +111,7 @@ export default function EventsSearch() {
     }
   }
 
-  const handleEventClick = (eventId: number) => {
+  const handleEventClick = (eventId: string) => {
     router.push(`/events/${eventId}`)
   }
 
@@ -253,6 +262,7 @@ export default function EventsSearch() {
             >
               {event.image_url && (
                 <div className="aspect-video overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={event.image_url || "/placeholder.svg"}
                     alt={event.title}

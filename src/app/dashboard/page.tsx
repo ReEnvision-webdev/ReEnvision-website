@@ -1,9 +1,10 @@
 
 import EventManagement from "@/components/admin/event-management"
-
+import { checkAuth } from "@/lib/check-auth"
 export default async function Page() {
   // In production, you would implement proper authentication here
   const isAdmin = true // For demo purposes, always show admin interface
+  await checkAuth();
 
   if (isAdmin) {
     return (

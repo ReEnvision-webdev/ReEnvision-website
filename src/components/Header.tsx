@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -26,8 +24,69 @@ function NavLink({ href, label }: { href: string; label: string }) {
   );
 }
 
+function EventsDropdown() {
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isEventsActive =
+    pathname === "/events" || pathname === "/events/search";
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
+      <Button
+        variant="ghost"
+        size="sm"
+        className={`hover:bg-[#F0F8FF] hover:text-[#1d588a] ${isEventsActive ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"} `}
+      >
+        Events
+        <svg
+          className={`ml-1 h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </Button>
+
+      {isOpen && (
+        <div className="absolute left-0 mt-0 w-48 bg-[#1d588a] border border-[#00427A] shadow-lg z-50">
+          <Link href="/events">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/events" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+            >
+              All Events
+            </Button>
+          </Link>
+          <Link href="/events/search">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/events/search" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+            >
+              Search Events
+            </Button>
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isEventsOpen, setIsEventsOpen] = useState(false);
   const pathname = usePathname();
   const { data: session, status } = useSession();
 
@@ -61,7 +120,6 @@ function MobileMenu() {
               { href: "/", label: "Home" },
               { href: "/about", label: "About" },
               { href: "/courses", label: "Courses" },
-              { href: "/events", label: "Events" },
               { href: "/donate", label: "Donate" },
               { href: "/contact", label: "Contact Us" },
             ].map(({ href, label }) => (
@@ -79,6 +137,52 @@ function MobileMenu() {
                 </Button>
               </Link>
             ))}
+            {/* Events Dropdown for Mobile */}
+            <div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`justify-between w-full hover:bg-[#F0F8FF] rounded-none ${pathname.startsWith("/events") ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                onClick={() => setIsEventsOpen(!isEventsOpen)}
+              >
+                Events
+                <svg
+                  className={`h-4 w-4 transition-transform ${isEventsOpen ? "rotate-180" : ""}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </Button>
+              {isEventsOpen && (
+                <div className="mt-1 ml-4 flex flex-col space-y-1">
+                  <Link href="/events">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`justify-start hover:bg-[#F0F8FF] w-full rounded-none ${pathname === "/events" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                    >
+                      All Events
+                    </Button>
+                  </Link>
+                  <Link href="/events/search">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`justify-start hover:bg-[#F0F8FF] w-full rounded-none ${pathname === "/events/search" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                    >
+                      Search Events
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
 
             {status === "authenticated" ? (
               <>
@@ -150,7 +254,7 @@ export default function Header() {
           <NavLink href="/" label="Home" />
           <NavLink href="/about" label="About" />
           <NavLink href="/courses" label="Courses" />
-          <NavLink href="/events" label="Events" />
+          <EventsDropdown />
           <NavLink href="/donate" label="Donate" />
           <NavLink href="/contact" label="Contact Us" />
         </nav>

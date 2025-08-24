@@ -1,22 +1,17 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { loadStripe } from "@stripe/stripe-js";
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-);
 
 interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  sessionId: string | null;
+  approvalUrl: string | null;
 }
 
 export default function PaymentModal({
   isOpen,
   onClose,
-  sessionId,
+  approvalUrl,
 }: PaymentModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -39,23 +34,14 @@ export default function PaymentModal({
   }, [isOpen, onClose]);
 
   useEffect(() => {
-    const redirectToCheckout = async () => {
-      if (sessionId && isOpen) {
-        const stripe = await stripePromise;
-        if (stripe) {
-          const { error } = await stripe.redirectToCheckout({
-            sessionId: sessionId,
-          });
-          if (error) {
-            console.error("Error redirecting to checkout:", error);
-            onClose();
-          }
-        }
+    const redirectToPayPal = () => {
+      if (approvalUrl && isOpen) {
+        window.location.href = approvalUrl;
       }
     };
 
-    redirectToCheckout();
-  }, [sessionId, isOpen, onClose]);
+    redirectToPayPal();
+  }, [approvalUrl, isOpen]);
 
   if (!isOpen) return null;
 
@@ -76,10 +62,10 @@ export default function PaymentModal({
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1d588a] mx-auto mb-4"></div>
           <h3 className="text-lg font-semibold text-gray-800 mb-2">
-            Redirecting to Payment
+            Redirecting to PayPal
           </h3>
           <p className="text-gray-600 text-sm">
-            Please wait while we redirect you to our secure payment page...
+            Please wait while we redirect you to PayPal for secure payment...
           </p>
         </div>
       </div>

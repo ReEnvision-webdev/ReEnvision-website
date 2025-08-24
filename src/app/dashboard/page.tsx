@@ -1,23 +1,20 @@
-import { authOptions } from "@/lib/auth.config";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-
+import EventManagement from "@/components/admin/event-management";
+import { checkAuth } from "@/lib/check-auth";
 export default async function Page() {
-  const session = await getServerSession(authOptions);
+  // In production, you would implement proper authentication here
+  const isAdmin = false; // For demo purposes, always show admin interface
+  await checkAuth();
 
-  if (!session) {
-    return redirect("/signin");
-  }
-
-  const user = session.user;
-
-  // Check if user is admin
-  if (user.isAdmin) {
+  if (isAdmin) {
     return (
-      <div className="mt-30">
-        <h1>Admin Dashboard</h1>
-        <p>Welcome, administrator! You have special access privileges.</p>
-        {/* Add admin-specific content here */}
+      <div className="container mx-auto p-6 py-25">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-[#1f639e]">Admin Dashboard</h1>
+          <p className="text-muted-foreground">
+            Welcome, administrator! You have special access privileges.
+          </p>
+        </div>
+        <EventManagement />
       </div>
     );
   }

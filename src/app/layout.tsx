@@ -5,6 +5,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AuthProvider from "@/components/AuthProvider";
+import { Analytics } from "@vercel/analytics/next"
 
 // Configure EB Garamond
 const ebGaramond = EB_Garamond({
@@ -34,6 +35,7 @@ export default function RootLayout({
       <body className="antialiased bg-[#F0F8FF]">
         <AuthProvider>
           <Header />
+          <Analytics/>
           <main className="min-h-screen">{children}</main>
           <Footer />
         </AuthProvider>

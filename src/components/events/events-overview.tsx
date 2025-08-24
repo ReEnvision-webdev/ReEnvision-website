@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation"
 import EventCalendar from "./event-calendar"
 
 type Event = {
-  id: number
+  id: string
   title: string
   content: string
   event_date: string
@@ -63,8 +63,11 @@ export default function EventsOverview() {
     }
   }
 
-  const handleEventClick = (eventId: number) => {
-    router.push(`/events/${eventId}`)
+  const handleEventClick = (eventId: string) => {
+    // Ensure we have a valid event ID before navigating
+    if (eventId && typeof eventId === 'string' && eventId.length > 0) {
+      router.push(`/events/${eventId}`)
+    }
   }
 
   const formatDate = (dateString: string) => {

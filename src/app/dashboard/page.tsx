@@ -25,7 +25,7 @@ export default async function Page() {
   return (
     <div className="mt-30">
       <h1>Dashboard</h1>
-      <p>Welcome to your dashboard!</p>
+      <p>Comming soon, hang tight!</p>
     </div>
   );
 }

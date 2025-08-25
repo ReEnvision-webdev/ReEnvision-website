@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       text: "",
       subject: "Reset your password",
       replyTo: "no-reply@test.com",
-      html: `<h1>Reset your password</h1><p>Please reset your password by clicking this link: <a href="${process.env.BASE_URL}/reset-password?email=${encodeURIComponent(email)}&token=${rawVerifToken}">Reset Password</a></p><p>Note that this link will expire in 1 hour.</p>`,
+      html: `<h1>Reset your password</h1><p>Please reset your password by clicking this link: <a href="${process.env.EMAIL_VERIF_URL}/reset-password?email=${encodeURIComponent(email)}&token=${rawVerifToken}">Reset Password</a></p><p>Note that this link will expire in 1 hour.</p>`,
     });
 
     const response: StandardResponse = {

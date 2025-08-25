@@ -227,9 +227,9 @@ export default function EventsSearch() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-aos="fade-up">
       {/* Search Input */}
-      <Card>
+      <Card data-aos="fade-up">
         <CardContent className="p-6">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
@@ -279,7 +279,7 @@ export default function EventsSearch() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {events.map(event => (
             <Card
-              key={event.id}
+              key={event.id} // Assuming event.id is unique
               className="cursor-pointer hover:shadow-lg transition-shadow duration-200 overflow-hidden"
               onClick={() => handleEventClick(event.id)}
             >

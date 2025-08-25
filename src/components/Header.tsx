@@ -66,7 +66,7 @@ function EventsDropdown() {
               size="sm"
               className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/events" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
             >
-              All Events
+              Overview
             </Button>
           </Link>
           <Link href="/events/search">
@@ -75,7 +75,7 @@ function EventsDropdown() {
               size="sm"
               className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/events/search" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
             >
-              Search Events
+              All Events
             </Button>
           </Link>
         </div>
@@ -168,7 +168,7 @@ function MobileMenu() {
                       size="sm"
                       className={`justify-start hover:bg-[#F0F8FF] w-full rounded-none ${pathname === "/events" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
                     >
-                      All Events
+                      Overview
                     </Button>
                   </Link>
                   <Link href="/events/search">
@@ -177,7 +177,7 @@ function MobileMenu() {
                       size="sm"
                       className={`justify-start hover:bg-[#F0F8FF] w-full rounded-none ${pathname === "/events/search" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
                     >
-                      Search Events
+                      All Events
                     </Button>
                   </Link>
                 </div>

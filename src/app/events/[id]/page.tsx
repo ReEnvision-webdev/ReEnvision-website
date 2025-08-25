@@ -11,7 +11,8 @@ export default async function EventPage({ params }: EventPageProps) {
   const { id } = await params;
 
   // Basic validation for cuid format (starts with 'c' and has reasonable length)
-  if (!id || id.length < 20 || !id.startsWith("c")) {
+  // Adjusting the validation to be less strict since cuid length can vary
+  if (!id || id.length < 10 || !id.startsWith("c")) {
     notFound();
   }
 

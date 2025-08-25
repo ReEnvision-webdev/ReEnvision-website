@@ -15,7 +15,10 @@ export default function EventsSearchPage() {
   return (
     <div className="container mx-auto p-6 pt-35" data-aos="fade-up">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-center mb-2 text-[#1f639e]" data-aos="fade-up">
+        <h1
+          className="text-4xl font-bold text-center mb-2 text-[#1f639e]"
+          data-aos="fade-up"
+        >
           Search Events
         </h1>
         <p className="text-muted-foreground text-center" data-aos="fade-up">

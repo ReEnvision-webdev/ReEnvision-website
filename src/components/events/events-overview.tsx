@@ -106,9 +106,9 @@ export default function EventsOverview() {
   }
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12" data-aos="fade-up">
       {/* Calendar Section */}
-      <section>
+      <section data-aos="fade-up">
         <div className="mb-6">
           <h2 className="text-2xl font-bold mb-2 text-[#1f639e]">
             Event Calendar
@@ -121,7 +121,7 @@ export default function EventsOverview() {
       </section>
 
       {/* Latest Events Section */}
-      <section>
+      <section data-aos="fade-up">
         <div className="mb-6">
           <h2 className="text-2xl font-bold mb-2 text-[#1f639e]">
             Latest Events
@@ -144,6 +144,8 @@ export default function EventsOverview() {
                 key={event.id}
                 className="cursor-pointer hover:shadow-lg transition-shadow duration-200 overflow-hidden"
                 onClick={() => handleEventClick(event.id)}
+                data-aos="fade-up"
+                data-aos-delay={100 + latestEvents.indexOf(event) * 100} // Add delay based on index
               >
                 {event.image_url && (
                   <div className="aspect-video overflow-hidden">

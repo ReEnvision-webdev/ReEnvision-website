@@ -1,10 +1,10 @@
 import db from "@/db/database";
 import { usersTable } from "@/db/schema";
-// import { sendEmail } from "@/lib/send-mail";
+import { sendEmail } from "@/lib/send-mail";
 import { NextRequest, NextResponse } from "next/server";
-// import cuid from "cuid";
-// import bcrypt from "bcryptjs";
-// import crypto from "crypto";
+import cuid from "cuid";
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { eq } from "drizzle-orm";
 import { StandardResponse } from "@/lib/types";
 
@@ -61,30 +61,28 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  // const rawVerifToken = crypto.randomBytes(32).toString("hex");
+  const rawVerifToken = crypto.randomBytes(32).toString("hex");
 
   try {
-    console.log("sending email token!", process.env.EMAIL_VERIF_URL)
-    
-    // await db.insert(usersTable).values({
-    //   id: cuid(),
-    //   email: email,
-    //   name: name,
-    //   password: await bcrypt.hash(password, 10),
-    //   emailVerificationKey: crypto
-    //     .createHash("sha256")
-    //     .update(rawVerifToken)
-    //     .digest("hex"),
-    //   emailVerificationKeyExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-    // });
+    await db.insert(usersTable).values({
+      id: cuid(),
+      email: email,
+      name: name,
+      password: await bcrypt.hash(password, 10),
+      emailVerificationKey: crypto
+        .createHash("sha256")
+        .update(rawVerifToken)
+        .digest("hex"),
+      emailVerificationKeyExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    });
 
-    // await sendEmail({
-    //   to: email,
-    //   text: "",
-    //   subject: "Verify your email",
-    //   replyTo: "contact@re-envision.org",
-    //   html: `<h1>Re-envision account verification</h1><p>Please verify your email by clicking this link: <a href="${process.env.EMAIL_VERIF_URL}/verify?email=${encodeURIComponent(email)}&token=${rawVerifToken}">Verify Email</a></p><p>Note that this link will expire in 24 hours.</p>`,
-    // });
+    await sendEmail({
+      to: email,
+      text: "",
+      subject: "Verify your email",
+      replyTo: "contact@re-envision.org",
+      html: `<h1>Re-envision account verification</h1><p>Please verify your email by clicking this link: <a href="${process.env.EMAIL_VERIF_URL}/verify?email=${encodeURIComponent(email)}&token=${rawVerifToken}">Verify Email</a></p><p>Note that this link will expire in 24 hours.</p>`,
+    });
 
     const response: StandardResponse = {
       success: true,

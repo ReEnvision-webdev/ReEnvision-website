@@ -9,13 +9,13 @@ import MarkdownRenderer from "./markdown-renderer";
 
 interface Event {
   id: string;
-  title: string;
-  content: string;
-  event_date: string;
-  image_url: string | null;
-  created_at: string;
-  updated_at: string;
-  user_id: string;
+  eventTitle: string;
+  eventDesc: string;
+  eventDate: string;
+  imageUrl: string | null;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: string;
 }
 
 interface EventDetailProps {
@@ -41,8 +41,8 @@ export default function EventDetail({ event }: EventDetailProps) {
     });
   };
 
-  const isUpcoming = new Date(event.event_date) > new Date();
-  const isPast = new Date(event.event_date) < new Date();
+  const isUpcoming = new Date(event.eventDate) > new Date();
+  const isPast = new Date(event.eventDate) < new Date();
 
   return (
     <div className="container mx-auto p-6 max-w-4xl pt-30">
@@ -60,7 +60,7 @@ export default function EventDetail({ event }: EventDetailProps) {
       <div className="mb-8">
         <div className="flex items-start justify-between mb-4">
           <h1 className="text-4xl font-bold leading-tight text-[#1f639e]">
-            {event.title}
+            {event.eventTitle}
           </h1>
           <div className="flex gap-2">
             {isUpcoming && (
@@ -83,23 +83,23 @@ export default function EventDetail({ event }: EventDetailProps) {
         <div className="flex flex-wrap gap-6 text-lg text-muted-foreground mb-6">
           <div className="flex items-center gap-2">
             <Calendar className="w-5 h-5" />
-            <span>{formatDate(event.event_date)}</span>
+            <span>{formatDate(event.eventDate)}</span>
           </div>
           <div className="flex items-center gap-2">
             <Clock className="w-5 h-5" />
-            <span>{formatTime(event.event_date)}</span>
+            <span>{formatTime(event.eventDate)}</span>
           </div>
         </div>
       </div>
 
       {/* Event Image */}
-      {event.image_url && (
+      {event.imageUrl && (
         <div className="mb-8">
           <div className="w-full overflow-hidden rounded-lg shadow-lg">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={event.image_url || "/placeholder.svg"}
-              alt={event.title}
+              src={event.imageUrl || "/placeholder.svg"}
+              alt={event.eventTitle}
               className="w-full h-auto object-contain max-h-[600px]"
             />
           </div>
@@ -113,7 +113,7 @@ export default function EventDetail({ event }: EventDetailProps) {
             About This Event
           </h2>
           <div className="prose prose-lg max-w-none text-muted-foreground">
-            <MarkdownRenderer content={event.content} />
+            <MarkdownRenderer content={event.eventDesc} />
           </div>
         </CardContent>
       </Card>
@@ -124,7 +124,7 @@ export default function EventDetail({ event }: EventDetailProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
             <div>
               <span className="font-medium">Created:</span>{" "}
-              {new Date(event.created_at).toLocaleDateString("en-US", {
+              {new Date(event.createdAt).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -132,7 +132,7 @@ export default function EventDetail({ event }: EventDetailProps) {
             </div>
             <div>
               <span className="font-medium">Last Updated:</span>{" "}
-              {new Date(event.updated_at).toLocaleDateString("en-US", {
+              {new Date(event.updatedAt).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",

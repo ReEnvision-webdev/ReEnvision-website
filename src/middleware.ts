@@ -4,6 +4,7 @@ import type { NextRequest } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { StandardResponse } from "./lib/types";
+import { headers } from "next/headers";
 
 const redis = new Redis({
   url: process.env.KV_REST_API_URL,
@@ -22,10 +23,15 @@ const resetPasswordRatelimiter = new Ratelimit({
   analytics: true,
 });
 
+const getHostName = async () => {
+  const headersList = await headers();
+  return headersList.get("host");
+};
+
 const ALLOWED_ORIGIN =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000"
-    : "https://re-envision.org";
+    : (await getHostName()) || "";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

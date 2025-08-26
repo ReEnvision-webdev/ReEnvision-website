@@ -28,11 +28,6 @@ const getHostName = async () => {
   return headersList.get("host");
 };
 
-// const ALLOWED_ORIGIN =
-//   process.env.NODE_ENV === "development"
-//     ? "http://localhost:3000"
-//     : (await getHostName()) || "";
-
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 

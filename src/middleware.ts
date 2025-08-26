@@ -28,19 +28,24 @@ const getHostName = async () => {
   return headersList.get("host");
 };
 
-const ALLOWED_ORIGIN =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3000"
-    : (await getHostName()) || "";
+// const ALLOWED_ORIGIN =
+//   process.env.NODE_ENV === "development"
+//     ? "http://localhost:3000"
+//     : (await getHostName()) || "";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  const allowedOrigin =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : (await getHostName()) || "";
 
   if (request.method === "OPTIONS" && pathname.startsWith("/api")) {
     return new NextResponse(null, {
       status: 204,
       headers: {
-        "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+        "Access-Control-Allow-Origin": allowedOrigin,
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
       },
@@ -51,6 +56,7 @@ export async function middleware(request: NextRequest) {
     const rateLimitResponse = await handleRateLimit(
       request,
       resetPasswordRatelimiter,
+      allowedOrigin,
     );
 
     if (rateLimitResponse) {
@@ -68,13 +74,17 @@ export async function middleware(request: NextRequest) {
       status: 500,
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+        "Access-Control-Allow-Origin": allowedOrigin,
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
       },
     });
   } else if (pathname.startsWith("/api")) {
-    const rateLimitResponse = await handleRateLimit(request, ratelimit);
+    const rateLimitResponse = await handleRateLimit(
+      request,
+      ratelimit,
+      allowedOrigin,
+    );
 
     if (rateLimitResponse) {
       return rateLimitResponse;
@@ -91,7 +101,7 @@ export async function middleware(request: NextRequest) {
       status: 500,
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+        "Access-Control-Allow-Origin": allowedOrigin,
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
       },
@@ -108,6 +118,7 @@ export const config = {
 const handleRateLimit = async (
   request: NextRequest,
   ratelimiter: Ratelimit,
+  allowedOrigin: string,
 ): Promise<NextResponse> => {
   const ip =
     request.headers.get("x-real-ip") ??
@@ -125,7 +136,7 @@ const handleRateLimit = async (
         status: 429,
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+          "Access-Control-Allow-Origin": allowedOrigin,
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
           "Access-Control-Allow-Headers": "Content-Type",
           "Retry-After": reset
@@ -138,7 +149,7 @@ const handleRateLimit = async (
 
   const response = NextResponse.next();
 
-  response.headers.set("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
+  response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
   response.headers.set("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
   response.headers.set("Access-Control-Allow-Headers", "Content-Type");
 

@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
       text: "",
       subject: "Verify your email",
       replyTo: "contact@re-envision.org",
-      html: `<h1>Re-envision account verification</h1><p>Please verify your email by clicking this link: <a href="${process.env.EMAIL_VERIF_URL}/verify?email=${encodeURIComponent(email)}&token=${rawVerifToken}">Verify Email</a></p><p>Note that this link will expire in 24 hours.</p>`,
+      html: `<h1>Re-envision account verification</h1><p>Please verify your email by clicking this link: <a href="https://re-envision.org/verify?email=${encodeURIComponent(email)}&token=${rawVerifToken}">Verify Email</a></p><p>Note that this link will expire in 24 hours.</p>`,
     });
 
     const response: StandardResponse = {

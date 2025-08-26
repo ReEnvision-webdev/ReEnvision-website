@@ -1,10 +1,10 @@
 import db from "@/db/database";
 import { usersTable } from "@/db/schema";
-import { sendEmail } from "@/lib/send-mail";
+// import { sendEmail } from "@/lib/send-mail";
 import { NextRequest, NextResponse } from "next/server";
-import cuid from "cuid";
-import bcrypt from "bcryptjs";
-import crypto from "crypto";
+// import cuid from "cuid";
+// import bcrypt from "bcryptjs";
+// import crypto from "crypto";
 import { eq } from "drizzle-orm";
 import { StandardResponse } from "@/lib/types";
 
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  const rawVerifToken = crypto.randomBytes(32).toString("hex");
+  // const rawVerifToken = crypto.randomBytes(32).toString("hex");
 
   try {
     console.log("sending email token!", process.env.EMAIL_VERIF_URL)

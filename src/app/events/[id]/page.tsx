@@ -39,19 +39,7 @@ export default async function EventPage({ params }: EventPageProps) {
       notFound();
     }
 
-    // Map database fields to frontend expected fields
-    const eventData = result.data;
-    const event = {
-      id: eventData.id,
-      title: eventData.eventTitle,
-      content: eventData.eventDesc,
-      event_date: eventData.eventDate,
-      image_url: eventData.imageUrl,
-      created_at: eventData.createdAt,
-      updated_at: eventData.updatedAt,
-      user_id: eventData.createdBy,
-    };
-    return <EventDetail event={event} />;
+    return <EventDetail event={result.data} />;
   } catch (error: unknown) {
     // Log the error for debugging purposes
     if (error instanceof Error) {

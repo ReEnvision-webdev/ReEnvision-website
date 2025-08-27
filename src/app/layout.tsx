@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AuthProvider from "@/components/AuthProvider";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 // Configure EB Garamond
 const ebGaramond = EB_Garamond({
@@ -36,6 +37,7 @@ export default function RootLayout({
         <AuthProvider>
           <Header />
           <Analytics />
+          <SpeedInsights />
           <main className="min-h-screen">{children}</main>
           <Footer />
         </AuthProvider>

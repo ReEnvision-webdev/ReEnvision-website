@@ -5,7 +5,10 @@
   ];
   idx.extensions = [
     
-  ];
+  
+ "ahmadawais.shades-of-purple"
+ "Google.validation-agent-extension"
+ "Letgamer.sweet-vscode-icons"];
   idx.previews = {
     previews = {
       web = {

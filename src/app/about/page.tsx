@@ -1,6 +1,7 @@
 // app/about/page.tsx
 "use client";
 import Image from "@/components/ui/image"; // Assuming this wraps next/image
+import { Lightbulb, Group, Handshake } from "lucide-react"; // Importing icons
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect } from "react";
 import AOS from "aos";
@@ -19,7 +20,7 @@ export default function AboutPage() {
     });
   }, []);
   return (
-    <div className="flex flex-col min-h-screen items-center py-8 pt-[64px]">
+    <div className="flex flex-col min-h-screen items-center pt-[64px] bg-[#f0f8ff]">
       {/* Main Header */}
       <div className="h-[75vh] flex flex-col items-center justify-center relative about-hero-img">
         <h1
@@ -29,57 +30,80 @@ export default function AboutPage() {
           About Us
         </h1>
       </div>
+
       {/* Our Mission Section */}
       <section
-        className="container mx-auto px-4 py-8 max-w-4xl bg-white rounded-lg shadow-sm"
+        className="w-full px-4 py-8 flex flex-col md:flex-row items-center gap-8 bg-[#F0F8FF]" // Changed to edge-to-edge, added padding, and background color
         data-aos="fade-up"
         data-aos-delay="100"
       >
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-[#1f639e] text-center">
-          Our Mission
-        </h2>
-        <p className="text-lg text-gray-600 text-center leading-relaxed">
-          ReEnvision is passionately dedicated to bridging the digital divide by
-          making cutting-edge technology accessible, affordable, and
-          understandable for underserved communities. We believe that everyone
-          deserves the opportunity to participate fully in our increasingly
-          digital world. Through strategic partnerships with local
-          organizations, schools, and businesses, alongside the tireless efforts
-          of our passionate volunteers, we provide essential tools,
-          comprehensive training programs, and valuable resources. Our ultimate
-          goal is to empower individuals with the digital skills and confidence
-          they need, foster creativity and innovation within these communities,
-          and actively promote a more inclusive and equitable society where
-          technology serves as a bridge, not a barrier.
-        </p>
+        <div className="md:w-1/3 flex justify-center">
+          <Lightbulb size={80} className="text-[#1f639e]" />
+        </div>
+        <div className="md:w-2/3">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-[#1f639e] text-center md:text-left">
+            Our Mission
+          </h2>
+          <ul className="list-disc list-inside text-lg text-gray-600 leading-relaxed space-y-3">
+            <li>
+              **Bridging the Digital Divide:** Making technology accessible,
+              affordable, and understandable for underserved communities.
+            </li>
+            <li>
+              **Empowering Individuals:** Providing essential tools,
+              comprehensive training, and valuable resources.
+            </li>
+            <li>
+              **Fostering Innovation:** Helping communities develop digital
+              skills, creativity, and confidence.
+            </li>
+            <li>
+              **Promoting Equity:** Working towards an inclusive society where
+              technology is a bridge, not a barrier.
+            </li>
+          </ul>
+          <p className="text-sm text-gray-500 mt-4 text-center md:text-left">
+            *Achieved through strategic partnerships and dedicated volunteers.*
+          </p>
+        </div>
       </section>
+
       {/* Who We Are Section */}
       <section
-        className="container mx-auto px-4 py-8 max-w-4xl bg-white rounded-lg shadow-sm mt-4"
+        className="w-full px-4 py-8 flex flex-col md:flex-row-reverse items-center gap-8 bg-[#E1F0FA]" // Changed to edge-to-edge, added padding, and background color
         data-aos="fade-up"
         data-aos-delay="200"
       >
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-[#1f639e] text-center">
-          Who We Are
-        </h2>
-        <p className="text-lg text-gray-600 text-center leading-relaxed">
-          ReEnvision was founded in 2024 by a group of driven students who
-          recognized the urgent need to address technology inequality. What
-          started as a vision has quickly grown into a committed force for
-          change. Our diverse team is the heart of our organization, comprised
-          of dedicated professionals bringing expertise in technology and
-          education, passionate educators who understand community needs, and
-          enthusiastic volunteers from all walks of life who share our
-          commitment. United by a common goal, we work tirelessly, leveraging
-          our collective skills and perspectives. Together, we strive to not
-          only keep pace with but also thoughtfully harness the power of
-          today&apos;s fast-moving technological landscape to create a lasting,
-          positive impact for those who need it most.
-        </p>
+        <div className="md:w-1/3 flex justify-center">
+          <Group size={80} className="text-[#1f639e]" />
+        </div>
+        <div className="md:w-2/3">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-[#1f639e] text-center md:text-right">
+            Who We Are
+          </h2>
+          <ul className="list-disc list-inside text-lg text-gray-600 leading-relaxed space-y-3 text-center md:text-right">
+            <li>
+              **Founded in 2024:** By driven students addressing technology
+              inequality.
+            </li>
+            <li>
+              **Diverse Team:** Professionals in tech and education, passionate
+              educators, and enthusiastic volunteers.
+            </li>
+            <li>
+              **United by a Goal:** Leveraging collective skills to create
+              lasting, positive impact.
+            </li>
+          </ul>
+          <p className="text-sm text-gray-500 mt-4 text-center md:text-right">
+            *Growing committed force for change.*
+          </p>
+        </div>
       </section>
+
       {/* Our Values Section */}
       <section
-        className="container mx-auto px-4 py-8 max-w-4xl bg-white rounded-lg shadow-sm mt-4"
+        className="w-full px-4 py-8 bg-[#F0F8FF]" // Changed to edge-to-edge, added padding, and background color
         data-aos="fade-up"
         data-aos-delay="300"
       >
@@ -120,8 +144,9 @@ export default function AboutPage() {
           })}
         </div>
       </section>
+
       {/* Our Teams Section */}
-      <section id="teams" className="w-full py-8 mt-4">
+      <section id="teams" className="w-full py-8 bg-[#E1F0FA]">
         <div className="container mx-auto px-4">
           <h2
             className="text-2xl md:text-3xl font-semibold mb-8 text-[#1f639e] text-center"

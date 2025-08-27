@@ -3,6 +3,8 @@ import db from "@/db/database";
 import { usersTable } from "@/db/schema";
 import bcrypt from "bcryptjs";
 import { and, eq } from "drizzle-orm";
+import { Session, User } from "next-auth";
+import { JWT } from "next-auth/jwt";
 
 class CredentialError extends Error {
   constructor(message: string) {
@@ -45,7 +47,12 @@ export const authOptions = {
             throw new CredentialError("Email is not verified");
           }
 
-          return user;
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            isAdmin: user.isAdmin,
+          };
         } catch (error) {
           if (error instanceof CredentialError) {
             throw error;
@@ -57,4 +64,20 @@ export const authOptions = {
       },
     }),
   ],
+  callbacks: {
+    async session({ session, token }: { session: Session; token: JWT }) {
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.isAdmin = token.isAdmin as boolean;
+      }
+      return session;
+    },
+    async jwt({ token, user }: { token: JWT; user: User }) {
+      if (user) {
+        token.id = user.id;
+        token.isAdmin = user.isAdmin;
+      }
+      return token;
+    },
+  },
 };

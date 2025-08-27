@@ -19,6 +19,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 // --- Import ParticlesBackground dynamically ---
 import dynamic from "next/dynamic";
+import Popup from "@/components/Popup";
 
 // Dynamically import ParticlesBackground with SSR disabled
 // This prevents the component (and particles.js) from running during server-side rendering
@@ -192,6 +193,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen relative">
+      <Popup />
       {/* Hero Section */}
       <section
         className={`${bgColors.hero} relative w-full overflow-hidden`}

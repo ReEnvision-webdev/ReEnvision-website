@@ -54,7 +54,8 @@ export async function POST(request: NextRequest) {
     // Send mail with sanitized inputs
     await transporter.sendMail({
       from: "webdev@re-envision.org",
-      to: "contact@re-envision.org",
+      to: "santi@re-envision.org",
+      // TODO: change later to official contact email
       subject: `Contact Form Submission from ${sanitize(name)}`,
       text: `
         Name: ${sanitize(name)}

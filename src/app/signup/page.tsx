@@ -40,6 +40,7 @@ export default function SignupPage() {
         success: false,
         message: "Passwords do not match",
       });
+      setLoading(false);
       return;
     }
 
@@ -63,6 +64,7 @@ export default function SignupPage() {
         success: false,
         message: data.message || "Something went wrong",
       });
+      setLoading(false);
       return;
     } else {
       setStatusMessage({
@@ -72,6 +74,7 @@ export default function SignupPage() {
       });
 
       (event.target as HTMLFormElement).reset();
+      setLoading(false);
     }
   };
 

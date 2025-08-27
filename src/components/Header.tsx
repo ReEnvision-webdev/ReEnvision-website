@@ -24,9 +24,71 @@ function NavLink({ href, label }: { href: string; label: string }) {
   );
 }
 
-function MobileMenu() {
+function EventsDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+
+  const isEventsActive =
+    pathname === "/events" || pathname === "/events/search";
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
+      <Button
+        variant="ghost"
+        size="sm"
+        className={`hover:bg-[#F0F8FF] hover:text-[#1d588a] ${isEventsActive ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"} `}
+      >
+        Events
+        <svg
+          className={`ml-1 h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </Button>
+
+      {isOpen && (
+        <div className="absolute left-0 mt-0 w-48 bg-[#1d588a] border border-[#00427A] shadow-lg z-50">
+          <Link href="/events">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/events" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+            >
+              Overview
+            </Button>
+          </Link>
+          <Link href="/events/search">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/events/search" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+            >
+              All Events
+            </Button>
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileMenu() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isEventsOpen, setIsEventsOpen] = useState(false);
+  const pathname = usePathname();
+  const { data: session, status } = useSession();
 
   return (
     <div className="md:hidden">
@@ -58,7 +120,6 @@ function MobileMenu() {
               { href: "/", label: "Home" },
               { href: "/about", label: "About" },
               { href: "/courses", label: "Courses" },
-              { href: "/events", label: "Events" },
               { href: "/donate", label: "Donate" },
               { href: "/contact", label: "Contact Us" },
             ].map(({ href, label }) => (
@@ -76,16 +137,92 @@ function MobileMenu() {
                 </Button>
               </Link>
             ))}
-
-            <Link href="/signin">
+            {/* Events Dropdown for Mobile */}
+            <div>
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
-                className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2"
+                className={`justify-between w-full hover:bg-[#F0F8FF] rounded-none ${pathname.startsWith("/events") ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                onClick={() => setIsEventsOpen(!isEventsOpen)}
               >
-                Sign In
+                Events
+                <svg
+                  className={`h-4 w-4 transition-transform ${isEventsOpen ? "rotate-180" : ""}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
               </Button>
-            </Link>
+              {isEventsOpen && (
+                <div className="mt-1 ml-4 flex flex-col space-y-1">
+                  <Link href="/events">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`justify-start hover:bg-[#F0F8FF] w-full rounded-none ${pathname === "/events" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                    >
+                      Overview
+                    </Button>
+                  </Link>
+                  <Link href="/events/search">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`justify-start hover:bg-[#F0F8FF] w-full rounded-none ${pathname === "/events/search" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                    >
+                      All Events
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {status === "authenticated" ? (
+              <>
+                <Link href="/dashboard">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2 ${
+                      pathname === "/dashboard"
+                        ? "bg-[#F0F8FF] text-[#1d588a]"
+                        : "text-[#F0F8FF]"
+                    }`}
+                  >
+                    {session?.user?.isAdmin ? "Admin Dashboard" : "Dashboard"}
+                  </Button>
+                </Link>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2 w-full"
+                  onClick={() => {
+                    if (confirm("Are you sure you want to sign out?")) {
+                      signOut();
+                    }
+                  }}
+                >
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <Link href="/signin">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2"
+                >
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       )}
@@ -95,7 +232,7 @@ function MobileMenu() {
 
 export default function Header() {
   const pathname = usePathname();
-  const { status } = useSession();
+  const { data: session, status } = useSession();
 
   return (
     <header className="bg-[#1d588a] text-[#F0F8FF] px-4 py-3 fixed top-0 left-0 right-0 z-50">
@@ -117,32 +254,53 @@ export default function Header() {
           <NavLink href="/" label="Home" />
           <NavLink href="/about" label="About" />
           <NavLink href="/courses" label="Courses" />
-          <NavLink href="/events" label="Events" />
+          <EventsDropdown />
           <NavLink href="/donate" label="Donate" />
           <NavLink href="/contact" label="Contact Us" />
         </nav>
 
         <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block ${
-              pathname === "/signin"
-                ? "bg-[#F0F8FF] text-[#1d588a]"
-                : "text-[#F0F8FF]"
-            }`}
-            onClick={() => {
-              if (status === "authenticated") {
-                signOut();
-              }
-            }}
-          >
-            {status === "authenticated" ? (
-              <p>Log Out</p>
-            ) : (
+          {status === "authenticated" ? (
+            <>
+              <Button
+                variant="outline"
+                size="sm"
+                className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block ${
+                  pathname === "/dashboard"
+                    ? "bg-[#F0F8FF] text-[#1d588a]"
+                    : "text-[#F0F8FF]"
+                }`}
+              >
+                <Link href="/dashboard">
+                  {session?.user?.isAdmin ? "Admin Dashboard" : "Dashboard"}
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block"
+                onClick={() => {
+                  if (confirm("Are you sure you want to sign out?")) {
+                    signOut();
+                  }
+                }}
+              >
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block ${
+                pathname === "/signin"
+                  ? "bg-[#F0F8FF] text-[#1d588a]"
+                  : "text-[#F0F8FF]"
+              }`}
+            >
               <Link href="/signin">Sign In</Link>
-            )}
-          </Button>
+            </Button>
+          )}
           <MobileMenu />
         </div>
       </div>

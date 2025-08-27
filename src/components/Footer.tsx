@@ -12,7 +12,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
           <div className="hidden md:flex items-center space-x-2">
             <Image
-              src="/vectors/favicon.svg" // Path to your favicon.png
+              src="/vectors/navbar.svg" // Path to your favicon.png
               alt="Logo"
               width={50} // Specify the width (in pixels)
               height={50} // Specify the height (in pixels)

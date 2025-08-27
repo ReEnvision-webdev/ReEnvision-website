@@ -79,11 +79,11 @@ function IPadWithApps() {
   return (
     <div className="relative w-full max-w-2xl mx-auto">
       <div
-        className="relative bg-white rounded-[30px] shadow-2xl overflow-hidden border-[14px] border-gray-800"
+        className="relative bg-white rounded-[30px] shadow-2xl overflow-hidden border-[14px] border-[#1f639e]"
         style={{ aspectRatio: "4/3" }}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 p-6 flex flex-col">
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gray-800 rounded-full"></div>
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-[#1f639e] rounded-full"></div>
           <div className="grid grid-cols-2 grid-rows-2 gap-8 h-full w-full place-items-center p-8">
             {apps.map((app, index) => (
               <div
@@ -106,7 +106,7 @@ function IPadWithApps() {
           </div>
         </div>
       </div>
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gray-800 rounded-full"></div>
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-[#1f639e] rounded-full"></div>
       <style jsx>{`
         @keyframes float {
           0% {

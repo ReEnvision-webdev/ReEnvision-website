@@ -1,7 +1,7 @@
 // app/about/page.tsx
 "use client";
 import Image from "@/components/ui/image"; // Assuming this wraps next/image
-import { Lightbulb, Group, Handshake } from "lucide-react"; // Importing icons
+import { Lightbulb, Group } from "lucide-react"; // Importing icons
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect } from "react";
 import AOS from "aos";

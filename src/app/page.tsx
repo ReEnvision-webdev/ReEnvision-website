@@ -130,7 +130,7 @@ function IPadWithApps() {
 // --- Edge-to-Edge Infinite Partners Carousel ---
 function PartnersCarousel() {
   return (
-    <div className="w-full overflow-hidden bg-[#E1F0FA] py-8">
+    <div className="w-full overflow-hidden py-8">
       <div className="flex animate-infinite-scroll items-center">
         {[...PARTNERS, ...PARTNERS, ...PARTNERS].map((partner, index) => (
           <div

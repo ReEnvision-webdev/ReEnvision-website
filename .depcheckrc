@@ -1,0 +1,3 @@
+ignore-bin-package: true,
+ignores: ["eslint*", "cross-env", "tailwindcss", "tw*", "@tailwindcss/postcss"]
+skip-missing: true

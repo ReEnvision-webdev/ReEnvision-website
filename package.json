@@ -6,7 +6,7 @@
     "dev": "cross-env NODE_ENV=development next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "prettier . --write && next lint && depcheck --quiet --oneline | grep -v '^Unused dependencies' | xargs -r bash -c 'echo \"npm remove $@\"; npm remove $@'",
+    "lint": "prettier . --write && next lint && depcheck --quiet --oneline | grep -v '^Unused dependencies' | tee /tmp/unused_deps.txt | xargs -r npm remove; [ -s /tmp/unused_deps.txt ] && echo \"npm remove $(cat /tmp/unused_deps.txt)\"",
     "db:push": "npx drizzle-kit push"
   },
   "dependencies": {
@@ -29,7 +29,6 @@
     "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.4",
     "lucide-react": "^0.525.0",
-    "malware": "^1.0.0",
     "next": "15.3.5",
     "next-auth": "^4.24.11",
     "next-themes": "^0.4.6",

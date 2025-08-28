@@ -6,7 +6,7 @@
     "dev": "cross-env NODE_ENV=development next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "prettier . --write && next lint && depcheck --quiet --oneline | grep -v '^Unused dependencies' | tee deps.txt | xargs -r npm remove && echo $(cat deps.txt); rm deps.txt; exit ${PIPESTATUS[0]}",
+    "lint": "prettier . --write && next lint && depcheck --quiet --oneline | grep -v '^Unused dependencies' | tee deps.txt | xargs -r npm remove; rm deps.txt; exit ${PIPESTATUS[0]}",
     "db:push": "npx drizzle-kit push"
   },
   "dependencies": {

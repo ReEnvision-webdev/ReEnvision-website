@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Users, BookOpen, Video, Globe, Zap, Award, Star, Clock } from "lucide-react";
+import { Users, BookOpen, Video, Globe, Zap, Award, Clock } from "lucide-react";
 import Link from "next/link";
 import { getAllCourses, type Course } from "@/lib/courses";
 import AOS from "aos";

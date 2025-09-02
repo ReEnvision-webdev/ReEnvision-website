@@ -200,7 +200,7 @@ export default function CoursesPage() {
         </div>
       </section>
 
-      <section className="py-20 px-6 bg-[#1d588a] text-white">
+      <section className="py-20 px-6 bg-[#f0f8ff] text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6" data-aos="fade-up">Transform Your Future Today</h2>
           <p className="text-xl mb-10 opacity-90 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="200">

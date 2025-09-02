@@ -6,7 +6,7 @@
     "dev": "cross-env NODE_ENV=development next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "prettier . --write && next lint",
+    "lint": "prettier . --write && eslint .",
     "db:push": "npx drizzle-kit push"
   },
   "dependencies": {

@@ -228,16 +228,8 @@ export default function HomePage() {
               data-aos="fade-up"
               data-aos-delay="400"
             >
-              <Link href="#about1">
+              <Link href="/signup">
                 <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF] px-7 py-3 text-base">
-                  Learn More
-                </Button>
-              </Link>
-              <Link href="/signin">
-                <Button
-                  variant="outline"
-                  className="border-[#1f639e] text-[#1f639e] hover:text-[#0c0c0c] hover:border-[#0c0c0c] px-7 py-3 text-base bg-transparent"
-                >
                   Get Started
                 </Button>
               </Link>

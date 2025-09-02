@@ -202,8 +202,8 @@ export default function CoursesPage() {
 
       <section className="py-20 px-6 bg-[#f0f8ff] text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold mb-6" data-aos="fade-up">Transform Your Future Today</h2>
-          <p className="text-xl mb-10 opacity-90 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="200">
+          <h2 className="text-4xl font-bold mb-6 text-[#1d588a]" data-aos="fade-up">Transform Your Future Today</h2>
+          <p className="text-xl mb-10 opacity-90 max-w-3xl mx-auto leading-relaxed text-gray-600" data-aos="fade-up" data-aos-delay="200">
             Join thousands of successful graduates who have launched their tech careers with ReEnvision. Start your
             journey today and unlock endless opportunities in technology.
           </p>
@@ -214,13 +214,6 @@ export default function CoursesPage() {
               className="text-lg px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 bg-white text-[#1d588a] hover:bg-gray-100"
             >
               Schedule Free Consultation
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="text-lg px-8 py-3 rounded-xl border-2 border-white text-white hover:bg-white hover:text-[#1d588a] bg-transparent shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-            >
-              Download Course Catalog
             </Button>
           </div>
         </div>

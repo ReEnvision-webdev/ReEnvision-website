@@ -115,7 +115,7 @@ export default function CoursesPage() {
           <div className="text-center mb-12" data-aos="fade-up">
             <h2 className="text-3xl font-bold text-[#1d588a] mb-4">Available Courses & Boot Camps</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Interactive, mentor-led courses designed to build practical skills and empower communities.
+              Interactive, mentor-led courses designed to build technical skills and help empower communities.
             </p>
           </div>
 
@@ -129,17 +129,7 @@ export default function CoursesPage() {
                 data-aos-delay={index * 100}
               >
                 <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <Badge className="bg-[#1d588a]/10 text-[#1d588a] hover:bg-[#1d588a]/20 text-xs px-2 py-1 transition-all duration-300 ease-out">
-                      <Video className="h-3 w-3 mr-1" />
-                      Live on Zoom
-                    </Badge>
-                    <div className="flex items-center gap-1 text-xs text-gray-500">
-                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      <span className="font-medium">{course.rating}</span>
-                      <span>({course.reviews})</span>
-                    </div>
-                  </div>
+
                   <CardTitle className="text-xl font-bold text-[#1d588a] mb-2 line-clamp-2">{course.title}</CardTitle>
                   <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">{course.description}</p>
                 </CardHeader>

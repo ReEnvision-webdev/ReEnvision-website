@@ -2,7 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Users, BookOpen, Video, Globe, Zap, Award, Clock } from "lucide-react";
 import Link from "next/link";
 import { getAllCourses, type Course } from "@/lib/courses";
@@ -61,11 +67,15 @@ export default function CoursesPage() {
             </div>
             <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300">
               <Users className="h-5 w-5 text-[#1d588a]" />
-              <span className="font-semibold text-[#1d588a]">Expert Mentors</span>
+              <span className="font-semibold text-[#1d588a]">
+                Expert Mentors
+              </span>
             </div>
             <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300">
               <BookOpen className="h-5 w-5 text-[#1d588a]" />
-              <span className="font-semibold text-[#1d588a]">Hands-on Learning</span>
+              <span className="font-semibold text-[#1d588a]">
+                Hands-on Learning
+              </span>
             </div>
           </div>
         </div>
@@ -74,36 +84,62 @@ export default function CoursesPage() {
       <section className="py-12 px-6 bg-white/50">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-8" data-aos="fade-up">
-            <h2 className="text-2xl font-bold text-[#1d588a] mb-4">Why Join?</h2>
+            <h2 className="text-2xl font-bold text-[#1d588a] mb-4">
+              Why Join?
+            </h2>
           </div>
 
           <div className="grid md:grid-cols-4 gap-6">
-            <div className="text-center group" data-aos="fade-up" data-aos-delay="100">
+            <div
+              className="text-center group"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
               <div className="bg-gradient-to-br from-[#1d588a]/20 to-[#1d588a]/10 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                 <Globe className="h-6 w-6 text-[#1d588a]" />
               </div>
-              <h3 className="text-base font-semibold text-[#1d588a]">Accessible Learning</h3>
+              <h3 className="text-base font-semibold text-[#1d588a]">
+                Accessible Learning
+              </h3>
             </div>
 
-            <div className="text-center group" data-aos="fade-up" data-aos-delay="200">
+            <div
+              className="text-center group"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
               <div className="bg-gradient-to-br from-[#1d588a]/20 to-[#1d588a]/10 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                 <Award className="h-6 w-6 text-[#1d588a]" />
               </div>
-              <h3 className="text-base font-semibold text-[#1d588a]">Real Mentorship</h3>
+              <h3 className="text-base font-semibold text-[#1d588a]">
+                Real Mentorship
+              </h3>
             </div>
 
-            <div className="text-center group" data-aos="fade-up" data-aos-delay="300">
+            <div
+              className="text-center group"
+              data-aos="fade-up"
+              data-aos-delay="300"
+            >
               <div className="bg-gradient-to-br from-[#1d588a]/20 to-[#1d588a]/10 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                 <BookOpen className="h-6 w-6 text-[#1d588a]" />
               </div>
-              <h3 className="text-base font-semibold text-[#1d588a]">Practical Skills</h3>
+              <h3 className="text-base font-semibold text-[#1d588a]">
+                Practical Skills
+              </h3>
             </div>
 
-            <div className="text-center group" data-aos="fade-up" data-aos-delay="400">
+            <div
+              className="text-center group"
+              data-aos="fade-up"
+              data-aos-delay="400"
+            >
               <div className="bg-gradient-to-br from-[#1d588a]/20 to-[#1d588a]/10 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
                 <Zap className="h-6 w-6 text-[#1d588a]" />
               </div>
-              <h3 className="text-base font-semibold text-[#1d588a]">Community Impact</h3>
+              <h3 className="text-base font-semibold text-[#1d588a]">
+                Community Impact
+              </h3>
             </div>
           </div>
         </div>
@@ -112,9 +148,12 @@ export default function CoursesPage() {
       <section className="py-16 px-6 bg-gradient-to-br from-[#1d588a]/5 to-[#1d588a]/10">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12" data-aos="fade-up">
-            <h2 className="text-3xl font-bold text-[#1d588a] mb-4">Available Courses & Boot Camps</h2>
+            <h2 className="text-3xl font-bold text-[#1d588a] mb-4">
+              Available Courses & Boot Camps
+            </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Interactive, mentor-led courses designed to build technical skills and help empower communities.
+              Interactive, mentor-led courses designed to build technical skills
+              and help empower communities.
             </p>
           </div>
 
@@ -128,16 +167,21 @@ export default function CoursesPage() {
                 data-aos-delay={index * 100}
               >
                 <CardHeader className="pb-4">
-
-                  <CardTitle className="text-xl font-bold text-[#1d588a] mb-2 line-clamp-2">{course.title}</CardTitle>
-                  <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">{course.description}</p>
+                  <CardTitle className="text-xl font-bold text-[#1d588a] mb-2 line-clamp-2">
+                    {course.title}
+                  </CardTitle>
+                  <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
+                    {course.description}
+                  </p>
                 </CardHeader>
 
                 <CardContent className="space-y-4 flex-grow">
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4 text-[#1d588a]" />
-                      <span className="text-sm text-[#1d588a] font-medium">{course.duration}</span>
+                      <span className="text-sm text-[#1d588a] font-medium">
+                        {course.duration}
+                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Users className="h-4 w-4 text-[#1d588a]" />
@@ -147,14 +191,20 @@ export default function CoursesPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <BookOpen className="h-4 w-4 text-[#1d588a]" />
-                      <span className="text-sm text-[#1d588a] font-medium">{course.level}</span>
+                      <span className="text-sm text-[#1d588a] font-medium">
+                        {course.level}
+                      </span>
                     </div>
                   </div>
 
                   <div className="pt-2">
                     <div className="flex items-baseline gap-2">
-                      <div className="text-2xl font-bold text-[#1d588a]">{course.price}</div>
-                      <div className="text-sm text-gray-500 line-through">{course.originalPrice}</div>
+                      <div className="text-2xl font-bold text-[#1d588a]">
+                        {course.price}
+                      </div>
+                      <div className="text-sm text-gray-500 line-through">
+                        {course.originalPrice}
+                      </div>
                     </div>
                     <div className="text-xs text-gray-500 mt-1">
                       {course.schedule.format} • {course.schedule.commitment}
@@ -173,7 +223,10 @@ export default function CoursesPage() {
                         View Details
                       </Button>
                     </Link>
-                    <Link href={`/payment?course=${course.id}`} className="flex-1">
+                    <Link
+                      href={`/payment?course=${course.id}`}
+                      className="flex-1"
+                    >
                       <Button
                         size="sm"
                         className="w-full text-sm py-2 rounded-lg hover:scale-[1.02] transition-all duration-300 ease-out bg-[#1d588a] hover:bg-[#1d588a]/90"

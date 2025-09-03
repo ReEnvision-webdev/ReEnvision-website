@@ -1,2 +1,30 @@
-add a signout button too
+========================  TO DO LIST ========================
+
 fix carrousel bug thing
+
+======================== Ideas ========================
+
+Key:
+- is see
+> is do
++ is any api requests or backend 
+| end
+
+--------------- courses flow ---------------
+
+> course is published on admin dashboard
+- user sees course on the courses catalog
+> user clicks on course
+- user sees details
+- user decides they want to take it
+> user clicks on enroll button
++ enroll button runs a function to create a checkout
++ a secure paypal checkout with designated price and product name gets generated 
+- user sees paypal payment portal
+> user pays
++ payment gets logged into paypal and recieves a receipt with remind code
+- user sees remind code
+> user joins remind
+> admin  approves user into class after verifying that they payed on the paypal
+| user gets to see meeting links and other details on remind
+

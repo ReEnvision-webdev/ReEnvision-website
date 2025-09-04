@@ -1,16 +1,24 @@
 ========================  TO DO LIST ========================
 
-fix carrousel bug thing
+- fix carrousel bug thing
+- create database table, schema, and drizzle thing to host the courses
+- create backend that communicates with database for courses
+- create backend for admmin dashboard that adds courses
+- replace signout with a profile picture that when you click on it, you get access to settings and a logout button
+
+
 
 ======================== Ideas ========================
 
+
+--------------- courses flow ---------------
+
 Key:
+
 - is see
 > is do
 + is any api requests or backend 
 | end
-
---------------- courses flow ---------------
 
 > course is published on admin dashboard
 - user sees course on the courses catalog
@@ -28,3 +36,10 @@ Key:
 > admin  approves user into class after verifying that they payed on the paypal
 | user gets to see meeting links and other details on remind
 
+
+--------------- account settings ---------------
+
+- profile picture
+- Name
+- email (will require reverif)
+- password (will require old password)

@@ -3,6 +3,8 @@
   packages = [
     pkgs.nodejs_20
     pkgs.gh
+    pkgs.nano
+    pkgs.postgresql
   ];
   idx.extensions = [
     

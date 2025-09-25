@@ -1,0 +1,1 @@
+-- This migration is intentionally left empty to sync with the existing database.

@@ -19,14 +19,25 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
+ TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, MoreVertical } from "lucide-react";
+import { Plus, Edit, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,6 +60,7 @@ export default function CourseManagement() {
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  const [courseToDelete, setCourseToDelete] = useState<number | null>(null);
   // Form state
   const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
@@ -107,11 +119,12 @@ export default function CourseManagement() {
     setIsDialogOpen(true);
   };
 
-  const handleDelete = async (courseId: number) => {
-    if (!confirm("Are you sure you want to delete this course?")) {
-      return;
-    }
+  const confirmDelete = (courseId: number) => {
+    setCourseToDelete(courseId);
+  };
 
+  const executeDelete = async () => {
+    const courseId = courseToDelete;
     try {
       const response = await fetch(`/api/courses?id=${courseId}`, {
         method: "DELETE",
@@ -124,7 +137,8 @@ export default function CourseManagement() {
 
       toast.success("Course deleted successfully!");
       fetchCourses(); // Refresh the list
-    } catch (error) {
+    } catch (error: any) {
+      setCourseToDelete(null); // Reset even on error
       toast.error(
         error instanceof Error ? error.message : "An unknown error occurred."
       );
@@ -225,8 +239,8 @@ export default function CourseManagement() {
   return (
     <div className="mt-8 space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-[#1f639e]">
-          Course Management
+        <h2 className="text-2xl font-bold text-[#1f639e] pr-5">
+ Course Management
         </h2>
         <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
           <DialogTrigger asChild>
@@ -243,7 +257,7 @@ export default function CourseManagement() {
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div>
-                <Label htmlFor="courseName">Course Name *</Label>
+                <Label  htmlFor="courseName">Course Name *</Label>
                 <Input
                   id="courseName"
                   value={courseName}
@@ -291,7 +305,7 @@ export default function CourseManagement() {
               </div>
               <div className="flex justify-end gap-2">
                 <Button
-                  variant="outline"
+                  className="bg-[#1f639e] hover:bg-[#164a73]"
                   onClick={() => handleDialogOpenChange(false)}
                 >
                   Cancel
@@ -314,46 +328,71 @@ export default function CourseManagement() {
       </div>
 
       {loading ? (
-        <p>Loading courses...</p>
+        <p className="text-[#1f639e] text-center">Loading courses...</p>
       ) : (
         <Card>
+          <AlertDialog
+            open={courseToDelete !== null}
+            onOpenChange={(open) => {
+              if (!open) {
+                setCourseToDelete(null);
+              }
+            }}
+          >
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the
+                  course.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel
+                  onClick={() => setCourseToDelete(null)}
+                  className="bg-[#1f639e] text-white hover:text-[#1f639e]"
+                >
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction onClick={executeDelete} className="bg-red-600 hover:bg-red-700">
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <CardContent className="pt-6">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Course Name</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="text-[#1f639e]">Course Name</TableHead>
+ <TableHead className="text-right pr-8 text-[#1f639e]">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {courses.length > 0 ? (
-                  courses.map((course) => (
+                  courses.map((course) => ( 
                     <TableRow key={course.id}>
-                      <TableCell className="font-medium">
+                      <TableCell className="font-medium text-[#1f639e]">
                         {course.course_name}
                       </TableCell>
-                      <TableCell>${course.course_price}</TableCell>
                       <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <span className="sr-only">Open menu</span>
-                              <MoreVertical className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleEdit(course)}>
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(course.id)}
-                              className="text-red-600"
-                            >
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <div className="flex justify-end gap-2">
+                   <Button
+                     size="sm"
+                     className="bg-[#1f639e] hover:bg-[#164a73]"
+                     onClick={() => openEditDialog(event)}
+                   >
+                     <Edit className="w-4 h-4" />
+                   </Button>
+                  <Button
+                      size="sm"
+                      className="bg-[#1f639e] hover:bg-[#164a73]"
+                      onClick={() => confirmDelete(course.id)}
+
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))

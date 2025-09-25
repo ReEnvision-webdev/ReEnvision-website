@@ -1,4 +1,5 @@
 import EventManagement from "@/components/admin/event-management";
+import CourseManagement from "@/components/admin/course-management"; // Import the new component
 import { checkAuth } from "@/lib/check-auth";
 import { authOptions } from "@/lib/auth.config";
 import { getServerSession } from "next-auth/next";
@@ -17,7 +18,16 @@ export default async function Page() {
             Welcome, administrator! You have special access privileges.
           </p>
         </div>
+        
+        {/* Existing Event Management */}
         <EventManagement />
+
+        {/* Spacer and Divider */}
+        <div className="my-12 border-t border-gray-200"></div>
+
+        {/* New Course Management */}
+        <CourseManagement />
+
       </div>
     );
   }

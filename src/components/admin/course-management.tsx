@@ -1,8 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -10,15 +15,39 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus } from "lucide-react";
+import { Plus, MoreVertical } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 
+interface Course {
+  id: number;
+  course_name: string;
+  course_description: string;
+  course_price: string;
+  courses_image: string;
+}
+
 export default function CourseManagement() {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [uploading, setUploading] = useState(false);
 
   // Form state
   const [courseName, setCourseName] = useState("");
@@ -26,6 +55,30 @@ export default function CourseManagement() {
   const [coursePrice, setCoursePrice] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/courses");
+      if (!response.ok) {
+        throw new Error("Failed to fetch courses.");
+      }
+      const data = await response.json();
+      setCourses(data);
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "An unknown error occurred."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
 
   const resetForm = () => {
     setCourseName("");
@@ -33,94 +86,137 @@ export default function CourseManagement() {
     setCoursePrice("");
     setImageFile(null);
     setImagePreview(null);
+    setImageUrl(null);
+    setEditingCourse(null);
+  };
+
+  const handleDialogOpenChange = (open: boolean) => {
+    setIsDialogOpen(open);
+    if (!open) {
+      resetForm();
+    }
+  };
+
+  const handleEdit = (course: Course) => {
+    setEditingCourse(course);
+    setCourseName(course.course_name);
+    setCourseDescription(course.course_description);
+    setCoursePrice(course.course_price);
+    setImageUrl(course.courses_image);
+    setImagePreview(course.courses_image);
+    setIsDialogOpen(true);
+  };
+
+  const handleDelete = async (courseId: number) => {
+    if (!confirm("Are you sure you want to delete this course?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/courses?id=${courseId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to delete course.");
+      }
+
+      toast.success("Course deleted successfully!");
+      fetchCourses(); // Refresh the list
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "An unknown error occurred."
+      );
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) {
-      resetForm();
-      return;
+    if (file) {
+      if (!file.type.includes("jpeg") && !file.type.includes("jpg")) {
+        toast.error("Only JPEG files are allowed.");
+        e.target.value = "";
+        return;
+      }
+      if (file.size > 400 * 1024) {
+        toast.error("File size must be less than 400KB.");
+        e.target.value = "";
+        return;
+      }
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
-
-    // Validate file type (JPEG only)
-    if (!file.type.includes("jpeg") && !file.type.includes("jpg")) {
-      toast.error("Only JPEG files are allowed.");
-      e.target.value = ""; // Clear the file input
-      return;
-    }
-
-    // Validate file size (400KB max)
-    if (file.size > 400 * 1024) {
-      toast.error("File size must be less than 400KB.");
-      e.target.value = ""; // Clear the file input
-      return;
-    }
-
-    setImageFile(file);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
   };
 
   const handleSaveCourse = async () => {
-    if (!courseName || !courseDescription || !coursePrice || !imageFile) {
-      toast.error("All fields, including the image, are required.");
+    if (!courseName || !courseDescription || !coursePrice) {
+      toast.error("All fields are required.");
       return;
+    }
+    if (!editingCourse && !imageFile) {
+        toast.error("An image is required for new courses.");
+        return;
     }
 
     setUploading(true);
-    let imageUrl = "";
+    let finalImageUrl = editingCourse?.courses_image;
 
     try {
-      // Step 1: Upload the image
-      const imageFormData = new FormData();
-      imageFormData.append("file", imageFile);
-      imageFormData.append("uploadType", "course"); // Specify the upload type for the backend
+      if (imageFile) {
+        const imageFormData = new FormData();
+        imageFormData.append("file", imageFile);
+        imageFormData.append("uploadType", "course");
 
-      const uploadRes = await fetch("/api/upload", {
-        method: "POST",
-        body: imageFormData,
-      });
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          body: imageFormData,
+        });
 
-      if (!uploadRes.ok) {
-        const errorData = await uploadRes.json();
-        throw new Error(errorData.error || "Failed to upload image.");
+        if (!uploadRes.ok) {
+          const errorData = await uploadRes.json();
+          throw new Error(errorData.error || "Failed to upload image.");
+        }
+        const uploadData = await uploadRes.json();
+        finalImageUrl = uploadData.url;
+      }
+      
+      if (!finalImageUrl) {
+          throw new Error("Image URL is missing.");
       }
 
-      const uploadData = await uploadRes.json();
-      imageUrl = uploadData.url; // Assumes the backend returns { url: "..." }
+      const courseData = {
+        course_name: courseName,
+        course_description: courseDescription,
+        course_price: coursePrice,
+        courses_image: finalImageUrl,
+      };
 
-      if (!imageUrl) {
-        throw new Error("Image URL was not returned from the upload.");
-      }
+      const url = editingCourse ? `/api/courses?id=${editingCourse.id}` : "/api/courses";
+      const method = editingCourse ? "PUT" : "POST";
 
-      // Step 2: Create the course with the returned image URL
-      const courseRes = await fetch("/api/courses", {
-        method: "POST",
+      const courseRes = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          course_name: courseName,
-          course_description: courseDescription,
-          course_price: coursePrice,
-          courses_image: imageUrl,
-        }),
+        body: JSON.stringify(courseData),
       });
 
       if (!courseRes.ok) {
         const errorData = await courseRes.json();
-        throw new Error(errorData.error || "Failed to create course.");
+        throw new Error(errorData.error || `Failed to ${editingCourse ? 'update' : 'create'} course.`);
       }
 
-      toast.success("Course created successfully!");
-      setIsDialogOpen(false);
-      resetForm();
-      // Optionally, you could trigger a refetch of courses here if displaying them
+      toast.success(`Course ${editingCourse ? 'updated' : 'created'} successfully!`);
+      handleDialogOpenChange(false);
+      fetchCourses();
     } catch (error) {
-      const msg = error instanceof Error ? error.message : "An unknown error occurred.";
-      console.error("Error creating course:", msg);
-      toast.error(`Error: ${msg}`);
+      toast.error(
+        error instanceof Error ? error.message : "An unknown error occurred."
+      );
     } finally {
       setUploading(false);
     }
@@ -129,8 +225,10 @@ export default function CourseManagement() {
   return (
     <div className="mt-8 space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-[#1f639e]">Course Management</h2>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <h2 className="text-2xl font-bold text-[#1f639e]">
+          Course Management
+        </h2>
+        <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
           <DialogTrigger asChild>
             <Button className="flex items-center gap-2 bg-[#1f639e] hover:bg-[#164a73]">
               <Plus className="w-4 h-4" />
@@ -139,7 +237,9 @@ export default function CourseManagement() {
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Add a New Course</DialogTitle>
+              <DialogTitle>
+                {editingCourse ? "Edit Course" : "Add a New Course"}
+              </DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div>
@@ -192,7 +292,7 @@ export default function CourseManagement() {
               <div className="flex justify-end gap-2">
                 <Button
                   variant="outline"
-                  onClick={() => setIsDialogOpen(false)}
+                  onClick={() => handleDialogOpenChange(false)}
                 >
                   Cancel
                 </Button>
@@ -201,19 +301,77 @@ export default function CourseManagement() {
                   disabled={uploading}
                   className="bg-[#1f639e] hover:bg-[#164a73]"
                 >
-                  {uploading ? "Saving..." : "Save Course"}
+                  {uploading
+                    ? "Saving..."
+                    : editingCourse
+                    ? "Save Changes"
+                    : "Save Course"}
                 </Button>
               </div>
             </div>
           </DialogContent>
         </Dialog>
       </div>
-       {/* A placeholder for where the list of courses would go */}
-      <Card className="p-8 text-center">
-        <p className="text-muted-foreground">
-            Course listing will be displayed here in the future.
-        </p>
-      </Card>
+
+      {loading ? (
+        <p>Loading courses...</p>
+      ) : (
+        <Card>
+          <CardContent className="pt-6">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Course Name</TableHead>
+                  <TableHead>Price</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {courses.length > 0 ? (
+                  courses.map((course) => (
+                    <TableRow key={course.id}>
+                      <TableCell className="font-medium">
+                        {course.course_name}
+                      </TableCell>
+                      <TableCell>${course.course_price}</TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <span className="sr-only">Open menu</span>
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleEdit(course)}>
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleDelete(course.id)}
+                              className="text-red-600"
+                            >
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={3}
+                      className="h-24 text-center"
+                    >
+                      No courses found.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

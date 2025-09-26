@@ -124,9 +124,9 @@ export default function CourseManagement() {
   };
 
   const executeDelete = async () => {
-    const courseId = courseToDelete;
+    if (courseToDelete === null) return;
     try {
-      const response = await fetch(`/api/courses?id=${courseId}`, {
+      const response = await fetch(`/api/courses?id=${courseToDelete}`, {
         method: "DELETE",
       });
 
@@ -137,6 +137,7 @@ export default function CourseManagement() {
 
       toast.success("Course deleted successfully!");
       fetchCourses(); // Refresh the list
+      setCourseToDelete(null);
     } catch (error: any) {
       setCourseToDelete(null); // Reset even on error
       toast.error(
@@ -380,7 +381,7 @@ export default function CourseManagement() {
                    <Button
                      size="sm"
                      className="bg-[#1f639e] hover:bg-[#164a73]"
-                     onClick={() => openEditDialog(event)}
+                     onClick={() => handleEdit(course)}
                    >
                      <Edit className="w-4 h-4" />
                    </Button>

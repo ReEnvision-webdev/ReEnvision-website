@@ -14,6 +14,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import MarkdownRenderer from '@/components/markdown-renderer';
 
 // Define the Course type based on your database schema
 interface Course {
@@ -133,10 +134,8 @@ export default function CoursesPage() {
                     </CardTitle>
                   </CardHeader>
 
-                  <CardContent className="flex-grow">
-                    <p className="text-sm text-gray-600 leading-relaxed line-clamp-4 h-20">
-                      {course.course_description}
-                    </p>
+                  <CardContent className="flex-grow text-sm text-gray-600 leading-relaxed line-clamp-4 h-20 overflow-hidden">
+                     <MarkdownRenderer content={course.course_description} />
                   </CardContent>
 
                   <CardFooter className="pt-4 flex flex-col items-start bg-slate-50 mt-auto">

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import MarkdownRenderer from "./markdown-renderer";
+import MarkdownRenderer from "@/components/markdown-renderer";
 
 interface Event {
   id: string;

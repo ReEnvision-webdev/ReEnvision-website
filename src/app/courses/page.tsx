@@ -1,42 +1,60 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Users, BookOpen, Video, Globe, Zap, Award, Clock } from "lucide-react";
-import Link from "next/link";
-import { getAllCourses, type Course } from "@/lib/courses";
-import AOS from "aos";
-import "aos/dist/aos.css";
+} from '@/components/ui/card';
+import { ShoppingCart, Video, Users, BookOpen } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+// Define the Course type based on your database schema
+interface Course {
+  id: string;
+  course_name: string;
+  courses_image: string | null;
+  course_description: string;
+  course_price: string; // Drizzle returns numeric as string
+}
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     AOS.init({
       duration: 1000,
-      easing: "ease-out-cubic",
+      easing: 'ease-out-cubic',
       once: true,
       offset: 50,
-      delay: 0,
     });
-    loadCourses();
-  }, []);
 
-  const loadCourses = async () => {
-    try {
-      const coursesData = await getAllCourses();
-      setCourses(coursesData);
-    } catch (error) {
-      console.error("Failed to load courses:", error);
-    }
-  };
+    const fetchCourses = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch('/api/courses', { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error('Failed to fetch courses');
+        }
+        const result = await response.json();
+        setCourses(result.data || []); // Ensure data is an array
+      } catch (error) {
+        console.error('Failed to load courses:', error);
+        setCourses([]); // Set to empty array on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#F0F8FF]">
@@ -53,93 +71,25 @@ export default function CoursesPage() {
             data-aos="fade-up"
             data-aos-delay="200"
           >
-            Learn tech skills live on Zoom with expert mentors and volunteers.
+            Learn tech skills live with expert mentors and volunteers. Find the perfect
+            course to start your journey in technology.
           </p>
-
           <div
             className="flex flex-col md:flex-row justify-center items-center gap-8 text-base"
             data-aos="fade-up"
             data-aos-delay="400"
           >
-            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300">
+            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-md">
               <Video className="h-5 w-5 text-[#1d588a]" />
               <span className="font-semibold text-[#1d588a]">Live on Zoom</span>
             </div>
-            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300">
+            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-md">
               <Users className="h-5 w-5 text-[#1d588a]" />
-              <span className="font-semibold text-[#1d588a]">
-                Expert Mentors
-              </span>
+              <span className="font-semibold text-[#1d588a]">Expert Mentors</span>
             </div>
-            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all duration-300">
+            <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-md">
               <BookOpen className="h-5 w-5 text-[#1d588a]" />
-              <span className="font-semibold text-[#1d588a]">
-                Hands-on Learning
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-12 px-6 bg-white/50">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-8" data-aos="fade-up">
-            <h2 className="text-2xl font-bold text-[#1d588a] mb-4">
-              Why Join?
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-6">
-            <div
-              className="text-center group"
-              data-aos="fade-up"
-              data-aos-delay="100"
-            >
-              <div className="bg-gradient-to-br from-[#1d588a]/20 to-[#1d588a]/10 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                <Globe className="h-6 w-6 text-[#1d588a]" />
-              </div>
-              <h3 className="text-base font-semibold text-[#1d588a]">
-                Accessible Learning
-              </h3>
-            </div>
-
-            <div
-              className="text-center group"
-              data-aos="fade-up"
-              data-aos-delay="200"
-            >
-              <div className="bg-gradient-to-br from-[#1d588a]/20 to-[#1d588a]/10 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                <Award className="h-6 w-6 text-[#1d588a]" />
-              </div>
-              <h3 className="text-base font-semibold text-[#1d588a]">
-                Real Mentorship
-              </h3>
-            </div>
-
-            <div
-              className="text-center group"
-              data-aos="fade-up"
-              data-aos-delay="300"
-            >
-              <div className="bg-gradient-to-br from-[#1d588a]/20 to-[#1d588a]/10 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                <BookOpen className="h-6 w-6 text-[#1d588a]" />
-              </div>
-              <h3 className="text-base font-semibold text-[#1d588a]">
-                Practical Skills
-              </h3>
-            </div>
-
-            <div
-              className="text-center group"
-              data-aos="fade-up"
-              data-aos-delay="400"
-            >
-              <div className="bg-gradient-to-br from-[#1d588a]/20 to-[#1d588a]/10 w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                <Zap className="h-6 w-6 text-[#1d588a]" />
-              </div>
-              <h3 className="text-base font-semibold text-[#1d588a]">
-                Community Impact
-              </h3>
+              <span className="font-semibold text-[#1d588a]">Hands-on Learning</span>
             </div>
           </div>
         </div>
@@ -152,93 +102,78 @@ export default function CoursesPage() {
               Available Courses & Boot Camps
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Interactive, mentor-led courses designed to build technical skills
-              and help empower communities.
+              Interactive, mentor-led courses designed to build technical skills.
             </p>
           </div>
 
-          {/* Course Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {courses.map((course, index) => (
-              <Card
-                key={course.id}
-                className="bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-500 ease-out hover:scale-[1.02] border-0 h-full flex flex-col"
-                data-aos="fade-up"
-                data-aos-delay={index * 100}
-              >
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-xl font-bold text-[#1d588a] mb-2 line-clamp-2">
-                    {course.title}
-                  </CardTitle>
-                  <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
-                    {course.description}
-                  </p>
-                </CardHeader>
-
-                <CardContent className="space-y-4 flex-grow">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-[#1d588a]" />
-                      <span className="text-sm text-[#1d588a] font-medium">
-                        {course.duration}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-[#1d588a]" />
-                      <span className="text-sm text-[#1d588a] font-medium">
-                        {course.students.toLocaleString()} students
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <BookOpen className="h-4 w-4 text-[#1d588a]" />
-                      <span className="text-sm text-[#1d588a] font-medium">
-                        {course.level}
-                      </span>
-                    </div>
+          {loading ? (
+            <div className="text-center col-span-full py-12">
+              <p className="text-lg text-gray-500">Loading courses...</p>
+            </div>
+          ) : courses.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {courses.map((course, index) => (
+                <Card
+                  key={course.id}
+                  className="bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-500 ease-out hover:scale-[1.02] border-0 h-full flex flex-col overflow-hidden rounded-lg"
+                  data-aos="fade-up"
+                  data-aos-delay={index * 100}
+                >
+                  <div className="relative w-full h-48">
+                    <Image
+                      src={course.courses_image || '/placeholder.svg'}
+                      alt={course.course_name}
+                      layout="fill"
+                      objectFit="cover"
+                    />
                   </div>
+                  <CardHeader className="pb-4">
+                    <CardTitle className="text-xl font-bold text-[#1d588a] mb-2 line-clamp-2 h-14">
+                      {course.course_name}
+                    </CardTitle>
+                  </CardHeader>
 
-                  <div className="pt-2">
-                    <div className="flex items-baseline gap-2">
-                      <div className="text-2xl font-bold text-[#1d588a]">
-                        {course.price}
-                      </div>
-                      <div className="text-sm text-gray-500 line-through">
-                        {course.originalPrice}
-                      </div>
-                    </div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      {course.schedule.format} • {course.schedule.commitment}
-                    </div>
-                  </div>
-                </CardContent>
+                  <CardContent className="flex-grow">
+                    <p className="text-sm text-gray-600 leading-relaxed line-clamp-4 h-20">
+                      {course.course_description}
+                    </p>
+                  </CardContent>
 
-                <CardFooter className="pt-4">
-                  <div className="flex gap-3 w-full">
-                    <Link href={`/courses/${course.id}`} className="flex-1">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="w-full text-sm py-2 rounded-lg hover:scale-[1.02] transition-all duration-300 ease-out bg-transparent border-[#1d588a] text-[#1d588a] hover:bg-[#1d588a] hover:text-white"
-                      >
-                        View Details
-                      </Button>
-                    </Link>
-                    <Link
-                      href={`/payment?course=${course.id}`}
-                      className="flex-1"
-                    >
-                      <Button
-                        size="sm"
-                        className="w-full text-sm py-2 rounded-lg hover:scale-[1.02] transition-all duration-300 ease-out bg-[#1d588a] hover:bg-[#1d588a]/90"
-                      >
-                        Enroll Now
-                      </Button>
-                    </Link>
-                  </div>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
+                  <CardFooter className="pt-4 flex flex-col items-start bg-slate-50 mt-auto">
+                    <div className="text-2xl font-bold text-[#1d588a] mb-4">
+                      {`$${course.course_price}`}
+                    </div>
+                    <div className="flex gap-3 w-full">
+                      <Link href={`/courses/${course.id}`} className="flex-1">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="w-full text-sm py-2 rounded-lg hover:scale-[1.02] transition-all duration-300 ease-out bg-transparent border-[#1d588a] text-[#1d588a] hover:bg-[#1d588a] hover:text-white"
+                        >
+                          View Details
+                        </Button>
+                      </Link>
+                      <Link href="#" className="flex-1">
+                        <Button
+                          size="sm"
+                          className="w-full text-sm py-2 rounded-lg hover:scale-[1.02] transition-all duration-300 ease-out bg-[#1d588a] hover:bg-[#1d588a]/90"
+                        >
+                          <ShoppingCart className="w-4 h-4 mr-2" />
+                          Enroll Now
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center col-span-full py-12">
+              <p className="text-lg text-gray-500">
+                No courses are available at the moment. Please check back later!
+              </p>
+            </div>
+          )}
         </div>
       </section>
     </div>

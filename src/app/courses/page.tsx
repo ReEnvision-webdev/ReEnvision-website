@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { ShoppingCart, Video, Users, BookOpen } from 'lucide-react';
-import Link from 'next/link';
-import Image from 'next/image';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import MarkdownRenderer from '@/components/markdown-renderer';
+} from "@/components/ui/card";
+import { ShoppingCart, Video, Users, BookOpen } from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import MarkdownRenderer from "@/components/markdown-renderer";
 
 // Define the Course type based on your database schema
 interface Course {
@@ -32,7 +32,7 @@ export default function CoursesPage() {
   useEffect(() => {
     AOS.init({
       duration: 1000,
-      easing: 'ease-out-cubic',
+      easing: "ease-out-cubic",
       once: true,
       offset: 50,
     });
@@ -40,14 +40,14 @@ export default function CoursesPage() {
     const fetchCourses = async () => {
       setLoading(true);
       try {
-        const response = await fetch('/api/courses', { cache: 'no-store' });
+        const response = await fetch("/api/courses", { cache: "no-store" });
         if (!response.ok) {
-          throw new Error('Failed to fetch courses');
+          throw new Error("Failed to fetch courses");
         }
         const result = await response.json();
         setCourses(result.data || []); // Ensure data is an array
       } catch (error) {
-        console.error('Failed to load courses:', error);
+        console.error("Failed to load courses:", error);
         setCourses([]); // Set to empty array on error
       } finally {
         setLoading(false);
@@ -72,8 +72,8 @@ export default function CoursesPage() {
             data-aos="fade-up"
             data-aos-delay="200"
           >
-            Learn tech skills live with expert mentors and volunteers. Find the perfect
-            course to start your journey in technology.
+            Learn tech skills live with expert mentors and volunteers. Find the
+            perfect course to start your journey in technology.
           </p>
           <div
             className="flex flex-col md:flex-row justify-center items-center gap-8 text-base"
@@ -86,11 +86,15 @@ export default function CoursesPage() {
             </div>
             <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-md">
               <Users className="h-5 w-5 text-[#1d588a]" />
-              <span className="font-semibold text-[#1d588a]">Expert Mentors</span>
+              <span className="font-semibold text-[#1d588a]">
+                Expert Mentors
+              </span>
             </div>
             <div className="flex items-center gap-2 bg-white/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-md">
               <BookOpen className="h-5 w-5 text-[#1d588a]" />
-              <span className="font-semibold text-[#1d588a]">Hands-on Learning</span>
+              <span className="font-semibold text-[#1d588a]">
+                Hands-on Learning
+              </span>
             </div>
           </div>
         </div>
@@ -103,7 +107,8 @@ export default function CoursesPage() {
               Available Courses & Boot Camps
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Interactive, mentor-led courses designed to build technical skills.
+              Interactive, mentor-led courses designed to build technical
+              skills.
             </p>
           </div>
 
@@ -122,7 +127,7 @@ export default function CoursesPage() {
                 >
                   <div className="relative w-full h-48">
                     <Image
-                      src={course.courses_image || '/placeholder.svg'}
+                      src={course.courses_image || "/placeholder.svg"}
                       alt={course.course_name}
                       layout="fill"
                       objectFit="cover"
@@ -135,7 +140,7 @@ export default function CoursesPage() {
                   </CardHeader>
 
                   <CardContent className="flex-grow text-sm text-gray-600 leading-relaxed line-clamp-4 h-20 overflow-hidden">
-                     <MarkdownRenderer content={course.course_description} />
+                    <MarkdownRenderer content={course.course_description} />
                   </CardContent>
 
                   <CardFooter className="pt-4 flex flex-col items-start bg-slate-50 mt-auto">

@@ -32,14 +32,20 @@ function ErrorDisplay({ message }: { message: string }) {
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-gray-50">
       <div className="text-center p-8 bg-white shadow-lg rounded-lg max-w-lg">
-        <h1 className="text-2xl font-bold text-red-600 mb-4">Could Not Load Event</h1>
+        <h1 className="text-2xl font-bold text-red-600 mb-4">
+          Could Not Load Event
+        </h1>
         <p className="text-gray-700">{message}</p>
       </div>
     </div>
   );
 }
 
-export default async function EventDetailPage({ params }: { params: { id: string } }) {
+export default async function EventDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const { id } = params;
 
   // If there's no ID in the path, it's a 404.
@@ -67,7 +73,14 @@ export default async function EventDetailPage({ params }: { params: { id: string
 
     // CORRECT: For other errors (e.g., 500), display the error on the page.
     if (!response.ok || !result.success) {
-      return <ErrorDisplay message={result.error || "The event could not be found due to a server error."} />;
+      return (
+        <ErrorDisplay
+          message={
+            result.error ||
+            "The event could not be found due to a server error."
+          }
+        />
+      );
     }
 
     const apiEvent: ApiEvent = result.data;
@@ -84,10 +97,12 @@ export default async function EventDetailPage({ params }: { params: { id: string
     };
 
     return <EventDetail event={mappedEvent} />;
-
   } catch (err: unknown) {
     console.error("Catastrophic error in EventDetailPage:", err);
-    const message = err instanceof Error ? err.message : "An unexpected internal error occurred.";
+    const message =
+      err instanceof Error
+        ? err.message
+        : "An unexpected internal error occurred.";
     // CORRECT: For catastrophic failures (like the original 'fetch failed'), show the error on the page.
     return <ErrorDisplay message={message} />;
   }

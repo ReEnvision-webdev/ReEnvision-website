@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Tag } from "lucide-react";
@@ -44,7 +44,10 @@ export default function CourseDetail({ course }: CourseDetailProps) {
                 <Tag className="w-6 h-6 mr-3 text-gray-400" />
                 {`$${course.price}`}
               </div>
-              <Button size="lg" className="w-full md:w-auto bg-[#1d588a] hover:bg-[#1f639e]">
+              <Button
+                size="lg"
+                className="w-full md:w-auto bg-[#1d588a] hover:bg-[#1f639e]"
+              >
                 <ShoppingCart className="w-5 h-5 mr-2" />
                 Enroll Now
               </Button>

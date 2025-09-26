@@ -34,7 +34,9 @@ function ErrorDisplay({ message }: { message: string }) {
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-gray-50">
       <div className="text-center p-8 bg-white shadow-lg rounded-lg max-w-lg">
-        <h1 className="text-2xl font-bold text-red-600 mb-4">Could Not Load Course</h1>
+        <h1 className="text-2xl font-bold text-red-600 mb-4">
+          Could Not Load Course
+        </h1>
         <p className="text-gray-700">{message}</p>
       </div>
     </div>
@@ -42,7 +44,11 @@ function ErrorDisplay({ message }: { message: string }) {
 }
 
 // The page is an async server function that fetches its own data.
-export default async function CourseDetailPage({ params }: { params: { id: string } }) {
+export default async function CourseDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const { id } = params;
 
   if (!id) {
@@ -69,7 +75,14 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
 
     // For other server errors, display an error on the page.
     if (!response.ok || !result.success) {
-      return <ErrorDisplay message={result.error || "The course could not be found due to a server error."} />;
+      return (
+        <ErrorDisplay
+          message={
+            result.error ||
+            "The course could not be found due to a server error."
+          }
+        />
+      );
     }
 
     const apiCourse: ApiCourse = result.data;
@@ -88,10 +101,12 @@ export default async function CourseDetailPage({ params }: { params: { id: strin
 
     // Render the CourseDetail component with the fetched data.
     return <CourseDetail course={mappedCourse} />;
-
   } catch (err: unknown) {
     console.error("Catastrophic error in CourseDetailPage:", err);
-    const message = err instanceof Error ? err.message : "An unexpected internal error occurred.";
+    const message =
+      err instanceof Error
+        ? err.message
+        : "An unexpected internal error occurred.";
     return <ErrorDisplay message={message} />;
   }
 }

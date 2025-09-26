@@ -36,14 +36,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
 
 interface Course {
@@ -67,8 +60,6 @@ export default function CourseManagement() {
   const [coursePrice, setCoursePrice] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
 
   const fetchCourses = async () => {
     try {
@@ -98,7 +89,6 @@ export default function CourseManagement() {
     setCoursePrice("");
     setImageFile(null);
     setImagePreview(null);
-    setImageUrl(null);
     setEditingCourse(null);
   };
 
@@ -114,7 +104,6 @@ export default function CourseManagement() {
     setCourseName(course.course_name);
     setCourseDescription(course.course_description);
     setCoursePrice(course.course_price);
-    setImageUrl(course.courses_image);
     setImagePreview(course.courses_image);
     setIsDialogOpen(true);
   };
@@ -123,10 +112,10 @@ export default function CourseManagement() {
     setCourseToDelete(courseId);
   };
 
-  const executeDelete = async () => {
-    if (courseToDelete === null) return;
+  const executeDelete = async (courseId: number | null) => {
+    if (courseId === null) return;
     try {
-      const response = await fetch(`/api/courses?id=${courseToDelete}`, {
+      const response = await fetch(`/api/courses/${courseId}`, {
         method: "DELETE",
       });
 
@@ -178,7 +167,6 @@ export default function CourseManagement() {
         return;
     }
 
-    setUploading(true);
     let finalImageUrl = editingCourse?.courses_image;
 
     try {
@@ -211,7 +199,7 @@ export default function CourseManagement() {
         courses_image: finalImageUrl,
       };
 
-      const url = editingCourse ? `/api/courses?id=${editingCourse.id}` : "/api/courses";
+      const url = editingCourse ? `/api/courses/${editingCourse.id}` : "/api/courses";
       const method = editingCourse ? "PUT" : "POST";
 
       const courseRes = await fetch(url, {
@@ -232,8 +220,6 @@ export default function CourseManagement() {
       toast.error(
         error instanceof Error ? error.message : "An unknown error occurred."
       );
-    } finally {
-      setUploading(false);
     }
   };
 
@@ -306,19 +292,17 @@ export default function CourseManagement() {
               </div>
               <div className="flex justify-end gap-2">
                 <Button
-                  className="bg-[#1f639e] hover:bg-[#164a73]"
+                  type="button"
+                  variant="outline"
                   onClick={() => handleDialogOpenChange(false)}
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleSaveCourse}
-                  disabled={uploading}
                   className="bg-[#1f639e] hover:bg-[#164a73]"
                 >
-                  {uploading
-                    ? "Saving..."
-                    : editingCourse
+                  {editingCourse
                     ? "Save Changes"
                     : "Save Course"}
                 </Button>
@@ -351,11 +335,13 @@ export default function CourseManagement() {
               <AlertDialogFooter>
                 <AlertDialogCancel
                   onClick={() => setCourseToDelete(null)}
-                  className="bg-[#1f639e] text-white hover:text-[#1f639e]"
                 >
                   Cancel
                 </AlertDialogCancel>
-                <AlertDialogAction onClick={executeDelete} className="bg-red-600 hover:bg-red-700">
+                <AlertDialogAction 
+                  onClick={() => executeDelete(courseToDelete)} 
+                  className="bg-red-600 hover:bg-red-700"
+                >
                   Delete
                 </AlertDialogAction>
               </AlertDialogFooter>

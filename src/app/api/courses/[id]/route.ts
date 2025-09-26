@@ -1,80 +1,160 @@
+
+import { NextRequest, NextResponse } from "next/server";
+import { eq } from "drizzle-orm";
 import db from "@/db/database";
 import { coursesTable } from "@/db/schema";
-import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { StandardResponse } from "@/lib/types";
+import { restrictAdmin } from "@/lib/jwt";
 
-// PUT (update) a course
-export async function PUT(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  try {
-    const { id } = await params;
-
-    const { course_name, course_description, course_price, courses_image } =
-      await req.json();
-
-    if (
-      !course_name ||
-      !course_description ||
-      !course_price ||
-      !courses_image
-    ) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 },
-      );
-    }
-
-    const updatedCourse = await db
-      .update(coursesTable)
-      .set({ course_name, course_description, course_price, courses_image })
-      .where(eq(coursesTable.id, id))
-      .returning();
-
-    if (updatedCourse.length === 0) {
-      return NextResponse.json({ error: "Course not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(
-      { message: "Course updated successfully", course: updatedCourse[0] },
-      { status: 200 },
-    );
-  } catch (error) {
-    console.error("Error updating course:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    );
-  }
+interface RouteParams {
+    params: { id: string };
 }
 
-// DELETE a course
-export async function DELETE(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  try {
-    const { id } = await params;
+export async function GET(req: NextRequest, { params }: RouteParams) {
+    try {
+        const [course] = await db
+            .select()
+            .from(coursesTable)
+            .where(eq(coursesTable.id, params.id));
 
-    const deletedCourse = await db
-      .delete(coursesTable)
-      .where(eq(coursesTable.id, id))
-      .returning();
+        if (!course) {
+            const response: StandardResponse = {
+                success: false,
+                error: "Course not found",
+                message: null,
+                data: null
+            }
+            return NextResponse.json(response, { status: 404 });
+        }
 
-    if (deletedCourse.length === 0) {
-      return NextResponse.json({ error: "Course not found" }, { status: 404 });
+        const response: StandardResponse = {
+            success: true,
+            data: course,
+            message: "Course fetched successfully",
+            error: null
+        }
+
+        return NextResponse.json(response, { status: 200 });
+    } catch (error) {
+        console.error("Error fetching course:", error);
+        const response: StandardResponse = {
+            success: false,
+            data: null,
+            message: "Internal Server Error",
+            error: error instanceof Error ? error.message : "Internal Server Error"
+        }
+        return NextResponse.json(
+          response,
+          { status: 500 },
+        );
+    }
+}
+
+export async function PUT(req: NextRequest, { params }: RouteParams) {
+    const adminResponse = await restrictAdmin(req);
+    if (adminResponse) {
+        return adminResponse;
     }
 
-    return NextResponse.json(
-      { message: "Course deleted successfully" },
-      { status: 200 },
-    );
-  } catch (error) {
-    console.error("Error deleting course:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    );
-  }
+    try {
+        const { course_name, course_description, course_price, courses_image } = await req.json();
+
+        const updateObject: Partial<typeof coursesTable.$inferInsert> = {};
+        if (course_name) updateObject.course_name = course_name;
+        if (course_description) updateObject.course_description = course_description;
+        if (course_price) updateObject.course_price = course_price;
+        if (courses_image) updateObject.courses_image = courses_image;
+
+        if (Object.keys(updateObject).length === 0) {
+            const response: StandardResponse = {
+                success: false,
+                error: "No fields to update",
+                message: null,
+                data: null
+            }
+            return NextResponse.json(response, { status: 400 });
+        }
+
+        const [updatedCourse] = await db
+            .update(coursesTable)
+            .set(updateObject)
+            .where(eq(coursesTable.id, params.id))
+            .returning();
+
+        if (!updatedCourse) {
+            const response: StandardResponse = {
+                success: false,
+                error: "Course not found",
+                message: null,
+                data: null
+            }
+            return NextResponse.json(response, { status: 404 });
+        }
+
+        const response: StandardResponse = {
+            success: true,
+            data: updatedCourse,
+            message: "Course updated successfully",
+            error: null
+        }
+
+        return NextResponse.json(response, { status: 200 });
+    } catch (error) {
+        console.error("Error updating course:", error);
+        const response: StandardResponse = {
+            success: false,
+            data: null,
+            message: "Internal Server Error",
+            error: error instanceof Error ? error.message : "Internal Server Error"
+        }
+        return NextResponse.json(
+          response,
+          { status: 500 },
+        );
+    }
+}
+
+export async function DELETE(req: NextRequest, { params }: RouteParams) {
+    const adminResponse = await restrictAdmin(req);
+    if (adminResponse) {
+        return adminResponse;
+    }
+
+    try {
+        const [deletedCourse] = await db
+            .delete(coursesTable)
+            .where(eq(coursesTable.id, params.id))
+            .returning();
+
+        if (!deletedCourse) {
+            const response: StandardResponse = {
+                success: false,
+                error: "Course not found",
+                message: null,
+                data: null
+            }
+            return NextResponse.json(response, { status: 404 });
+        }
+
+        const response: StandardResponse = {
+            success: true,
+            data: null,
+            message: "Course deleted successfully",
+            error: null
+        }
+
+        return NextResponse.json(response, { status: 200 });
+    } catch (error) {
+        console.error("Error deleting course:", error);
+        const response: StandardResponse = {
+            success: false,
+            data: null,
+            message: "Internal Server Error",
+            error: error instanceof Error ? error.message : "Internal Server Error"
+        }
+        return NextResponse.json(
+          response,
+          { status: 500 },
+        );
+    }
 }

@@ -1,239 +1,160 @@
+
+import { NextRequest, NextResponse } from "next/server";
+import { eq } from "drizzle-orm";
 import db from "@/db/database";
 import { eventsTable } from "@/db/schema";
 import { StandardResponse } from "@/lib/types";
-import { eq } from "drizzle-orm";
-import { NextRequest, NextResponse } from "next/server";
 import { restrictAdmin } from "@/lib/jwt";
 
-interface EventPutBody {
-  eventTitle?: string;
-  eventDesc?: string;
-  eventDate?: Date;
-  imageUrl?: string;
-  updatedAt: Date;
+interface RouteParams {
+    params: { id: string };
 }
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  const { id } = await params;
+// GET a single event by ID
+export async function GET(req: NextRequest, { params }: RouteParams) {
+    try {
+        const [event] = await db
+            .select()
+            .from(eventsTable)
+            .where(eq(eventsTable.id, params.id));
 
-  try {
-    const events = await db
-      .select()
-      .from(eventsTable)
-      .where(eq(eventsTable.id, id))
-      .limit(1);
+        if (!event) {
+            const response: StandardResponse = {
+                success: false,
+                error: "Event not found",
+                message: null,
+                data: null
+            }
+            return NextResponse.json(response, { status: 404 });
+        }
 
-    if (events.length === 0) {
-      const response: StandardResponse = {
-        success: false,
-        message: null,
-        error: "Event not found",
-        data: null,
-      };
+        const response: StandardResponse = {
+            success: true,
+            data: event,
+            message: "Event fetched successfully",
+            error: null
+        }
 
-      return NextResponse.json(response, {
-        status: 404,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+        return NextResponse.json(response, { status: 200 });
+    } catch (error) {
+        console.error("Error fetching event:", error);
+        const response: StandardResponse = {
+            success: false,
+            data: null,
+            message: "Internal Server Error",
+            error: error instanceof Error ? error.message : "Internal Server Error"
+        }
+        return NextResponse.json(response, { status: 500 });
     }
-
-    const response: StandardResponse = {
-      success: true,
-      message: null,
-      error: null,
-      data: events[0],
-    };
-
-    return NextResponse.json(response, {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching events:", error);
-
-    const response: StandardResponse = {
-      success: false,
-      message: "Internal server error",
-      error: "Failed to fetch events",
-      data: null,
-    };
-
-    return NextResponse.json(response, {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
 }
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  const res = await restrictAdmin(req);
-
-  if (res) {
-    return res;
-  }
-
-  const { id } = await params;
-
-  try {
-    const body = await req.json();
-
-    // Validate required fields if they are provided
-    if (body.event_title !== undefined && body.event_title === "") {
-      const response: StandardResponse = {
-        success: false,
-        message: null,
-        error: "Event title cannot be empty",
-        data: null,
-      };
-
-      return NextResponse.json(response, {
-        status: 400,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+// UPDATE an event by ID
+export async function PUT(req: NextRequest, { params }: RouteParams) {
+    const adminResponse = await restrictAdmin(req);
+    if (adminResponse) {
+        return adminResponse;
     }
 
-    // Map API field names to database field names
-    const updateData: EventPutBody = {
-      updatedAt: new Date(),
-    };
+    try {
+        const { id } = params;
+        const body = await req.json();
+        const { event_title, event_desc, event_date, image_url } = body;
 
-    if (body.event_title !== undefined)
-      updateData.eventTitle = body.event_title;
-    if (body.event_desc !== undefined) updateData.eventDesc = body.event_desc;
-    if (body.event_date !== undefined)
-      updateData.eventDate = new Date(body.event_date);
-    if (body.image_url !== undefined) updateData.imageUrl = body.image_url;
+        const updateFields: Record<string, any> = {
+            updatedAt: new Date(),
+        };
 
-    const events = await db
-      .update(eventsTable)
-      .set(updateData)
-      .where(eq(eventsTable.id, id))
-      .returning();
+        if (event_title !== undefined) updateFields.eventTitle = event_title;
+        if (event_desc !== undefined) updateFields.eventDesc = event_desc;
+        if (event_date !== undefined) updateFields.eventDate = new Date(event_date);
+        if ("image_url" in body) updateFields.imageUrl = image_url;
 
-    if (events.length === 0) {
-      const response: StandardResponse = {
-        success: false,
-        message: null,
-        error: "Event not found",
-        data: null,
-      };
+        if (Object.keys(updateFields).length === 1) {
+            const response: StandardResponse = {
+                success: false,
+                error: "No update fields provided",
+                message: null,
+                data: null
+            }
+            return NextResponse.json(response, { status: 400 });
+        }
 
-      return NextResponse.json(response, {
-        status: 404,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+        const [updatedEvent] = await db
+            .update(eventsTable)
+            .set(updateFields)
+            .where(eq(eventsTable.id, id))
+            .returning();
+
+        if (!updatedEvent) {
+            const response: StandardResponse = {
+                success: false,
+                error: "Event not found or failed to update",
+                message: null,
+                data: null
+            }
+            return NextResponse.json(response, { status: 404 });
+        }
+
+        const response: StandardResponse = {
+            success: true,
+            data: updatedEvent,
+            message: "Event updated successfully",
+            error: null
+        }
+
+        return NextResponse.json(response, { status: 200 });
+    } catch (error) {
+        console.error("Error updating event:", error);
+        const response: StandardResponse = {
+            success: false,
+            data: null,
+            message: "Internal Server Error",
+            error: error instanceof Error ? error.message : "Internal Server Error"
+        }
+        return NextResponse.json(response, { status: 500 });
     }
-
-    const response: StandardResponse = {
-      success: true,
-      message: null,
-      error: null,
-      data: events[0],
-    };
-
-    return NextResponse.json(response, {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (error) {
-    if (
-      error instanceof SyntaxError &&
-      error.message.includes("Unexpected end of JSON input")
-    ) {
-      const response: StandardResponse = {
-        success: false,
-        message: null,
-        error: "Missing fields",
-        data: null,
-      };
-
-      return NextResponse.json(response, {
-        status: 400,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    }
-
-    console.error("Error updating event:", error);
-
-    const response: StandardResponse = {
-      success: false,
-      message: "Internal server error",
-      error: "Failed to update event",
-      data: null,
-    };
-
-    return NextResponse.json(response, {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  const res = await restrictAdmin(req);
+// DELETE an event by ID
+export async function DELETE(req: NextRequest, { params }: RouteParams) {
+    const adminResponse = await restrictAdmin(req);
+    if (adminResponse) {
+        return adminResponse;
+    }
 
-  if (res) {
-    return res;
-  }
+    try {
+        const { id } = params;
+        const [deletedEvent] = await db
+            .delete(eventsTable)
+            .where(eq(eventsTable.id, id))
+            .returning();
 
-  const { id } = await params;
+        if (!deletedEvent) {
+            const response: StandardResponse = {
+                success: false,
+                error: "Event not found",
+                message: null,
+                data: null
+            }
+            return NextResponse.json(response, { status: 404 });
+        }
 
-  try {
-    await db.delete(eventsTable).where(eq(eventsTable.id, id));
+        const response: StandardResponse = {
+            success: true,
+            data: null,
+            message: "Event deleted successfully",
+            error: null
+        }
 
-    const response: StandardResponse = {
-      success: true,
-      message: null,
-      error: null,
-      data: null,
-    };
-
-    return NextResponse.json(response, {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  } catch (error) {
-    console.error("Error updating event:", error);
-
-    const response: StandardResponse = {
-      success: false,
-      message: "Internal server error",
-      error: "Failed to fetch events",
-      data: null,
-    };
-
-    return NextResponse.json(response, {
-      status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
+        return NextResponse.json(response, { status: 200 });
+    } catch (error) {
+        console.error("Error deleting event:", error);
+        const response: StandardResponse = {
+            success: false,
+            data: null,
+            message: "Internal Server Error",
+            error: error instanceof Error ? error.message : "Internal Server Error"
+        }
+        return NextResponse.json(response, { status: 500 });
+    }
 }

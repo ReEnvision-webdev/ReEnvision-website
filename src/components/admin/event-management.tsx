@@ -65,7 +65,6 @@ export default function EventManagement() {
       const response = await fetch("/api/events");
       if (!response.ok) throw new Error("Failed to fetch events");
       const result = await response.json();
-      console.log(result);
       setEvents(result.data);
     } catch (error) {
       console.error("Error fetching events:", error);
@@ -88,30 +87,18 @@ export default function EventManagement() {
   };
 
   const openEditDialog = (event: Event) => {
-    console.log("Opening edit dialog for event:", event);
     setEditingEvent(event);
     setTitle(event.eventTitle || "");
     setContent(event.eventDesc || "");
 
-    // Handle date parsing more robustly
     try {
       const date = new Date(event.eventDate);
-      if (!isNaN(date.getTime())) {
-        // datetime-local input expects YYYY-MM-DDTHH:mm format
-        const formattedDate = date.toISOString().slice(0, 16);
-        console.log("Setting event date to:", formattedDate);
-        setEventDate(formattedDate);
-      } else {
-        // Fallback to current date if parsing fails
-        const formattedDate = new Date().toISOString().slice(0, 16);
-        console.log("Setting fallback event date to:", formattedDate);
-        setEventDate(formattedDate);
-      }
-    } catch {
-      // Fallback to current date if parsing fails
-      const formattedDate = new Date().toISOString().slice(0, 16);
-      console.log("Setting error fallback event date to:", formattedDate);
+      const formattedDate = !isNaN(date.getTime())
+        ? date.toISOString().slice(0, 16)
+        : new Date().toISOString().slice(0, 16);
       setEventDate(formattedDate);
+    } catch {
+      setEventDate(new Date().toISOString().slice(0, 16));
     }
 
     setImagePreview(event.imageUrl || null);
@@ -120,12 +107,11 @@ export default function EventManagement() {
     setIsDialogOpen(true);
   };
 
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (!file) {
       setImageFile(null);
-      setImagePreview(null);
+      setImagePreview(editingEvent ? editingEvent.imageUrl : null);
       return;
     }
 
@@ -137,145 +123,50 @@ export default function EventManagement() {
       "image/x-png",
       "image/webp",
     ]);
-
     if (!allowedTypes.has(file.type)) {
       toast.error("Only JPEG, PNG, or WEBP images are allowed.");
-      e.target.value = "";
-      setImageFile(null);
-      setImagePreview(null);
       return;
     }
 
     if (file.size > 400 * 1024) {
       toast.error("File too large (max 400KB).");
-      e.target.value = "";
-      setImageFile(null);
-      setImagePreview(null);
       return;
     }
 
     setImageFile(file);
-
-    try {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    } catch {
-      setImagePreview(null);
-    }
-  };
-
-  const createEvent = async ({
-    title,
-    content,
-    eventDate,
-  }: {
-    title: string;
-    content: string;
-    eventDate: string;
-  }): Promise<StandardResponse> => {
-    const isoDate = new Date(eventDate).toISOString();
-    let finalImageUrl: string | null = imageUrl ?? null;
-
-    if (imageFile) {
-      setUploading(true);
-
-      try {
-        const form = new FormData();
-
-        form.append("file", imageFile);
-
-        const res = await fetch("/api/events/image", {
-          method: "POST",
-          body: form,
-          credentials: "include",
-        });
-
-        const json: StandardResponse = await res.json();
-
-        if (!res.ok || !json?.success) {
-          throw new Error(
-            json?.error ||
-              json?.message ||
-              `Upload failed with status ${res.status}`,
-          );
-        }
-
-        const uploadedUrl = (json.data as Record<string, unknown> | null)?.[
-          "url"
-        ] as string | undefined;
-
-        if (!uploadedUrl) {
-          throw new Error("Upload response missing image URL.");
-        }
-
-        finalImageUrl = uploadedUrl;
-        setImageUrl(uploadedUrl);
-      } finally {
-        setUploading(false);
-      }
-    }
-
-    const res = await fetch("/api/events", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        event_title: title.trim(),
-        event_desc: content.trim(),
-        event_date: isoDate,
-        image_url: finalImageUrl,
-        user_id: (await getSession())?.user.id,
-      }),
-    });
-
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`Create failed: ${res.status} ${text}`);
-    }
-
-    return res.json();
-  };
-
-  const updateEvent = async ({
-    id,
-    title,
-    content,
-    eventDate,
-  }: {
-    id: string;
-    title: string;
-    content: string;
-    eventDate: string;
-  }): Promise<StandardResponse> => {
-    const isoDate = new Date(eventDate).toISOString();
-
-    const payload = {
-      event_title: title.trim(),
-      event_desc: content.trim(),
-      event_date: isoDate,
-      image_url: imageUrl,
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
     };
+    reader.readAsDataURL(file);
+  };
 
-    const res = await fetch(`/api/events/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(payload),
-    });
-
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`Update failed: ${res.status} ${text}`);
+  const uploadImage = async (file: File): Promise<string> => {
+    setUploading(true);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      const res = await fetch("/api/events/image", {
+        method: "POST",
+        body: form,
+        credentials: "include",
+      });
+      const json: StandardResponse = await res.json();
+      if (!res.ok || !json?.success) {
+        throw new Error(
+          json?.error || `Upload failed with status ${res.status}`,
+        );
+      }
+      const uploadedUrl = (json.data as Record<string, unknown> | null)?.[
+        "url"
+      ] as string | undefined;
+      if (!uploadedUrl) {
+        throw new Error("Upload response missing image URL.");
+      }
+      return uploadedUrl;
+    } finally {
+      setUploading(false);
     }
-
-    return res.json();
   };
 
   const saveEvent = async () => {
@@ -285,33 +176,46 @@ export default function EventManagement() {
     }
 
     try {
-      if (editingEvent) {
-        const result = await updateEvent({
-          id: editingEvent.id,
-          title,
-          content,
-          eventDate,
-        });
-        if (!result?.data) throw new Error("Invalid response from server");
-
-        const updated = result.data as Event;
-        setEvents(events.map(e => (e.id === editingEvent.id ? updated : e)));
-        setIsDialogOpen(false);
-        resetForm();
-        toast.success("Event updated successfully");
-      } else {
-        const result = await createEvent({
-          title,
-          content,
-          eventDate,
-        });
-        if (!result?.data) throw new Error("Invalid response from server");
-
-        await fetchEvents();
-        setIsDialogOpen(false);
-        resetForm();
-        toast.success("Event created successfully");
+      let finalImageUrl = editingEvent?.imageUrl ?? null;
+      if (imageFile) {
+        finalImageUrl = await uploadImage(imageFile);
       }
+
+      const isoDate = new Date(eventDate).toISOString();
+      const payload = {
+        event_title: title.trim(),
+        event_desc: content.trim(),
+        event_date: isoDate,
+        image_url: finalImageUrl,
+      };
+
+      const url = editingEvent
+        ? `/api/events/${editingEvent.id}`
+        : "/api/events";
+      const method = editingEvent ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(
+          editingEvent
+            ? payload
+            : { ...payload, user_id: (await getSession())?.user.id },
+        ),
+      });
+
+      const result: StandardResponse = await res.json();
+      if (!res.ok || !result.success) {
+        throw new Error(result.error || "Failed to save event");
+      }
+
+      await fetchEvents();
+      setIsDialogOpen(false);
+      resetForm();
+      toast.success(
+        `Event ${editingEvent ? "updated" : "created"} successfully`,
+      );
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
       console.error("Error saving event:", err);
@@ -441,13 +345,11 @@ export default function EventManagement() {
         )}
       </div>
 
-      {/* Single Dialog component for editing events */}
       <Dialog
         open={isDialogOpen}
         onOpenChange={open => {
           setIsDialogOpen(open);
           if (!open) {
-            // Reset form when dialog is closed
             resetForm();
           }
         }}
@@ -494,7 +396,6 @@ export default function EventManagement() {
                     alt="Preview"
                     width={128}
                     height={128}
-                    // className="w-32 h-32 object-cover rounded border"
                   />
                 </div>
               )}
@@ -513,17 +414,17 @@ export default function EventManagement() {
 
             <div className="flex justify-end gap-2">
               <Button
-                className="bg-[#1f639e] hover:bg-[#164a73]"
+                variant="outline"
                 onClick={() => setIsDialogOpen(false)}
               >
                 Cancel
               </Button>
               <Button
-                className="bg-[#1f639e] hover:bg-[#164a73]"
                 onClick={saveEvent}
                 disabled={uploading}
+                className="bg-[#1f639e] hover:bg-[#164a73]"
               >
-                Save Event
+                {uploading ? "Saving..." : "Save Event"}
               </Button>
             </div>
           </div>

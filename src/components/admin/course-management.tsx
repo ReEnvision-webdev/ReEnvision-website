@@ -2,12 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -19,7 +14,7 @@ import {
   Table,
   TableBody,
   TableCell,
- TableHead,
+  TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
@@ -40,7 +35,7 @@ import {
 import { toast } from "sonner";
 
 interface Course {
-  id: number;
+  id: string;
   course_name: string;
   course_description: string;
   course_price: string;
@@ -53,7 +48,7 @@ export default function CourseManagement() {
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const [courseToDelete, setCourseToDelete] = useState<number | null>(null);
+  const [courseToDelete, setCourseToDelete] = useState<string | null>(null);
   // Form state
   const [courseName, setCourseName] = useState("");
   const [courseDescription, setCourseDescription] = useState("");
@@ -72,7 +67,7 @@ export default function CourseManagement() {
       setCourses(data);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "An unknown error occurred."
+        error instanceof Error ? error.message : "An unknown error occurred.",
       );
     } finally {
       setLoading(false);
@@ -108,11 +103,11 @@ export default function CourseManagement() {
     setIsDialogOpen(true);
   };
 
-  const confirmDelete = (courseId: number) => {
+  const confirmDelete = (courseId: string) => {
     setCourseToDelete(courseId);
   };
 
-  const executeDelete = async (courseId: number | null) => {
+  const executeDelete = async (courseId: string | null) => {
     if (courseId === null) return;
     try {
       const response = await fetch(`/api/courses/${courseId}`, {
@@ -127,10 +122,10 @@ export default function CourseManagement() {
       toast.success("Course deleted successfully!");
       fetchCourses(); // Refresh the list
       setCourseToDelete(null);
-    } catch (error: any) {
+    } catch (error) {
       setCourseToDelete(null); // Reset even on error
       toast.error(
-        error instanceof Error ? error.message : "An unknown error occurred."
+        error instanceof Error ? error.message : "An unknown error occurred.",
       );
     }
   };
@@ -163,8 +158,8 @@ export default function CourseManagement() {
       return;
     }
     if (!editingCourse && !imageFile) {
-        toast.error("An image is required for new courses.");
-        return;
+      toast.error("An image is required for new courses.");
+      return;
     }
 
     let finalImageUrl = editingCourse?.courses_image;
@@ -187,9 +182,9 @@ export default function CourseManagement() {
         const uploadData = await uploadRes.json();
         finalImageUrl = uploadData.url;
       }
-      
+
       if (!finalImageUrl) {
-          throw new Error("Image URL is missing.");
+        throw new Error("Image URL is missing.");
       }
 
       const courseData = {
@@ -199,7 +194,9 @@ export default function CourseManagement() {
         courses_image: finalImageUrl,
       };
 
-      const url = editingCourse ? `/api/courses/${editingCourse.id}` : "/api/courses";
+      const url = editingCourse
+        ? `/api/courses/${editingCourse.id}`
+        : "/api/courses";
       const method = editingCourse ? "PUT" : "POST";
 
       const courseRes = await fetch(url, {
@@ -210,15 +207,20 @@ export default function CourseManagement() {
 
       if (!courseRes.ok) {
         const errorData = await courseRes.json();
-        throw new Error(errorData.error || `Failed to ${editingCourse ? 'update' : 'create'} course.`);
+        throw new Error(
+          errorData.error ||
+            `Failed to ${editingCourse ? "update" : "create"} course.`,
+        );
       }
 
-      toast.success(`Course ${editingCourse ? 'updated' : 'created'} successfully!`);
+      toast.success(
+        `Course ${editingCourse ? "updated" : "created"} successfully!`,
+      );
       handleDialogOpenChange(false);
       fetchCourses();
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "An unknown error occurred."
+        error instanceof Error ? error.message : "An unknown error occurred.",
       );
     }
   };
@@ -227,7 +229,7 @@ export default function CourseManagement() {
     <div className="mt-8 space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-[#1f639e] pr-5">
- Course Management
+          Course Management
         </h2>
         <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
           <DialogTrigger asChild>
@@ -244,11 +246,11 @@ export default function CourseManagement() {
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div>
-                <Label  htmlFor="courseName">Course Name *</Label>
+                <Label htmlFor="courseName">Course Name *</Label>
                 <Input
                   id="courseName"
                   value={courseName}
-                  onChange={(e) => setCourseName(e.target.value)}
+                  onChange={e => setCourseName(e.target.value)}
                   placeholder="e.g., Introduction to Web Development"
                 />
               </div>
@@ -258,7 +260,7 @@ export default function CourseManagement() {
                   id="coursePrice"
                   type="number"
                   value={coursePrice}
-                  onChange={(e) => setCoursePrice(e.target.value)}
+                  onChange={e => setCoursePrice(e.target.value)}
                   placeholder="e.g., 99.99"
                 />
               </div>
@@ -285,7 +287,7 @@ export default function CourseManagement() {
                 <Textarea
                   id="courseDescription"
                   value={courseDescription}
-                  onChange={(e) => setCourseDescription(e.target.value)}
+                  onChange={e => setCourseDescription(e.target.value)}
                   placeholder="Describe the course..."
                   rows={6}
                 />
@@ -302,9 +304,7 @@ export default function CourseManagement() {
                   onClick={handleSaveCourse}
                   className="bg-[#1f639e] hover:bg-[#164a73]"
                 >
-                  {editingCourse
-                    ? "Save Changes"
-                    : "Save Course"}
+                  {editingCourse ? "Save Changes" : "Save Course"}
                 </Button>
               </div>
             </div>
@@ -318,7 +318,7 @@ export default function CourseManagement() {
         <Card>
           <AlertDialog
             open={courseToDelete !== null}
-            onOpenChange={(open) => {
+            onOpenChange={open => {
               if (!open) {
                 setCourseToDelete(null);
               }
@@ -333,13 +333,11 @@ export default function CourseManagement() {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel
-                  onClick={() => setCourseToDelete(null)}
-                >
+                <AlertDialogCancel onClick={() => setCourseToDelete(null)}>
                   Cancel
                 </AlertDialogCancel>
-                <AlertDialogAction 
-                  onClick={() => executeDelete(courseToDelete)} 
+                <AlertDialogAction
+                  onClick={() => executeDelete(courseToDelete)}
                   className="bg-red-600 hover:bg-red-700"
                 >
                   Delete
@@ -352,43 +350,41 @@ export default function CourseManagement() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="text-[#1f639e]">Course Name</TableHead>
- <TableHead className="text-right pr-8 text-[#1f639e]">Actions</TableHead>
+                  <TableHead className="text-right pr-8 text-[#1f639e]">
+                    Actions
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {courses.length > 0 ? (
-                  courses.map((course) => ( 
+                  courses.map(course => (
                     <TableRow key={course.id}>
                       <TableCell className="font-medium text-[#1f639e]">
                         {course.course_name}
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
-                   <Button
-                     size="sm"
-                     className="bg-[#1f639e] hover:bg-[#164a73]"
-                     onClick={() => handleEdit(course)}
-                   >
-                     <Edit className="w-4 h-4" />
-                   </Button>
-                  <Button
-                      size="sm"
-                      className="bg-[#1f639e] hover:bg-[#164a73]"
-                      onClick={() => confirmDelete(course.id)}
-
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                          <Button
+                            size="sm"
+                            className="bg-[#1f639e] hover:bg-[#164a73]"
+                            onClick={() => handleEdit(course)}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => confirmDelete(course.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell
-                      colSpan={3}
-                      className="h-24 text-center"
-                    >
+                    <TableCell colSpan={3} className="h-24 text-center">
                       No courses found.
                     </TableCell>
                   </TableRow>

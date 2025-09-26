@@ -47,7 +47,9 @@ export const coursesTable = pgTable("courses", {
   courses_image: text("courses_image"),
   course_description: text("course_description").notNull(),
   course_price: numeric("course_price").notNull(),
-  created_at: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  created_at: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   updated_at: timestamp("updated_at").notNull().defaultNow(),
 });
 
@@ -59,5 +61,7 @@ export const customersTable = pgTable("customers", {
   customer_name: text("customer_name").notNull(),
   customer_email: text("customer_email").notNull(),
   course_id: text("course_id").references(() => coursesTable.id),
-  time_purchased: timestamp("time_purchased", { withTimezone: true }).notNull().defaultNow(),
+  time_purchased: timestamp("time_purchased", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });

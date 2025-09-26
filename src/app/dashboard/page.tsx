@@ -18,7 +18,7 @@ export default async function Page() {
             Welcome, administrator! You have special access privileges.
           </p>
         </div>
-        
+
         {/* Existing Event Management */}
         <EventManagement />
 
@@ -27,7 +27,6 @@ export default async function Page() {
 
         {/* New Course Management */}
         <CourseManagement />
-
       </div>
     );
   }

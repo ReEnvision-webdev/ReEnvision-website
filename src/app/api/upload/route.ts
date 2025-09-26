@@ -5,7 +5,7 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;
-    const uploadType = formData.get("uploadType") as string || 'event'; // Default to 'event' for backward compatibility
+    const uploadType = (formData.get("uploadType") as string) || "event"; // Default to 'event' for backward compatibility
 
     if (!file) {
       return Response.json({ error: "No file provided" }, { status: 400 });
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     }
 
     // Determine the storage bucket based on the upload type
-    const storagePath = uploadType === 'course' ? 'courses' : 'event-images';
+    const storagePath = uploadType === "course" ? "courses" : "event-images";
 
     // Generate filename
     const today = new Date().toISOString().split("T")[0];
@@ -53,9 +53,11 @@ export async function POST(request: Request) {
     );
 
     if (!response.ok) {
-        const errorBody = await response.json();
-        console.error("Supabase Upload Error:", errorBody);
-        throw new Error(errorBody.message || "Failed to upload image to storage.");
+      const errorBody = await response.json();
+      console.error("Supabase Upload Error:", errorBody);
+      throw new Error(
+        errorBody.message || "Failed to upload image to storage.",
+      );
     }
 
     // Get public URL from the correct path
@@ -64,7 +66,11 @@ export async function POST(request: Request) {
     return Response.json({ url: publicUrl });
   } catch (error) {
     console.error("Upload error:", error);
-    const message = error instanceof Error ? error.message : "An unknown error occurred.";
-    return Response.json({ error: `Failed to upload image: ${message}` }, { status: 500 });
+    const message =
+      error instanceof Error ? error.message : "An unknown error occurred.";
+    return Response.json(
+      { error: `Failed to upload image: ${message}` },
+      { status: 500 },
+    );
   }
 }

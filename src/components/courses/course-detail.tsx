@@ -35,7 +35,7 @@ export default function CourseDetail({ course }: CourseDetailProps) {
       </section>
 
       {/* Main Content Area */}
-      <main className="max-w-4xl mx-auto p-6 md:p-8 -mt-16">
+      <main className="max-w-4xl mx-auto p-6 md:p-8 -mt-4">
         <div className="bg-white rounded-lg shadow-xl overflow-hidden">
           <div className="p-6 md:p-8">
             {/* Price and Enroll Button */}

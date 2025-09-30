@@ -26,6 +26,13 @@ interface Course {
   course_price: string; // Drizzle returns numeric as string
 }
 
+// Define the type for PayPal links
+interface PayPalLink {
+  href: string;
+  rel: string;
+  method: string;
+}
+
 export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
@@ -68,7 +75,7 @@ export default function CoursesPage() {
         `${window.location.origin}/courses`
       );
       const approvalLink = payment.links.find(
-        (link: any) => link.rel === "approve"
+        (link: PayPalLink) => link.rel === "approve"
       );
       if (approvalLink) {
         window.location.href = approvalLink.href;

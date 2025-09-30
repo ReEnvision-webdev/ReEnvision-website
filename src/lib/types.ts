@@ -4,3 +4,7 @@ export interface StandardResponse {
   data: Record<string, unknown> | Array<Record<string, unknown>> | null;
   error: string | null;
 }
+
+export interface NextRouteContext {
+  params: { [key: string]: string };
+}

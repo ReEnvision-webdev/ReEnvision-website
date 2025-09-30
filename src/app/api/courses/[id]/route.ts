@@ -5,16 +5,18 @@ import { coursesTable } from "@/db/schema";
 import { StandardResponse } from "@/lib/types";
 import { restrictAdmin } from "@/lib/jwt";
 
-interface RouteParams {
-  params: { id: string };
-}
+export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest, { params }: RouteParams) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     const [course] = await db
       .select()
       .from(coursesTable)
-      .where(eq(coursesTable.id, params.id));
+      .where(eq(coursesTable.id, id));
 
     if (!course) {
       const response: StandardResponse = {
@@ -46,13 +48,17 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function PUT(req: NextRequest, { params }: RouteParams) {
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const adminResponse = await restrictAdmin(req);
   if (adminResponse) {
     return adminResponse;
   }
 
   try {
+    const { id } = await params;
     const { course_name, course_description, course_price, courses_image } =
       await req.json();
 
@@ -76,7 +82,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     const [updatedCourse] = await db
       .update(coursesTable)
       .set(updateObject)
-      .where(eq(coursesTable.id, params.id))
+      .where(eq(coursesTable.id, id))
       .returning();
 
     if (!updatedCourse) {
@@ -109,16 +115,20 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: RouteParams) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const adminResponse = await restrictAdmin(req);
   if (adminResponse) {
     return adminResponse;
   }
 
   try {
+    const { id } = await params;
     const [deletedCourse] = await db
       .delete(coursesTable)
-      .where(eq(coursesTable.id, params.id))
+      .where(eq(coursesTable.id, id))
       .returning();
 
     if (!deletedCourse) {

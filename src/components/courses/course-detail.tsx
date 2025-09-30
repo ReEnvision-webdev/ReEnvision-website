@@ -1,14 +1,21 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { ShoppingCart, Tag } from "lucide-react";
-import Image from "next/image";
-import MarkdownRenderer from "@/components/markdown-renderer";
-import { MappedCourse } from "@/app/courses/[id]/page";
-import { createPayPalPayment } from "@/app/actions/create-paypal-payment";
+import { Button } from '@/components/ui/button';
+import { ShoppingCart, Tag } from 'lucide-react';
+import Image from 'next/image';
+import MarkdownRenderer from '@/components/markdown-renderer';
+import { MappedCourse } from '@/app/courses/[id]/page';
+import { createPayPalPayment } from '@/app/actions/create-paypal-payment';
 
 interface CourseDetailProps {
   course: MappedCourse;
+}
+
+// Define the type for PayPal links
+interface PayPalLink {
+  href: string;
+  rel: string;
+  method: string;
 }
 
 // This component renders the detailed view of a single course.
@@ -18,21 +25,21 @@ export default function CourseDetail({ course }: CourseDetailProps) {
       const payment = await createPayPalPayment(
         course.title,
         course.price,
-        "USD",
+        'USD',
         `${window.location.origin}/payment/success`,
-        window.location.href
+        window.location.href,
       );
       const approvalLink = payment.links.find(
-        (link: any) => link.rel === "approve"
+        (link: PayPalLink) => link.rel === 'approve',
       );
       if (approvalLink) {
         window.location.href = approvalLink.href;
       } else {
-        console.error("Could not find PayPal approval link.");
+        console.error('Could not find PayPal approval link.');
         // Handle the error, e.g., show a message to the user
       }
     } catch (error) {
-      console.error("Failed to create PayPal payment:", error);
+      console.error('Failed to create PayPal payment:', error);
       // Handle the error, e.g., show a message to the user
     }
   };

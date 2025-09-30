@@ -5,17 +5,17 @@ import { eventsTable } from "@/db/schema";
 import { StandardResponse } from "@/lib/types";
 import { restrictAdmin } from "@/lib/jwt";
 
-interface RouteParams {
-  params: { id: string };
-}
-
 // GET a single event by ID
-export async function GET(req: NextRequest, { params }: RouteParams) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     const [event] = await db
       .select()
       .from(eventsTable)
-      .where(eq(eventsTable.id, params.id));
+      .where(eq(eventsTable.id, id));
 
     if (!event) {
       const response: StandardResponse = {
@@ -48,14 +48,17 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
 }
 
 // UPDATE an event by ID
-export async function PUT(req: NextRequest, { params }: RouteParams) {
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const adminResponse = await restrictAdmin(req);
   if (adminResponse) {
     return adminResponse;
   }
 
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await req.json();
     const { event_title, event_desc, event_date, image_url } = body;
 
@@ -120,14 +123,17 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
 }
 
 // DELETE an event by ID
-export async function DELETE(req: NextRequest, { params }: RouteParams) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const adminResponse = await restrictAdmin(req);
   if (adminResponse) {
     return adminResponse;
   }
 
   try {
-    const { id } = params;
+    const { id } = await params;
     const [deletedEvent] = await db
       .delete(eventsTable)
       .where(eq(eventsTable.id, id))

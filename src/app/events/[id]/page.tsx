@@ -44,9 +44,9 @@ function ErrorDisplay({ message }: { message: string }) {
 export default async function EventDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const { id } = params;
+  const { id } = await params;
 
   // If there's no ID in the path, it's a 404.
   if (!id) {
@@ -54,8 +54,7 @@ export default async function EventDetailPage({
   }
 
   try {
-    // FIX: This correctly creates the absolute URL for server-side fetching.
-    const headersList = headers();
+    const headersList = await headers();
     const host = headersList.get("host") || "";
     const protocol = host.includes("localhost") ? "http" : "https";
     const baseUrl = `${protocol}://${host}`;
@@ -83,7 +82,16 @@ export default async function EventDetailPage({
       );
     }
 
-    const apiEvent: ApiEvent = result.data;
+    // FIX: The data from the API can be null or an array, which is not a valid event.
+    if (!result.data || Array.isArray(result.data)) {
+      return (
+        <ErrorDisplay
+          message={"The event data is missing or in an incorrect format."}
+        />
+      );
+    }
+
+    const apiEvent = result.data as unknown as ApiEvent;
 
     const mappedEvent: MappedEvent = {
       id: apiEvent.id,

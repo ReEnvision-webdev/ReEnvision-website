@@ -47,9 +47,9 @@ function ErrorDisplay({ message }: { message: string }) {
 export default async function CourseDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const { id } = params;
+  const { id } = await params;
 
   if (!id) {
     notFound();
@@ -57,7 +57,7 @@ export default async function CourseDetailPage({
 
   try {
     // Construct the absolute URL for server-side fetching.
-    const headersList = headers();
+    const headersList = await headers();
     const host = headersList.get("host") || "";
     const protocol = host.includes("localhost") ? "http" : "https";
     const baseUrl = `${protocol}://${host}`;
@@ -85,7 +85,15 @@ export default async function CourseDetailPage({
       );
     }
 
-    const apiCourse: ApiCourse = result.data;
+    if (!result.data || Array.isArray(result.data)) {
+      return (
+        <ErrorDisplay
+          message={"The course data is missing or in an incorrect format."}
+        />
+      );
+    }
+
+    const apiCourse = result.data as unknown as ApiCourse;
 
     // Map the API data to a more friendly structure for the detail component.
     const mappedCourse: MappedCourse = {

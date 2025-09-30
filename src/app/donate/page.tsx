@@ -5,6 +5,13 @@ import "aos/dist/aos.css";
 import PaymentModal from "@/components/PaymentModal";
 import { createPayPalPayment } from "@/app/actions/create-paypal-payment";
 
+// Define the type for PayPal links
+interface PayPalLink {
+  href: string;
+  rel: string;
+  method: string;
+}
+
 export default function DonatePage() {
   const [selectedAmount, setSelectedAmount] = useState<string>("");
   const [customAmount, setCustomAmount] = useState<string>("");
@@ -61,9 +68,24 @@ export default function DonatePage() {
     setIsLoading(true);
 
     try {
-      const result = await createPayPalPayment(amount, "Anonymous Donor");
-      setApprovalUrl(result.approvalUrl);
-      setIsModalOpen(true);
+      const payment = await createPayPalPayment(
+        "Donation",
+        amount.toFixed(2),
+        "USD",
+        `${window.location.origin}/payment/success`,
+        window.location.href
+      );
+      const approvalLink = payment.links.find(
+        (link: PayPalLink) => link.rel === "approve"
+      );
+
+      if (approvalLink) {
+        setApprovalUrl(approvalLink.href);
+        setIsModalOpen(true);
+      } else {
+        console.error("Could not find PayPal approval link.");
+        alert("There was an error processing your donation. Please try again.");
+      }
     } catch (error) {
       console.error("Error creating PayPal payment:", error);
       alert("There was an error processing your donation. Please try again.");

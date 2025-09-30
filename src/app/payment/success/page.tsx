@@ -12,9 +12,9 @@ export default function PaymentSuccessPage() {
           Payment Successful!
         </h1>
         <p className="text-gray-600 mb-8">
-          Thank you for your payment. Your enrollment is complete.
+          You will recieve an email containing your reciept and class codes to join. 
         </p>
-        <Link href="/courses">
+        <Link href="/courses" legacyBehavior>
           <a className="text-white bg-[#1d588a] hover:bg-[#1f639e] font-bold py-2 px-4 rounded">
             Return to Courses
           </a>

@@ -15,6 +15,7 @@ import Image from "next/image";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import MarkdownRenderer from "@/components/markdown-renderer";
+import { createPayPalPayment } from "@/app/actions/create-paypal-payment";
 
 // Define the Course type based on your database schema
 interface Course {
@@ -56,6 +57,30 @@ export default function CoursesPage() {
 
     fetchCourses();
   }, []);
+
+  const handleEnroll = async (course: Course) => {
+    try {
+      const payment = await createPayPalPayment(
+        course.course_name,
+        course.course_price,
+        "USD",
+        `${window.location.origin}/payment/success`,
+        `${window.location.origin}/courses`
+      );
+      const approvalLink = payment.links.find(
+        (link: any) => link.rel === "approve"
+      );
+      if (approvalLink) {
+        window.location.href = approvalLink.href;
+      } else {
+        console.error("Could not find PayPal approval link.");
+        // Handle the error, e.g., show a message to the user
+      }
+    } catch (error) {
+      console.error("Failed to create PayPal payment:", error);
+      // Handle the error, e.g., show a message to the user
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#F0F8FF]">
@@ -157,15 +182,14 @@ export default function CoursesPage() {
                           View Details
                         </Button>
                       </Link>
-                      <Link href="#" className="flex-1">
-                        <Button
-                          size="sm"
-                          className="w-full text-sm py-2 rounded-lg hover:scale-[1.02] transition-all duration-300 ease-out bg-[#1d588a] hover:bg-[#1d588a]/90"
-                        >
-                          <ShoppingCart className="w-4 h-4 mr-2" />
-                          Enroll Now
-                        </Button>
-                      </Link>
+                      <Button
+                        size="sm"
+                        className="flex-1 w-full text-sm py-2 rounded-lg hover:scale-[1.02] transition-all duration-300 ease-out bg-[#1d588a] hover:bg-[#1d588a]/90"
+                        onClick={() => handleEnroll(course)}
+                      >
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        Enroll Now
+                      </Button>
                     </div>
                   </CardFooter>
                 </Card>

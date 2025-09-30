@@ -5,6 +5,7 @@ import { ShoppingCart, Tag } from "lucide-react";
 import Image from "next/image";
 import MarkdownRenderer from "@/components/markdown-renderer";
 import { MappedCourse } from "@/app/courses/[id]/page";
+import { createPayPalPayment } from "@/app/actions/create-paypal-payment";
 
 interface CourseDetailProps {
   course: MappedCourse;
@@ -12,6 +13,30 @@ interface CourseDetailProps {
 
 // This component renders the detailed view of a single course.
 export default function CourseDetail({ course }: CourseDetailProps) {
+  const handleEnroll = async () => {
+    try {
+      const payment = await createPayPalPayment(
+        course.title,
+        course.price,
+        "USD",
+        `${window.location.origin}/payment/success`,
+        window.location.href
+      );
+      const approvalLink = payment.links.find(
+        (link: any) => link.rel === "approve"
+      );
+      if (approvalLink) {
+        window.location.href = approvalLink.href;
+      } else {
+        console.error("Could not find PayPal approval link.");
+        // Handle the error, e.g., show a message to the user
+      }
+    } catch (error) {
+      console.error("Failed to create PayPal payment:", error);
+      // Handle the error, e.g., show a message to the user
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section with Course Title and Image */}
@@ -47,6 +72,7 @@ export default function CourseDetail({ course }: CourseDetailProps) {
               <Button
                 size="lg"
                 className="w-full md:w-auto bg-[#1d588a] hover:bg-[#1f639e]"
+                onClick={handleEnroll}
               >
                 <ShoppingCart className="w-5 h-5 mr-2" />
                 Enroll Now

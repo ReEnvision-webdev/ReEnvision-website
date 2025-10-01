@@ -1,6 +1,7 @@
+
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -78,6 +79,70 @@ function EventsDropdown() {
               All Events
             </Button>
           </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ProfileDropdown() {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <div
+        className="h-10 w-10 rounded-full bg-gray-300 cursor-pointer"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {/* Profile picture placeholder */}
+      </div>
+
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-48 bg-[#1d588a] border border-[#00427A] shadow-lg z-50">
+          <Link href="/settings">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/settings" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}>
+              User Settings
+            </Button>
+          </Link>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none text-[#F0F8FF]"
+            onClick={() => {
+              if (confirm("Are you sure you want to sign out?")) {
+                signOut();
+              }
+            }}
+          >
+            Sign Out
+          </Button>
         </div>
       )}
     </div>
@@ -199,6 +264,19 @@ function MobileMenu() {
                     {session?.user?.isAdmin ? "Admin Dashboard" : "Dashboard"}
                   </Button>
                 </Link>
+                <Link href="/settings">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] mt-2 ${
+                      pathname === "/settings"
+                        ? "bg-[#F0F8FF] text-[#1d588a]"
+                        : "text-[#F0F8FF]"
+                    }`}
+                  >
+                    User Settings
+                  </Button>
+                </Link>
                 <Button
                   variant="outline"
                   size="sm"
@@ -236,15 +314,14 @@ export default function Header() {
 
   return (
     <header className="bg-[#1d588a] text-[#F0F8FF] px-4 py-3 fixed top-0 left-0 right-0 z-50">
-      {/* Added `fixed`, `top-0`, `left-0`, `right-0` */}
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Image
-            src="/vectors/navbar.svg" // Path to your favicon.png
+            src="/vectors/navbar.svg"
             alt="Logo"
-            width={50} // Specify the width (in pixels)
-            height={50} // Specify the height (in pixels)
-            className="h-15 w-15" // Optional: Add any additional styles
+            width={50}
+            height={50}
+            className="h-15 w-15"
           />
           <span className="text-xl font-bold">ReEnvision</span>
         </div>
@@ -261,33 +338,21 @@ export default function Header() {
 
         <div className="flex items-center space-x-2">
           {status === "authenticated" ? (
-            <>
-              <Button
-                variant="outline"
-                size="sm"
-                className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block ${
-                  pathname === "/dashboard"
-                    ? "bg-[#F0F8FF] text-[#1d588a]"
-                    : "text-[#F0F8FF]"
-                }`}
-              >
+            <div className="hidden md:flex items-center space-x-4">
                 <Link href="/dashboard">
-                  {session?.user?.isAdmin ? "Admin Dashboard" : "Dashboard"}
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] ${
+                        pathname === "/dashboard"
+                            ? "bg-[#F0F8FF] text-[#1d588a]"
+                            : "text-[#F0F8FF]"
+                        }`}>
+                        {session?.user?.isAdmin ? "Admin Dashboard" : "Dashboard"}
+                    </Button>
                 </Link>
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-transparent border-[#F0F8FF] text-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] hidden md:block"
-                onClick={() => {
-                  if (confirm("Are you sure you want to sign out?")) {
-                    signOut();
-                  }
-                }}
-              >
-                Sign Out
-              </Button>
-            </>
+                <ProfileDropdown />
+            </div>
           ) : (
             <Button
               variant="outline"

@@ -1,3 +1,4 @@
+
 import CredentialsProvider from "next-auth/providers/credentials";
 import db from "@/db/database";
 import { usersTable } from "@/db/schema";
@@ -65,19 +66,35 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
+      // On initial sign-in, populate the token with user data
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+        token.isAdmin = user.isAdmin;
+      } else if (token.id) {
+        // On subsequent session checks, refetch the user from the database
+        // This ensures the session reflects any database changes
+        const dbUser = await db
+          .selectDistinct()
+          .from(usersTable)
+          .where(eq(usersTable.id, token.id as string))
+          .limit(1);
+        
+        if (dbUser[0]) {
+          token.name = dbUser[0].name;
+          token.isAdmin = dbUser[0].isAdmin;
+        }
+      }
+      return token;
+    },
     async session({ session, token }: { session: Session; token: JWT }) {
       if (token && session.user) {
         session.user.id = token.id as string;
+        session.user.name = token.name as string;
         session.user.isAdmin = token.isAdmin as boolean;
       }
       return session;
-    },
-    async jwt({ token, user }: { token: JWT; user: User }) {
-      if (user) {
-        token.id = user.id;
-        token.isAdmin = user.isAdmin;
-      }
-      return token;
     },
   },
 };

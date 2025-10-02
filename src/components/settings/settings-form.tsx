@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import { type User } from "next-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,11 +33,40 @@ interface SettingsFormProps {
 }
 
 export default function SettingsForm({ user }: SettingsFormProps) {
+  const { data: session, update } = useSession();
   const [emailVerificationStep, setEmailVerificationStep] = useState("enterEmail");
+  const [name, setName] = useState(user?.name ?? "");
+  const [isUpdatingName, setIsUpdatingName] = useState(false);
+  const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
 
   if (!user) {
     return null; // Or a loading state
   }
+
+  const handleNameUpdate = async () => {
+    setIsUpdatingName(true);
+    try {
+      const response = await fetch("/api/user/update-name", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        await update();
+        setIsNameDialogOpen(false);
+      } else {
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error("Failed to update name:", error);
+    }
+    setIsUpdatingName(false);
+  };
 
   return (
     <div className="container mx-auto p-6 py-25">
@@ -73,9 +103,9 @@ export default function SettingsForm({ user }: SettingsFormProps) {
             <div className="flex items-center justify-between rounded-lg border p-4">
               <div>
                 <Label>Name</Label>
-                <p className="text-lg">{user.name}</p>
+                <p className="text-lg">{session?.user?.name ?? user.name}</p>
               </div>
-              <Dialog>
+              <Dialog open={isNameDialogOpen} onOpenChange={setIsNameDialogOpen}>
                 <DialogTrigger asChild>
                   <Button variant="ghost" size="icon">
                     <Pencil className="h-4 w-4" />
@@ -87,10 +117,12 @@ export default function SettingsForm({ user }: SettingsFormProps) {
                   </DialogHeader>
                   <div className="py-4">
                     <Label htmlFor="name">Name</Label>
-                    <Input id="name" defaultValue={user.name ?? ""} />
+                    <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
                   </div>
                   <DialogFooter>
-                    <Button>Save</Button>
+                    <Button onClick={handleNameUpdate} disabled={isUpdatingName}>
+                      {isUpdatingName ? "Saving..." : "Save"}
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>

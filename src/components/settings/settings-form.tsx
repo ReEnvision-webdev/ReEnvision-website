@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -34,10 +33,12 @@ interface SettingsFormProps {
 
 export default function SettingsForm({ user }: SettingsFormProps) {
   const { data: session, update } = useSession();
-  const [emailVerificationStep, setEmailVerificationStep] = useState("enterEmail");
   const [name, setName] = useState(user?.name ?? "");
   const [isUpdatingName, setIsUpdatingName] = useState(false);
   const [isNameDialogOpen, setIsNameDialogOpen] = useState(false);
+  const [newEmail, setNewEmail] = useState(user?.email ?? "");
+  const [isSendingVerification, setIsSendingVerification] = useState(false);
+  const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
 
   if (!user) {
     return null; // Or a loading state
@@ -66,6 +67,45 @@ export default function SettingsForm({ user }: SettingsFormProps) {
       console.error("Failed to update name:", error);
     }
     setIsUpdatingName(false);
+  };
+
+  const handleEmailUpdate = async () => {
+    // Basic email validation
+    if (!newEmail || !newEmail.includes("@")) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    // Check if the new email is the same as the current email
+    if (newEmail === user.email) {
+      alert("This is already your current email address");
+      return;
+    }
+
+    setIsSendingVerification(true);
+    try {
+      const response = await fetch("/api/user/update-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: newEmail }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        alert("Verification email sent! Please check your inbox.");
+        // Close the dialog
+        setIsEmailDialogOpen(false);
+      } else {
+        alert(data.error || "Failed to send verification email");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred while sending the verification email");
+    }
+    setIsSendingVerification(false);
   };
 
   return (
@@ -132,44 +172,42 @@ export default function SettingsForm({ user }: SettingsFormProps) {
                 <Label>Email</Label>
                 <p className="text-lg">{user.email}</p>
               </div>
-              <Dialog>
+              <Dialog open={isEmailDialogOpen} onOpenChange={setIsEmailDialogOpen}>
                 <DialogTrigger asChild>
                   <Button variant="ghost" size="icon">
                     <Pencil className="h-4 w-4" />
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
                     <DialogTitle>Edit Email</DialogTitle>
                   </DialogHeader>
-                  {emailVerificationStep === "enterEmail" && (
-                    <>
-                      <div className="py-4">
-                        <Label htmlFor="email">Email</Label>
+                  <div className="py-4">
+                    <div className="grid gap-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="email">New Email Address</Label>
                         <Input
                           id="email"
                           type="email"
-                          defaultValue={user.email ?? ""}
+                          placeholder="Enter new email address"
+                          value={newEmail}
+                          onChange={(e) => setNewEmail(e.target.value)}
                         />
                       </div>
-                      <DialogFooter>
-                        <Button onClick={() => setEmailVerificationStep("enterCode")}>
-                          Send Verification Code
-                        </Button>
-                      </DialogFooter>
-                    </>
-                  )}
-                  {emailVerificationStep === "enterCode" && (
-                    <>
-                      <div className="py-4">
-                        <Label htmlFor="verification-code">Verification Code</Label>
-                        <Input id="verification-code" placeholder="Enter code" />
-                      </div>
-                      <DialogFooter>
-                        <Button>Verify & Save</Button>
-                      </DialogFooter>
-                    </>
-                  )}
+                      <Button 
+                        onClick={handleEmailUpdate}
+                        disabled={isSendingVerification}
+                      >
+                        {isSendingVerification ? "Sending Verification Email..." : "Send Verification Email"}
+                      </Button>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <p className="text-sm text-muted-foreground">
+                      A verification email will be sent to your new email address. 
+                      Please click the link in the email to confirm the change.
+                    </p>
+                  </DialogFooter>
                 </DialogContent>
               </Dialog>
             </div>

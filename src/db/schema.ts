@@ -22,6 +22,11 @@ export const usersTable = pgTable("users", {
   emailVerificationKeyExpires: timestamp("email_verification_key_expires"),
   isAdmin: boolean("is_admin").notNull().default(false),
   isBanned: boolean("is_banned").notNull().default(false),
+  newEmail: varchar("new_email", { length: 255 }),
+  newEmailVerificationKey: text("new_email_verification_key"),
+  newEmailVerificationKeyExpires: timestamp(
+    "new_email_verification_key_expires"
+  ),
 });
 
 export const eventsTable = pgTable("events", {

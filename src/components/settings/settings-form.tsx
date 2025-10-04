@@ -77,7 +77,7 @@ export default function SettingsForm({ user }: SettingsFormProps) {
     }
 
     // Check if the new email is the same as the current email
-    if (newEmail === user.email) {
+    if (newEmail === (session?.user?.email ?? user.email)) {
       alert("This is already your current email address");
       return;
     }
@@ -170,7 +170,7 @@ export default function SettingsForm({ user }: SettingsFormProps) {
             <div className="flex items-center justify-between rounded-lg border p-4">
               <div>
                 <Label>Email</Label>
-                <p className="text-lg">{user.email}</p>
+                <p className="text-lg">{session?.user?.email ?? user.email}</p>
               </div>
               <Dialog open={isEmailDialogOpen} onOpenChange={setIsEmailDialogOpen}>
                 <DialogTrigger asChild>
@@ -275,7 +275,7 @@ export default function SettingsForm({ user }: SettingsFormProps) {
                 <div className="py-4">
                   <Input
                     type="email"
-                    placeholder={user.email ?? ""}
+                    placeholder={session?.user?.email ?? user.email ?? ""}
                     className="w-full"
                   />
                 </div>

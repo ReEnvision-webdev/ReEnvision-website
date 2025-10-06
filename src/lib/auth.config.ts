@@ -67,14 +67,12 @@ export const authOptions = {
   ],
   callbacks: {
     async jwt({ token, user }: { token: JWT; user?: User }) {
-      // On initial sign-in, populate the token with user data
       if (user) {
         token.id = user.id;
         token.name = user.name;
+        token.email = user.email;
         token.isAdmin = user.isAdmin;
       } else if (token.id) {
-        // On subsequent session checks, refetch the user from the database
-        // This ensures the session reflects any database changes
         const dbUser = await db
           .selectDistinct()
           .from(usersTable)
@@ -83,6 +81,7 @@ export const authOptions = {
         
         if (dbUser[0]) {
           token.name = dbUser[0].name;
+          token.email = dbUser[0].email;
           token.isAdmin = dbUser[0].isAdmin;
         }
       }
@@ -92,6 +91,7 @@ export const authOptions = {
       if (token && session.user) {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
+        session.user.email = token.email as string;
         session.user.isAdmin = token.isAdmin as boolean;
       }
       return session;

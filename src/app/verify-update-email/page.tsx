@@ -1,98 +1,66 @@
-"use client";
+'use client';
 
-import { delay } from "@/lib/utils";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function VerifyUpdateEmailPage() {
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [redirected, setRedirected] = useState(false);
   const { update } = useSession();
+  const router = useRouter();
+  const [message, setMessage] = useState('Verifying your new email...');
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    (async () => {
+    let isCancelled = false;
+    const token = new URLSearchParams(window.location.search).get('token');
+
+    if (!token) {
+      setError(true);
+      setMessage('Verification token is missing.');
+      return;
+    }
+
+    const verifyToken = async () => {
       try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const email = urlParams.get("email");
-        const token = urlParams.get("token");
-        const userId = urlParams.get("userId");
+        const res = await fetch(`/api/user/verify-update-email?token=${token}`);
+        const data = await res.json();
 
-        const res = await fetch("/api/user/verify-update-email", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            token,
-            userId,
-          }),
-        });
-
-        if (res.ok) {
-          const data = await res.json();
-          setSuccess(true);
-
-          // Update the session with the new user data
-          if (data.data) {
-            await update({
-              user: {
-                ...data.data
-              }
-            });
-          }
-
-          delay(2000).then(() => {
-            setRedirected(true);
-            redirect("/settings");
-          });
-        } else {
-          const data = await res.json();
-          setError(data.error);
-
-          if (res.status === 409) {
-            setError(
-              "Email is already verified. You will be redirected to the settings page in 2 seconds."
-            );
-
-            delay(2000).then(() => {
-              setRedirected(true);
-              redirect("/settings");
-            });
-          }
+        if (isCancelled) {
+          return;
         }
-      } catch (error) {
-        console.error("Error verifying email update:", error);
-        setError("Something went wrong while verifying your email update.");
+
+        if (res.ok && data.success) {
+          setMessage('Email successfully updated! Redirecting to settings...');
+          await update(); // Correctly re-fetch the session
+          setTimeout(() => {
+            router.push('/settings');
+          }, 2000);
+        } else {
+          setError(true);
+          setMessage(data.error || 'An error occurred during verification.');
+        }
+      } catch (e) {
+        if (!isCancelled) {
+          setError(true);
+          setMessage('An unexpected error occurred.');
+          console.error(e);
+        }
       }
-    })();
-  }, []);
+    };
+
+    verifyToken();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [update, router]);
 
   return (
-    <div className="container mx-auto px-4 py-16 pt-20">
-      <div className="max-w-md mx-auto text-center">
-        <h1 className="text-2xl font-bold mb-8">Email Update Verification</h1>
-        <div className="pt-8">
-          {!success
-            ? error
-              ? error
-              : "Verifying email..."
-            : "Email updated successfully! Redirecting to settings page in 2 seconds..."}
-        </div>
-
-        {redirected && (
-          <p className="mt-4">
-            Click{" "}
-            <Link href="/settings" className="text-blue-600 hover:underline">
-              here
-            </Link>{" "}
-            if you are not redirected automatically.
-          </p>
-        )}
-      </div>
+    <div className="container mx-auto p-6 py-25 text-center">
+      <h1 className="text-3xl font-bold text-[#1f639e]">Email Verification</h1>
+      <p className={`mt-4 text-lg ${error ? 'text-red-500' : 'text-gray-600'}`}>
+        {message}
+      </p>
     </div>
   );
 }

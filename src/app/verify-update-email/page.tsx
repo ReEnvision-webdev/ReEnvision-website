@@ -31,7 +31,7 @@ export default function VerifyUpdateEmailPage() {
 
         if (res.ok && data.success) {
           setMessage('Email successfully updated! Redirecting to settings...');
-          await update(); // Correctly re-fetch the session
+          await update(); // Re-fetch the session to reflect the new email
           setTimeout(() => {
             router.push('/settings');
           }, 2000);

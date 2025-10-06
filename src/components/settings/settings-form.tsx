@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { type User } from "next-auth";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Pencil } from "lucide-react";
+import { toast } from "sonner";
 
 interface SettingsFormProps {
   user: User | undefined;
@@ -39,6 +40,26 @@ export default function SettingsForm({ user }: SettingsFormProps) {
   const [newEmail, setNewEmail] = useState(user?.email ?? "");
   const [isSendingVerification, setIsSendingVerification] = useState(false);
   const [isEmailDialogOpen, setIsEmailDialogOpen] = useState(false);
+  const [isProfilePictureDialogOpen, setIsProfilePictureDialogOpen] = useState(false);
+  const [isUpdatingProfilePicture, setIsUpdatingProfilePicture] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  // Clean up preview URL when component unmounts or dialog closes
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  // Clean up preview URL when dialog is closed
+  useEffect(() => {
+    if (!isProfilePictureDialogOpen && previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+      setSelectedFile(null);
+    }
+  }, [isProfilePictureDialogOpen, previewUrl]);
 
   if (!user) {
     return null; // Or a loading state
@@ -60,11 +81,14 @@ export default function SettingsForm({ user }: SettingsFormProps) {
       if (data.success) {
         await update();
         setIsNameDialogOpen(false);
+        toast.success("Name updated successfully");
       } else {
+        toast.error(data.message || "Failed to update name");
         console.error(data.message);
       }
     } catch (error) {
       console.error("Failed to update name:", error);
+      toast.error("Failed to update name");
     }
     setIsUpdatingName(false);
   };
@@ -72,13 +96,13 @@ export default function SettingsForm({ user }: SettingsFormProps) {
   const handleEmailUpdate = async () => {
     // Basic email validation
     if (!newEmail || !newEmail.includes("@")) {
-      alert("Please enter a valid email address");
+      toast.error("Please enter a valid email address");
       return;
     }
 
     // Check if the new email is the same as the current email
     if (newEmail === (session?.user?.email ?? user.email)) {
-      alert("This is already your current email address");
+      toast.error("This is already your current email address");
       return;
     }
 
@@ -95,26 +119,119 @@ export default function SettingsForm({ user }: SettingsFormProps) {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        alert("Verification email sent! Please check your inbox.");
+        toast.success("Verification email sent! Please check your inbox.");
         // Close the dialog
         setIsEmailDialogOpen(false);
       } else {
-        alert(data.error || "Failed to send verification email");
+        toast.error(data.error || "Failed to send verification email");
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred while sending the verification email");
+      toast.error("An error occurred while sending the verification email");
     }
     setIsSendingVerification(false);
   };
 
+  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Invalid file type. Only JPEG, JPG, PNG, WEBP, and GIF are allowed.");
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("File size too large. Maximum size is 5MB.");
+        return;
+      }
+
+      setSelectedFile(file);
+      
+      // Create a preview URL for the selected file
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    }
+  };
+
+  const handleProfilePictureUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    if (!selectedFile) {
+      toast.error("Please select a profile picture");
+      return;
+    }
+
+    // Validate file type again in case file was changed externally
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
+    if (!allowedTypes.includes(selectedFile.type)) {
+      toast.error("Invalid file type. Only JPEG, JPG, PNG, WEBP, and GIF are allowed.");
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (selectedFile.size > 5 * 1024 * 1024) {
+      toast.error("File size too large. Maximum size is 5MB.");
+      return;
+    }
+
+    setIsUpdatingProfilePicture(true);
+    try {
+      const formData = new FormData();
+      formData.append("profilePicture", selectedFile);
+
+      const response = await fetch("/api/user/update-profile-picture", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        await update(); // Update session to reflect new profile picture
+        setIsProfilePictureDialogOpen(false);
+        // Revoke the preview URL to free up memory
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+        setSelectedFile(null);
+        setPreviewUrl(null);
+        toast.success("Profile picture updated successfully");
+      } else {
+        toast.error(data.message || "Failed to update profile picture");
+      }
+    } catch (error) {
+      console.error("Error updating profile picture:", error);
+      toast.error("Failed to update profile picture");
+    }
+    setIsUpdatingProfilePicture(false);
+  };
+
+  const profilePictureUrl = user?.image || (user?.profilePicture && user.profilePicture !== "skibiditoilet" ? user.profilePicture : undefined);
+
   return (
     <div className="container mx-auto p-6 py-25">
       <div className="mb-8 text-center">
-        <Dialog>
+        <Dialog open={isProfilePictureDialogOpen} onOpenChange={setIsProfilePictureDialogOpen}>
           <DialogTrigger asChild>
-            <div className="group relative mx-auto h-24 w-24 rounded-full bg-gray-300 mb-4 cursor-pointer">
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 rounded-full transition-all duration-300 flex items-center justify-center">
+            <div className="group relative mx-auto h-24 w-24 rounded-full bg-gray-300 mb-4 cursor-pointer overflow-hidden">
+              {profilePictureUrl ? (
+                <img 
+                  src={profilePictureUrl} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null; // Prevent infinite loop
+                    target.src = "https://placehold.co/150x150/cccccc/666666?text=Profile"; // Fallback image
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                  <span className="text-gray-500 text-xs">No image</span>
+                </div>
+              )}
+              <div className="absolute inset-0 group-hover:bg-[#1f639e] rounded-full transition-all duration-300 flex items-center justify-center">
                 <Pencil className="h-8 w-8 text-white opacity-0 group-hover:opacity-100" />
               </div>
             </div>
@@ -123,13 +240,68 @@ export default function SettingsForm({ user }: SettingsFormProps) {
             <DialogHeader>
               <DialogTitle>Upload Profile Picture</DialogTitle>
             </DialogHeader>
-            <div className="py-4">
-              <Label htmlFor="pfp">Profile Picture</Label>
-              <Input id="pfp" type="file" />
-            </div>
-            <DialogFooter>
-              <Button>Save</Button>
-            </DialogFooter>
+            <form onSubmit={handleProfilePictureUpdate}>
+              <div className="py-4 space-y-6">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-medium">Current Picture</h3>
+                    <div className="mt-2 flex justify-center">
+                      <div className="relative h-24 w-24 rounded-full overflow-hidden border">
+                        {profilePictureUrl ? (
+                          <img 
+                            src={profilePictureUrl} 
+                            alt="Current profile" 
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.onerror = null; // Prevent infinite loop
+                              target.src = "https://placehold.co/150x150/cccccc/666666?text=Profile"; // Fallback image
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                            <span className="text-gray-500 text-xs">No image</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-medium">New Picture Preview</h3>
+                    <div className="mt-2 flex justify-center">
+                      <div className="relative h-24 w-24 rounded-full overflow-hidden border bg-gray-100">
+                        <img 
+                          src={previewUrl || "https://placehold.co/150x150/cccccc/666666?text=Preview"} 
+                          alt="New profile preview" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="profilePicture">Select New Profile Picture</Label>
+                  <Input 
+                    id="profilePicture" 
+                    name="profilePicture" 
+                    type="file" 
+                    accept="image/*" 
+                    className="mt-1"
+                    onChange={handleProfilePictureChange}
+                  />
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Accepted formats: JPEG, JPG, PNG, WEBP, GIF. Max size: 5MB.
+                  </p>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button type="submit" disabled={isUpdatingProfilePicture}>
+                  {isUpdatingProfilePicture ? "Uploading..." : "Save"}
+                </Button>
+              </DialogFooter>
+            </form>
           </DialogContent>
         </Dialog>
         <h1 className="text-3xl font-bold text-[#1f639e]">User Settings</h1>

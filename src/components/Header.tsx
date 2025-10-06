@@ -89,6 +89,8 @@ function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const user = session?.user;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -111,6 +113,8 @@ function ProfileDropdown() {
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
+ const profilePictureUrl = user?.image || (user?.profilePicture && user.profilePicture !== "skibiditoilet" ? user.profilePicture : undefined);
+
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -118,7 +122,22 @@ function ProfileDropdown() {
         className="h-10 w-10 rounded-full bg-gray-300 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-        {/* Profile picture placeholder */}
+                      {profilePictureUrl ? (
+                <img 
+                  src={profilePictureUrl} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover rounded-full"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null; // Prevent infinite loop
+                    target.src = "https://placehold.co/150x150/cccccc/666666?text=Profile"; // Fallback image
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                  <span className="text-gray-500 text-xs">No image</span>
+                </div>
+              )}
       </div>
 
       {isOpen && (

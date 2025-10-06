@@ -31,7 +31,16 @@ export const authOptions = {
 
         try {
           const users = await db
-            .selectDistinct()
+            .select({
+              id: usersTable.id,
+              email: usersTable.email,
+              name: usersTable.name,
+              password: usersTable.password,
+              isAdmin: usersTable.isAdmin,
+              isBanned: usersTable.isBanned,
+              emailVerified: usersTable.emailVerified,
+              profilePicture: usersTable.profilePicture,
+            })
             .from(usersTable)
             .where(and(eq(usersTable.email, email)))
             .limit(1);
@@ -52,6 +61,7 @@ export const authOptions = {
             id: user.id,
             email: user.email,
             name: user.name,
+            profilePicture: user.profilePicture,
             isAdmin: user.isAdmin,
           };
         } catch (error) {
@@ -74,7 +84,13 @@ export const authOptions = {
         token.isAdmin = user.isAdmin;
       } else if (token.id) {
         const dbUser = await db
-          .selectDistinct()
+          .select({
+            id: usersTable.id,
+            email: usersTable.email,
+            name: usersTable.name,
+            profilePicture: usersTable.profilePicture,
+            isAdmin: usersTable.isAdmin,
+          })
           .from(usersTable)
           .where(eq(usersTable.id, token.id as string))
           .limit(1);
@@ -82,6 +98,7 @@ export const authOptions = {
         if (dbUser[0]) {
           token.name = dbUser[0].name;
           token.email = dbUser[0].email;
+          token.profilePicture = dbUser[0].profilePicture;
           token.isAdmin = dbUser[0].isAdmin;
         }
       }
@@ -92,6 +109,7 @@ export const authOptions = {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
+        session.user.profilePicture = token.profilePicture as string | undefined;
         session.user.isAdmin = token.isAdmin as boolean;
       }
       return session;

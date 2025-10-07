@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { type User } from "next-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +26,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Pencil } from "lucide-react";
-import { toast } from "sonner";
 
 interface SettingsFormProps {
   user: User | undefined;
@@ -49,6 +48,8 @@ export default function SettingsForm({ user }: SettingsFormProps) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  const [deleteConfirmationEmail, setDeleteConfirmationEmail] = useState("");
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   // Clean up preview URL when component unmounts or dialog closes
   useEffect(() => {
@@ -86,14 +87,14 @@ export default function SettingsForm({ user }: SettingsFormProps) {
       if (data.success) {
         await update();
         setIsNameDialogOpen(false);
-        toast.success("Name updated successfully");
+        alert("Name updated successfully");
       } else {
-        toast.error(data.message || "Failed to update name");
+        alert(data.message || "Failed to update name");
         console.error(data.message);
       }
     } catch (error) {
       console.error("Failed to update name:", error);
-      toast.error("Failed to update name");
+      alert("Failed to update name");
     }
     setIsUpdatingName(false);
   };
@@ -101,13 +102,13 @@ export default function SettingsForm({ user }: SettingsFormProps) {
   const handleEmailUpdate = async () => {
     // Basic email validation
     if (!newEmail || !newEmail.includes("@")) {
-      toast.error("Please enter a valid email address");
+      alert("Please enter a valid email address");
       return;
     }
 
     // Check if the new email is the same as the current email
     if (newEmail === (session?.user?.email ?? user.email)) {
-      toast.error("This is already your current email address");
+      alert("This is already your current email address");
       return;
     }
 
@@ -124,15 +125,15 @@ export default function SettingsForm({ user }: SettingsFormProps) {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        toast.success("Verification email sent! Please check your inbox.");
+        alert("Verification email sent! Please check your inbox.");
         // Close the dialog
         setIsEmailDialogOpen(false);
       } else {
-        toast.error(data.error || "Failed to send verification email");
+        alert(data.error || "Failed to send verification email");
       }
     } catch (error) {
       console.error("Error:", error);
-      toast.error("An error occurred while sending the verification email");
+      alert("An error occurred while sending the verification email");
     }
     setIsSendingVerification(false);
   };
@@ -143,13 +144,13 @@ export default function SettingsForm({ user }: SettingsFormProps) {
       // Validate file type
       const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
       if (!allowedTypes.includes(file.type)) {
-        toast.error("Invalid file type. Only JPEG, JPG, PNG, WEBP, and GIF are allowed.");
+        alert("Invalid file type. Only JPEG, JPG, PNG, WEBP, and GIF are allowed.");
         return;
       }
 
       // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        toast.error("File size too large. Maximum size is 5MB.");
+        alert("File size too large. Maximum size is 5MB.");
         return;
       }
 
@@ -165,20 +166,20 @@ export default function SettingsForm({ user }: SettingsFormProps) {
     e.preventDefault();
     
     if (!selectedFile) {
-      toast.error("Please select a profile picture");
+      alert("Please select a profile picture");
       return;
     }
 
     // Validate file type again in case file was changed externally
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/gif"];
     if (!allowedTypes.includes(selectedFile.type)) {
-      toast.error("Invalid file type. Only JPEG, JPG, PNG, WEBP, and GIF are allowed.");
+      alert("Invalid file type. Only JPEG, JPG, PNG, WEBP, and GIF are allowed.");
       return;
     }
 
     // Validate file size (max 5MB)
     if (selectedFile.size > 5 * 1024 * 1024) {
-      toast.error("File size too large. Maximum size is 5MB.");
+      alert("File size too large. Maximum size is 5MB.");
       return;
     }
 
@@ -201,13 +202,13 @@ export default function SettingsForm({ user }: SettingsFormProps) {
         if (previewUrl) URL.revokeObjectURL(previewUrl);
         setSelectedFile(null);
         setPreviewUrl(null);
-        toast.success("Profile picture updated successfully");
+        alert("Profile picture updated successfully");
       } else {
-        toast.error(data.message || "Failed to update profile picture");
+        alert(data.message || "Failed to update profile picture");
       }
     } catch (error) {
       console.error("Error updating profile picture:", error);
-      toast.error("Failed to update profile picture");
+      alert("Failed to update profile picture");
     }
     setIsUpdatingProfilePicture(false);
   };
@@ -215,13 +216,12 @@ export default function SettingsForm({ user }: SettingsFormProps) {
 const handleChangePassword = async () => {
   
   if (!oldPassword || !newPassword || !confirmNewPassword) {
-    toast.error("Please fill in all password fields");
+    alert("Please fill in all password fields");
     return;
   }
 
   if (newPassword !== confirmNewPassword) {
     alert("New password and confirm new password do not match");
-    toast.error("New password and confirm new password do not match");
     return;
   }
 
@@ -246,7 +246,7 @@ const handleChangePassword = async () => {
     console.log("API response:", response.status, data);
 
     if (response.ok && data.success) {
-      toast.success("Password updated successfully!");
+      alert("Password updated successfully!");
       setOldPassword("");
       setNewPassword("");
       setConfirmNewPassword("");
@@ -254,21 +254,48 @@ const handleChangePassword = async () => {
       await update(); // Keep this for session update
     } else {
       const errorMessage = data.message || data.error || "Failed to update password";
-      // Show alert if old password is incorrect
-      if (data.error && (data.error.toLowerCase().includes("incorrect") || data.error.toLowerCase().includes("invalid old password"))) {
-        alert("The old password you entered is incorrect. Please try again.");
-      } else {
-        // Only show toast for other errors, not for incorrect old password
-        toast.error(errorMessage);
-      }
+      alert(errorMessage);
     }
   } catch (error) {
     console.error("Error updating password:", error);
-    toast.error(`An error occurred while updating password`);
+    alert(`An error occurred while updating password`);
   } finally {
     setIsUpdatingPassword(false);
   }
 };
+
+const handleDeleteAccount = async () => {
+    if (deleteConfirmationEmail !== (session?.user?.email ?? user.email)) {
+      alert("Email address does not match.");
+      return;
+    }
+
+    setIsDeletingAccount(true);
+    try {
+      const response = await fetch('/api/user/delete-account', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: deleteConfirmationEmail }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        alert("Account deleted successfully. You are being redirected.");
+        await signOut({ callbackUrl: '/' });
+      } else {
+        alert(data.message || "Failed to delete account.");
+      }
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      alert("An error occurred while deleting your account.");
+    } finally {
+      setIsDeletingAccount(false);
+    }
+  };
+
   const profilePictureUrl = user?.image || (user?.profilePicture && user.profilePicture !== "skibiditoilet" ? user.profilePicture : undefined);
 
   return (
@@ -534,14 +561,19 @@ const handleChangePassword = async () => {
                 </AlertDialogHeader>
                 <div className="py-4">
                   <Input
+                    id="delete-confirm-email"
                     type="email"
                     placeholder={session?.user?.email ?? user.email ?? ""}
                     className="w-full"
+                    value={deleteConfirmationEmail}
+                    onChange={(e) => setDeleteConfirmationEmail(e.target.value)}
                   />
                 </div>
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction>Yes, delete my account</AlertDialogAction>
+                  <AlertDialogAction onClick={handleDeleteAccount} disabled={isDeletingAccount}>
+                    {isDeletingAccount ? "Deleting..." : "Yes, delete my account"}
+                  </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>

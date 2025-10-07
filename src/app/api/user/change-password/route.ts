@@ -40,19 +40,7 @@ export async function POST(request: NextRequest) {
     });
   }
 
-  if (newPassword.length < 8) {
-    const response: StandardResponse = {
-      success: false,
-      message: "New password must be at least 8 characters long",
-      error: "Password too short",
-      data: null,
-    };
 
-    return NextResponse.json(response, {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
 
   try {
     // Get the current user from the database using session user id

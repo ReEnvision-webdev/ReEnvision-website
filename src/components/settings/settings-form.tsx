@@ -213,7 +213,6 @@ export default function SettingsForm({ user }: SettingsFormProps) {
   };
 
 const handleChangePassword = async () => {
-  console.log("handleChangePassword function called");
   
   if (!oldPassword || !newPassword || !confirmNewPassword) {
     toast.error("Please fill in all password fields");
@@ -221,14 +220,12 @@ const handleChangePassword = async () => {
   }
 
   if (newPassword !== confirmNewPassword) {
+    alert("New password and confirm new password do not match");
     toast.error("New password and confirm new password do not match");
     return;
   }
 
-  if (newPassword.length < 8) {
-    toast.error("New password must be at least 8 characters long");
-    return;
-  }
+
 
   setIsUpdatingPassword(true);
   
@@ -257,8 +254,13 @@ const handleChangePassword = async () => {
       await update(); // Keep this for session update
     } else {
       const errorMessage = data.message || data.error || "Failed to update password";
-      toast.error(errorMessage);
-      console.error("Password change error:", errorMessage);
+      // Show alert if old password is incorrect
+      if (data.error && (data.error.toLowerCase().includes("incorrect") || data.error.toLowerCase().includes("invalid old password"))) {
+        alert("The old password you entered is incorrect. Please try again.");
+      } else {
+        // Only show toast for other errors, not for incorrect old password
+        toast.error(errorMessage);
+      }
     }
   } catch (error) {
     console.error("Error updating password:", error);
@@ -445,7 +447,6 @@ const handleChangePassword = async () => {
             </div>
           </div>
         </div>
-
         <div>
           <h2 className="text-xl font-semibold mb-4">Security</h2>
           <div className="flex items-center justify-between rounded-lg border p-4">
@@ -471,6 +472,7 @@ const handleChangePassword = async () => {
                       type="password" 
                       value={oldPassword}
                       onChange={(e) => setOldPassword(e.target.value)}
+                      placeholder="Enter your current password"
                     />
                   </div>
                   <div>
@@ -480,6 +482,7 @@ const handleChangePassword = async () => {
                       type="password" 
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="Enter your new password"
                     />
                   </div>
                   <div>
@@ -489,18 +492,26 @@ const handleChangePassword = async () => {
                       type="password" 
                       value={confirmNewPassword}
                       onChange={(e) => setConfirmNewPassword(e.target.value)}
+                      placeholder="Confirm your new password"
                     />
                   </div>
                 </div>
                 <DialogFooter>
                   <Button onClick={handleChangePassword} disabled={isUpdatingPassword}>
-                    {isUpdatingPassword ? "Updating..." : "Update Password"}
+                    {isUpdatingPassword ? (
+                      <div className="flex items-center justify-center">
+                        <span>Updating...</span>
+                      </div>
+                    ) : (
+                      "Update Password"
+                    )}
                   </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
           </div>
         </div>
+
 
         <div>
           <h2 className="text-xl font-semibold mb-4">Delete Account</h2>

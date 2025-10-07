@@ -6,6 +6,7 @@ import { usersTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { uploadImage, getImageUrl } from "@/db/supabaseStorage";
 
+
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
@@ -38,7 +39,7 @@ export async function POST(req: Request) {
     }
 
     // Upload to Supabase storage
-    const imageUrl = await uploadImage(file, "profile-pictures");
+    const imageUrl = await uploadImage(file, "profile");
     
     // Update user profile picture in database
     const updatedUsers = await db
@@ -52,7 +53,6 @@ export async function POST(req: Request) {
     if (!newProfilePicture) {
       return NextResponse.json({ success: false, message: "Could not update profile picture" }, { status: 500 });
     }
-
     return NextResponse.json({ 
       success: true, 
       message: "Profile picture updated successfully", 

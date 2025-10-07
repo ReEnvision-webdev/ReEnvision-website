@@ -44,6 +44,11 @@ export default function SettingsForm({ user }: SettingsFormProps) {
   const [isUpdatingProfilePicture, setIsUpdatingProfilePicture] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
   // Clean up preview URL when component unmounts or dialog closes
   useEffect(() => {
@@ -207,6 +212,61 @@ export default function SettingsForm({ user }: SettingsFormProps) {
     setIsUpdatingProfilePicture(false);
   };
 
+const handleChangePassword = async () => {
+  console.log("handleChangePassword function called");
+  
+  if (!oldPassword || !newPassword || !confirmNewPassword) {
+    toast.error("Please fill in all password fields");
+    return;
+  }
+
+  if (newPassword !== confirmNewPassword) {
+    toast.error("New password and confirm new password do not match");
+    return;
+  }
+
+  if (newPassword.length < 8) {
+    toast.error("New password must be at least 8 characters long");
+    return;
+  }
+
+  setIsUpdatingPassword(true);
+  
+  try {
+    console.log("Making API call to change password");
+    const response = await fetch("/api/user/change-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        oldPassword,
+        newPassword,
+      }),
+    });
+
+    const data = await response.json();
+    console.log("API response:", response.status, data);
+
+    if (response.ok && data.success) {
+      toast.success("Password updated successfully!");
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmNewPassword("");
+      setIsPasswordDialogOpen(false);
+      await update(); // Keep this for session update
+    } else {
+      const errorMessage = data.message || data.error || "Failed to update password";
+      toast.error(errorMessage);
+      console.error("Password change error:", errorMessage);
+    }
+  } catch (error) {
+    console.error("Error updating password:", error);
+    toast.error(`An error occurred while updating password`);
+  } finally {
+    setIsUpdatingPassword(false);
+  }
+};
   const profilePictureUrl = user?.image || (user?.profilePicture && user.profilePicture !== "skibiditoilet" ? user.profilePicture : undefined);
 
   return (
@@ -393,7 +453,7 @@ export default function SettingsForm({ user }: SettingsFormProps) {
               <Label>Password</Label>
               <p className="text-lg">********</p>
             </div>
-            <Dialog>
+            <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
               <DialogTrigger asChild>
                 <Button variant="ghost" size="icon">
                   <Pencil className="h-4 w-4" />
@@ -406,19 +466,36 @@ export default function SettingsForm({ user }: SettingsFormProps) {
                 <div className="py-4 space-y-4">
                   <div>
                     <Label htmlFor="old-password">Old Password</Label>
-                    <Input id="old-password" type="password" />
+                    <Input 
+                      id="old-password" 
+                      type="password" 
+                      value={oldPassword}
+                      onChange={(e) => setOldPassword(e.target.value)}
+                    />
                   </div>
                   <div>
                     <Label htmlFor="new-password">New Password</Label>
-                    <Input id="new-password" type="password" />
+                    <Input 
+                      id="new-password" 
+                      type="password" 
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                    />
                   </div>
                   <div>
                     <Label htmlFor="confirm-new-password">Confirm New Password</Label>
-                    <Input id="confirm-new-password" type="password" />
+                    <Input 
+                      id="confirm-new-password" 
+                      type="password" 
+                      value={confirmNewPassword}
+                      onChange={(e) => setConfirmNewPassword(e.target.value)}
+                    />
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button>Update Password</Button>
+                  <Button onClick={handleChangePassword} disabled={isUpdatingPassword}>
+                    {isUpdatingPassword ? "Updating..." : "Update Password"}
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>

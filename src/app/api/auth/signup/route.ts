@@ -7,6 +7,9 @@ import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { eq } from "drizzle-orm";
 import { StandardResponse } from "@/lib/types";
+import * as jdenticon from "jdenticon";
+import { createClient } from "@supabase/supabase-js";
+import sharp from "sharp";
 
 export async function POST(request: NextRequest) {
   const { email, name, password } = await request.json();
@@ -64,11 +67,65 @@ export async function POST(request: NextRequest) {
   const rawVerifToken = crypto.randomBytes(32).toString("hex");
 
   try {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL as string;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY as string;
+
+    if (!url || !serviceKey) {
+      throw new Error(
+        "Supabase env vars missing: NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY",
+      );
+    }
+    const supabase = createClient(url, serviceKey);
+    const userId = cuid();
+
+    // Configure Jdenticon to match the site's branding
+    const jdenticonConfig = {
+      lightness: {
+        color: [0.4, 0.8],
+        grayscale: [0.3, 0.9],
+      },
+      saturation: {
+        color: 0.65,
+        grayscale: 0,
+      },
+      hues: [208], // Hue for #1f639e
+      backColor: "#f0f8ff",
+    };
+
+    // Generate Jdenticon SVG and convert to a compressed JPG
+    const svg = jdenticon.toSvg(name, 200, jdenticonConfig);
+    const jpegBuffer = await sharp(Buffer.from(svg))
+      .jpeg({ quality: 80 })
+      .toBuffer();
+
+    const imagePath = `${userId}.jpg`;
+
+    // Upload to Supabase
+    const { error } = await supabase.storage
+      .from("profile-pictures")
+      .upload(imagePath, jpegBuffer, {
+        contentType: "image/jpeg",
+        upsert: true,
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from("profile-pictures")
+      .getPublicUrl(imagePath);
+
+    if (!publicUrlData) {
+      throw new Error("Could not get public URL for profile picture");
+    }
+
     await db.insert(usersTable).values({
-      id: cuid(),
+      id: userId,
       email: email,
       name: name,
       password: await bcrypt.hash(password, 10),
+      profilePicture: publicUrlData.publicUrl,
       emailVerificationKey: crypto
         .createHash("sha256")
         .update(rawVerifToken)
@@ -81,7 +138,9 @@ export async function POST(request: NextRequest) {
       text: "",
       subject: "Verify your email",
       replyTo: "contact@re-envision.org",
-      html: `<h1>Re-envision account verification</h1><p>Please verify your email by clicking this link: <a href="https://re-envision.org/verify?email=${encodeURIComponent(email)}&token=${rawVerifToken}">Verify Email</a></p><p>Note that this link will expire in 24 hours.</p>`,
+      html: `<h1>Re-envision account verification</h1><p>Please verify your email by clicking this link: <a href="https://re-envision.org/verify?email=${encodeURIComponent(
+        email,
+      )}&token=${rawVerifToken}">Verify Email</a></p><p>Note that this link will expire in 24 hours.</p>`,
     });
 
     const response: StandardResponse = {

@@ -12,6 +12,7 @@ export const usersTable = pgTable("users", {
   email: varchar({ length: 255 }).notNull().unique(),
   password: text().notNull(),
   name: text().notNull(),
+  profilePicture: text("profile_picture").default("skibiditoilet").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   resetKey: text("reset_key"),
   resetKeyExpires: timestamp("reset_key_expires"),
@@ -21,6 +22,11 @@ export const usersTable = pgTable("users", {
   emailVerificationKeyExpires: timestamp("email_verification_key_expires"),
   isAdmin: boolean("is_admin").notNull().default(false),
   isBanned: boolean("is_banned").notNull().default(false),
+  newEmail: varchar("new_email", { length: 255 }),
+  newEmailVerificationKey: text("new_email_verification_key"),
+  newEmailVerificationKeyExpires: timestamp(
+    "new_email_verification_key_expires"
+  ),
 });
 
 export const eventsTable = pgTable("events", {

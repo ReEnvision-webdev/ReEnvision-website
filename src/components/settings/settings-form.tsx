@@ -333,7 +333,7 @@ const handleDeleteAccount = async () => {
               <div className="py-4 space-y-6">
                 <div className="space-y-4">
                   <div>
-                    <h3 className="font-medium" className="text-[#1f639e]">Current Picture</h3>
+                    <h3 className="font-medium text-[#1f639e]">Current Picture</h3>
                     <div className="mt-2 flex justify-center">
                       <div className="relative h-24 w-24 rounded-full overflow-hidden border">
                         {profilePictureUrl ? (
@@ -357,7 +357,7 @@ const handleDeleteAccount = async () => {
                   </div>
                   
                   <div>
-                    <h3 className="font-medium" className="text-[#1f639e]">New Picture Preview</h3>
+                    <h3 className="font-medium text-[#1f639e]">New Picture Preview</h3>
                     <div className="mt-2 flex justify-center">
                       <div className="relative h-24 w-24 rounded-full overflow-hidden border bg-gray-100">
                         <img 

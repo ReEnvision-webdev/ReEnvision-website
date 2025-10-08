@@ -51,6 +51,8 @@ export const POST = async (req: NextRequest) => {
     await sendEmail({
         to: email,
         subject: 'Verify your new email address',
+        text: `Email Update Verification. You have requested to update your email address. Please verify this new email by visiting the following link: ${url}`,
+        replyTo: 'contact@re-envision.org',
         html: `<h1>Email Update Verification</h1><p>You have requested to update your email address. Please verify this new email by clicking the link below:</p><p><a href="${url}">Verify New Email</a></p><p>If you didn't request this change, you can safely ignore this email.</p><p>Note that this link will expire in 1 hour.</p>`
     });
 

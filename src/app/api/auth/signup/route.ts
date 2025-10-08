@@ -101,8 +101,8 @@ export async function POST(request: NextRequest) {
     const imagePath = `${userId}.jpg`;
 
     // Upload to Supabase
-    const { data, error } = await supabase.storage
-      .from("profile")
+    const { error } = await supabase.storage
+      .from("profile-pictures")
       .upload(imagePath, jpegBuffer, {
         contentType: "image/jpeg",
         upsert: true,
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { data: publicUrlData } = supabase.storage
-      .from("profile")
+      .from("profile-pictures")
       .getPublicUrl(imagePath);
 
     if (!publicUrlData) {

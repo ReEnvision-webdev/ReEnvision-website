@@ -1,6 +1,6 @@
 import db from "@/db/database";
 import { usersTable } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 
@@ -18,7 +18,7 @@ export const GET = async (req: NextRequest) => {
     const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
     // First, try to find a user with the pending verification token
-    let [user] = await db
+    const [user] = await db
       .select()
       .from(usersTable)
       .where(eq(usersTable.newEmailVerificationKey, hashedToken));

@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth.config";
 import db from "@/db/database";
 import { usersTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { uploadImage, getImageUrl } from "@/db/supabaseStorage";
+import { uploadImage } from "@/db/supabaseStorage";
 
 
 export async function POST(req: Request) {

@@ -4,7 +4,6 @@ import db from "@/db/database";
 import { usersTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { authOptions } from "@/lib/auth.config";
-import { StandardResponse } from "@/lib/types";
 
 export async function DELETE(request: NextRequest) {
   const session = await getServerSession(authOptions);

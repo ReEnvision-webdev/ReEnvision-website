@@ -327,13 +327,13 @@ const handleDeleteAccount = async () => {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Upload Profile Picture</DialogTitle>
+              <DialogTitle className="text-[#1f639e]">Upload Profile Picture</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleProfilePictureUpdate}>
               <div className="py-4 space-y-6">
                 <div className="space-y-4">
                   <div>
-                    <h3 className="font-medium">Current Picture</h3>
+                    <h3 className="font-medium" className="text-[#1f639e]">Current Picture</h3>
                     <div className="mt-2 flex justify-center">
                       <div className="relative h-24 w-24 rounded-full overflow-hidden border">
                         {profilePictureUrl ? (
@@ -357,7 +357,7 @@ const handleDeleteAccount = async () => {
                   </div>
                   
                   <div>
-                    <h3 className="font-medium">New Picture Preview</h3>
+                    <h3 className="font-medium" className="text-[#1f639e]">New Picture Preview</h3>
                     <div className="mt-2 flex justify-center">
                       <div className="relative h-24 w-24 rounded-full overflow-hidden border bg-gray-100">
                         <img 
@@ -371,7 +371,7 @@ const handleDeleteAccount = async () => {
                 </div>
                 
                 <div>
-                  <Label htmlFor="profilePicture">Select New Profile Picture</Label>
+                  <Label htmlFor="profilePicture" className="text-[#1f639e]">Select New Profile Picture</Label>
                   <Input 
                     id="profilePicture" 
                     name="profilePicture" 
@@ -386,7 +386,7 @@ const handleDeleteAccount = async () => {
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit" disabled={isUpdatingProfilePicture}>
+                <Button type="submit" disabled={isUpdatingProfilePicture} className="bg-[#1f639e]  hover:bg-[#164a73]">
                   {isUpdatingProfilePicture ? "Uploading..." : "Save"}
                 </Button>
               </DialogFooter>
@@ -399,54 +399,54 @@ const handleDeleteAccount = async () => {
 
       <div className="space-y-8">
         <div>
-          <h2 className="text-xl font-semibold mb-4">Profile Information</h2>
+          <h2 className="text-xl font-semibold mb-4 text-[#1f639e]">Profile Information</h2>
           <div className="space-y-4">
-            <div className="flex items-center justify-between rounded-lg border p-4">
+            <div className="flex items-center justify-between rounded-lg border p-4 border-[#1f639e]">
               <div>
-                <Label>Name</Label>
-                <p className="text-lg">{session?.user?.name ?? user.name}</p>
+                <Label className="text-[#1f639e]">Name</Label>
+                <p className="text-lg text-muted-foreground">{session?.user?.name ?? user.name}</p>
               </div>
               <Dialog open={isNameDialogOpen} onOpenChange={setIsNameDialogOpen}>
                 <DialogTrigger asChild>
                   <Button variant="ghost" size="icon">
-                    <Pencil className="h-4 w-4" />
+                    <Pencil className="h-4 w-4 text-[#1f639e]" />
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Edit Name</DialogTitle>
+                    <DialogTitle className="text-[#1f639e]">Edit Name</DialogTitle>
                   </DialogHeader>
                   <div className="py-4">
-                    <Label htmlFor="name">Name</Label>
+                    <Label htmlFor="name"  className="text-[#1f639e]">Name</Label>
                     <Input id="name" value={name} onChange={(e) => setName(e.target.value)} />
                   </div>
                   <DialogFooter>
-                    <Button onClick={handleNameUpdate} disabled={isUpdatingName}>
+                    <Button onClick={handleNameUpdate} disabled={isUpdatingName} className="bg-[#1f639e]  hover:bg-[#164a73]">
                       {isUpdatingName ? "Saving..." : "Save"}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
             </div>
-            <div className="flex items-center justify-between rounded-lg border p-4">
+            <div className="flex items-center justify-between rounded-lg border p-4  border-[#1f639e]">
               <div>
-                <Label>Email</Label>
-                <p className="text-lg">{session?.user?.email ?? user.email}</p>
+                <Label className="text-[#1f639e]">Email</Label>
+                <p className="text-lg text-muted-foreground">{session?.user?.email ?? user.email}</p>
               </div>
               <Dialog open={isEmailDialogOpen} onOpenChange={setIsEmailDialogOpen}>
                 <DialogTrigger asChild>
                   <Button variant="ghost" size="icon">
-                    <Pencil className="h-4 w-4" />
+                    <Pencil className="h-4 w-4 text-[#1f639e]" />
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
-                    <DialogTitle>Edit Email</DialogTitle>
+                    <DialogTitle className="text-[#1f639e]">Edit Email</DialogTitle>
                   </DialogHeader>
                   <div className="py-4">
                     <div className="grid gap-4">
                       <div className="grid gap-2">
-                        <Label htmlFor="email">New Email Address</Label>
+                        <Label htmlFor="email" className="text-[#1f639e]">New Email Address</Label>
                         <Input
                           id="email"
                           type="email"
@@ -458,6 +458,7 @@ const handleDeleteAccount = async () => {
                       <Button 
                         onClick={handleEmailUpdate}
                         disabled={isSendingVerification}
+                        className="bg-[#1f639e]  hover:bg-[#164a73]"
                       >
                         {isSendingVerification ? "Sending Verification Email..." : "Send Verification Email"}
                       </Button>
@@ -475,25 +476,25 @@ const handleDeleteAccount = async () => {
           </div>
         </div>
         <div>
-          <h2 className="text-xl font-semibold mb-4">Security</h2>
-          <div className="flex items-center justify-between rounded-lg border p-4">
+          <h2 className="text-xl font-semibold mb-4 text-[#1f639e]">Security</h2>
+          <div className="flex items-center justify-between rounded-lg border p-4  border-[#1f639e]">
             <div>
-              <Label>Password</Label>
-              <p className="text-lg">********</p>
+              <Label className="text-[#1f639e]">Password</Label>
+              <p className="text-lg text-muted-foreground">********</p>
             </div>
             <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
               <DialogTrigger asChild>
                 <Button variant="ghost" size="icon">
-                  <Pencil className="h-4 w-4" />
+                  <Pencil className="h-4 w-4 text-[#1f639e]" />
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Change Password</DialogTitle>
+                  <DialogTitle className="text-[#1f639e]">Change Password</DialogTitle>
                 </DialogHeader>
                 <div className="py-4 space-y-4">
                   <div>
-                    <Label htmlFor="old-password">Old Password</Label>
+                    <Label htmlFor="old-password" className="text-[#1f639e]">Old Password</Label>
                     <Input 
                       id="old-password" 
                       type="password" 
@@ -503,7 +504,7 @@ const handleDeleteAccount = async () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="new-password">New Password</Label>
+                    <Label htmlFor="new-password" className="text-[#1f639e]">New Password</Label>
                     <Input 
                       id="new-password" 
                       type="password" 
@@ -513,7 +514,7 @@ const handleDeleteAccount = async () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="confirm-new-password">Confirm New Password</Label>
+                    <Label htmlFor="confirm-new-password" className="text-[#1f639e]">Confirm New Password</Label>
                     <Input 
                       id="confirm-new-password" 
                       type="password" 
@@ -524,7 +525,7 @@ const handleDeleteAccount = async () => {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button onClick={handleChangePassword} disabled={isUpdatingPassword}>
+                  <Button onClick={handleChangePassword} disabled={isUpdatingPassword} className="bg-[#1f639e]  hover:bg-[#164a73]">
                     {isUpdatingPassword ? (
                       <div className="flex items-center justify-center">
                         <span>Updating...</span>
@@ -541,7 +542,7 @@ const handleDeleteAccount = async () => {
 
 
         <div>
-          <h2 className="text-xl font-semibold mb-4">Delete Account</h2>
+          <h2 className="text-xl font-semibold mb-4 text-destructive">Delete Account</h2>
           <div className="rounded-lg border border-destructive p-4">
             <p className="text-destructive mb-4">
               This action is irreversible. Please be certain before proceeding.
@@ -552,7 +553,7 @@ const handleDeleteAccount = async () => {
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogTitle className="text-[#1f639e]">Are you absolutely sure?</AlertDialogTitle>
                   <AlertDialogDescription>
                     This action cannot be undone. This will permanently delete your
                     account and remove your data from our servers. To confirm, please
@@ -570,8 +571,8 @@ const handleDeleteAccount = async () => {
                   />
                 </div>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDeleteAccount} disabled={isDeletingAccount}>
+                  <AlertDialogCancel className="border-[#1f639e] text-[#1f639e] hover:text-[#164a73]">Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteAccount} disabled={isDeletingAccount} className="bg-[#1f639e]  hover:bg-[#164a73]">
                     {isDeletingAccount ? "Deleting..." : "Yes, delete my account"}
                   </AlertDialogAction>
                 </AlertDialogFooter>

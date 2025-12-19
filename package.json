@@ -11,7 +11,7 @@
     "db:pull": "dotenv -e .env.local -- drizzle-kit introspect",
     "db:generate": "dotenv -e .env.local -- drizzle-kit generate",
     "db:migrate": "dotenv -e .env.local -- drizzle-kit migrate"
-    },
+  },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-dialog": "^1.1.15",
@@ -34,14 +34,14 @@
     "drizzle-orm": "^0.44.4",
     "jdenticon": "^3.3.0",
     "lucide-react": "^0.525.0",
-    "next": "15.5.2",
+    "next": "15.5.9",
     "next-auth": "^4.24.11",
     "next-themes": "^0.4.6",
     "nodemailer": "^6.10.1",
     "particles.js": "^2.0.0",
     "pg": "^8.16.3",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1"
   },
@@ -51,13 +51,13 @@
     "@types/aos": "^3.0.7",
     "@types/node": "^20",
     "@types/pg": "^8.15.5",
-    "@types/react": "19.1.12",
-    "@types/react-dom": "19.1.9",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
     "cross-env": "^10.0.0",
     "dotenv-cli": "^10.0.0",
     "drizzle-kit": "^0.31.4",
     "eslint": "^9",
-    "eslint-config-next": "15.5.2",
+    "eslint-config-next": "15.5.9",
     "eslint-plugin-import": "^2.32.0",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
@@ -66,7 +66,7 @@
     "typescript": "^5"
   },
   "overrides": {
-    "@types/react": "19.1.12",
-    "@types/react-dom": "19.1.9"
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3"
   }
 }

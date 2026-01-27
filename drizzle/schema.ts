@@ -1,3 +1,4 @@
+
 import { pgTable, foreignKey, text, timestamp, numeric, unique, varchar, boolean } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
@@ -45,6 +46,7 @@ export const users = pgTable("users", {
 	emailVerificationKeyExpires: timestamp("email_verification_key_expires", { mode: 'string' }),
 	isAdmin: boolean("is_admin").default(false).notNull(),
 	isBanned: boolean("is_banned").default(false).notNull(),
+	isVerified: boolean("is_verified").notNull().default(false),
 	newEmail: varchar("new_email", { length: 255 }),
 	newEmailVerificationKey: text("new_email_verification_key"),
 	newEmailVerificationKeyExpires: timestamp("new_email_verification_key_expires", { mode: 'string' }),
@@ -65,3 +67,10 @@ export const customers = pgTable("customers", {
 			name: "customers_course_id_courses_id_fk"
 		}),
 ]);
+
+export const chapters = pgTable("chapters", {
+    id: text().primaryKey().notNull(),
+    name: text("chapter_name").notNull(),
+    location: text("chapter_location").notNull(),
+    description: text("description").notNull(),
+});

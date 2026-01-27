@@ -50,4 +50,5 @@ export const chaptersTable = pgTable("chapters", {
     name: text("chapter_name").notNull(),
     location: text("chapter_location").notNull(),
     description: text("description").notNull(),
+    website: text("chapter website"),
 });

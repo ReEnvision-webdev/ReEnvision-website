@@ -1,5 +1,4 @@
-
-import { pgTable, foreignKey, text, timestamp, numeric, unique, varchar, boolean } from "drizzle-orm/pg-core"
+import { pgTable, foreignKey, text, timestamp, unique, varchar, boolean } from "drizzle-orm/pg-core"
 import { sql } from "drizzle-orm"
 
 
@@ -21,56 +20,33 @@ export const events = pgTable("events", {
 		}),
 ]);
 
-export const courses = pgTable("courses", {
-	id: text().primaryKey().notNull(),
-	courseName: text("course_name").notNull(),
-	coursesImage: text("courses_image"),
-	courseDescription: text("course_description").notNull(),
-	coursePrice: numeric("course_price").notNull(),
-	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-	updatedAt: timestamp("updated_at", { mode: 'string' }).defaultNow(),
-});
-
 export const users = pgTable("users", {
 	id: text().primaryKey().notNull(),
 	email: varchar({ length: 255 }).notNull(),
 	password: text().notNull(),
 	name: text().notNull(),
-	profilePicture: text("profile_picture").default('skibiditoilet').notNull(),
-	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
 	resetKey: text("reset_key"),
+	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
 	resetKeyExpires: timestamp("reset_key_expires", { mode: 'string' }),
-	lastReset: timestamp("last_reset", { mode: 'string' }),
 	emailVerified: boolean("email_verified").default(false).notNull(),
 	emailVerificationKey: text("email_verification_key"),
 	emailVerificationKeyExpires: timestamp("email_verification_key_expires", { mode: 'string' }),
 	isAdmin: boolean("is_admin").default(false).notNull(),
 	isBanned: boolean("is_banned").default(false).notNull(),
-	isVerified: boolean("is_verified").notNull().default(false),
+	lastReset: timestamp("last_reset", { mode: 'string' }),
+	profilePicture: text("profile_picture").default('skibiditoilet').notNull(),
 	newEmail: varchar("new_email", { length: 255 }),
 	newEmailVerificationKey: text("new_email_verification_key"),
 	newEmailVerificationKeyExpires: timestamp("new_email_verification_key_expires", { mode: 'string' }),
+	isVerified: boolean("is_verified").default(false).notNull(),
 }, (table) => [
 	unique("users_email_unique").on(table.email),
 ]);
 
-export const customers = pgTable("customers", {
-	id: text().primaryKey().notNull(),
-	customerName: text("customer_name").notNull(),
-	customerEmail: text("customer_email").notNull(),
-	courseId: text("course_id").notNull(),
-	timePurchased: timestamp("time_purchased", { withTimezone: true, mode: 'string' }).defaultNow().notNull(),
-}, (table) => [
-	foreignKey({
-			columns: [table.courseId],
-			foreignColumns: [courses.id],
-			name: "customers_course_id_courses_id_fk"
-		}),
-]);
-
 export const chapters = pgTable("chapters", {
-    id: text().primaryKey().notNull(),
-    name: text("chapter_name").notNull(),
-    location: text("chapter_location").notNull(),
-    description: text("description").notNull(),
+	id: text().primaryKey().notNull(),
+	chapterName: text("chapter_name").notNull(),
+	chapterLocation: text("chapter_location").notNull(),
+	description: text().notNull(),
+	chapterWebsite: text("chapter website"),
 });

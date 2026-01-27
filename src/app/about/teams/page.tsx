@@ -1,6 +1,10 @@
 
+'use client';
+import { useEffect } from 'react';
 import Image from 'next/image';
 import { Card, CardContent } from "@/components/ui/card";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const teams = {
   president: {
@@ -28,7 +32,7 @@ const teams = {
       name: 'Elijah Muse-May',
       role: 'Web Development Lead',
       description: 'Building and maintaining our digital presence.',
-      image: null,
+      image: '/images/about/placeholder.jpg', // Added placeholder
     },
     {
       name: 'Abram Acevado',
@@ -58,25 +62,38 @@ const teams = {
 }
 
 export default function TeamsPage() {
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-out-cubic',
+      once: true,
+      offset: 100,
+    });
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen items-center pt-[64px] bg-[#f0f8ff]">
-      <div className="h-[50vh] flex flex-col items-center justify-center relative about-hero-img">
+      <div className="h-[50vh] flex flex-col items-center justify-center relative about-hero-img" data-aos="fade-up">
         <h1 className="text-3xl md:text-6xl font-bold mb-6 text-[#E0E0E0] mt-8 text-center z-1">
           Our Teams
         </h1>
       </div>
 
-      <div className="w-full max-w-6xl mx-auto p-8">
+      <div className="w-full max-w-6xl mx-auto p-8" data-aos="fade-up" data-aos-delay="200">
         <section id="teams" className="w-full py-8">
           <div className="container mx-auto px-4">
             <h2
               className="text-2xl md:text-3xl font-semibold mb-8 text-[#1f639e] text-center"
+              data-aos="fade-up"
+              data-aos-delay="300"
             >
               ReEnvision Officers & Team Leads
             </h2>
             {/* President */}
             <div
               className="flex justify-center items-center mx-auto px-4 py-6"
+              data-aos="fade-up"
+              data-aos-delay="400"
             >
               <Card className="flex flex-col gap-4 items-center p-4 w-full max-w-xs shadow-md hover:shadow-lg transition-shadow duration-300">
                 <CardContent className="flex flex-col items-center p-0">
@@ -102,6 +119,8 @@ export default function TeamsPage() {
             {/* Heads */}
             <div
               className="flex flex-col md:flex-row justify-center items-center gap-8 mx-auto px-4 py-6"
+              data-aos="fade-up"
+              data-aos-delay="500"
             >
               {teams.heads.map((head, index) => (
                 <Card key={index} className="flex flex-col gap-4 items-center p-4 w-full max-w-xs shadow-md hover:shadow-lg transition-shadow duration-300">
@@ -129,6 +148,8 @@ export default function TeamsPage() {
             {/* Team Leads */}
             <div
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:flex xl:flex-wrap xl:justify-center gap-6 items-stretch mx-auto px-4 py-6"
+              data-aos="fade-up"
+              data-aos-delay="600"
             >
               {teams.leads.map((lead, index) => (
                 <Card key={index} className={`flex flex-col gap-4 items-center p-4 w-full ${Array.isArray(lead.image) ? 'xl:w-96' : 'xl:w-48'} xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300 ${Array.isArray(lead.image) ? 'sm:col-span-2' : ''}`}>

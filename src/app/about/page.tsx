@@ -1,18 +1,30 @@
 
 'use client';
+import { useEffect } from 'react';
 import { Globe, Target, Users, HeartHandshake } from 'lucide-react';
 import Link from 'next/link';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 export default function AboutPage() {
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-out-cubic',
+      once: true,
+      offset: 100,
+    });
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen items-center pt-[64px] bg-[#f0f8ff]">
-      <div className="h-[50vh] flex flex-col items-center justify-center relative about-hero-img">
+      <div className="h-[50vh] flex flex-col items-center justify-center relative about-hero-img" data-aos="fade-up">
         <h1 className="text-3xl md:text-6xl font-bold mb-6 text-[#E0E0E0] mt-8 text-center z-1">
           About ReEnvision
         </h1>
       </div>
 
-      <div className="w-full max-w-6xl mx-auto p-8">
+      <div className="w-full max-w-6xl mx-auto p-8" data-aos="fade-up" data-aos-delay="200">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <Link href="/about/mission">
             <div className="bg-white rounded-lg shadow-lg p-6 flex flex-col items-center text-center hover:bg-gray-100 transition-colors">

@@ -39,6 +39,7 @@ export const authOptions = {
               isAdmin: usersTable.isAdmin,
               isBanned: usersTable.isBanned,
               emailVerified: usersTable.emailVerified,
+              isVerified: usersTable.isVerified,
               profilePicture: usersTable.profilePicture,
             })
             .from(usersTable)
@@ -63,6 +64,7 @@ export const authOptions = {
             name: user.name,
             profilePicture: user.profilePicture,
             isAdmin: user.isAdmin,
+            isVerified: user.isVerified,
           };
         } catch (error) {
           if (error instanceof CredentialError) {
@@ -82,6 +84,7 @@ export const authOptions = {
         token.name = user.name;
         token.email = user.email;
         token.isAdmin = user.isAdmin;
+        token.isVerified = user.isVerified;
       } else if (token.id) {
         const dbUser = await db
           .select({
@@ -90,6 +93,7 @@ export const authOptions = {
             name: usersTable.name,
             profilePicture: usersTable.profilePicture,
             isAdmin: usersTable.isAdmin,
+            isVerified: usersTable.isVerified,
           })
           .from(usersTable)
           .where(eq(usersTable.id, token.id as string))
@@ -100,6 +104,7 @@ export const authOptions = {
           token.email = dbUser[0].email;
           token.profilePicture = dbUser[0].profilePicture;
           token.isAdmin = dbUser[0].isAdmin;
+          token.isVerified = dbUser[0].isVerified;
         }
       }
       return token;
@@ -111,6 +116,7 @@ export const authOptions = {
         session.user.email = token.email as string;
         session.user.profilePicture = token.profilePicture as string | undefined;
         session.user.isAdmin = token.isAdmin as boolean;
+        session.user.isVerified = token.isVerified as boolean;
       }
       return session;
     },

@@ -1,2 +1,4 @@
-add a signout button too
-fix carrousel bug thing
+1. fix carrousel
+2. add page for signin to join our community
+3. add db item for handling user acceptance
+4. delete db courses table and add new table for geolocations of chapters

@@ -25,6 +25,86 @@ function NavLink({ href, label }: { href: string; label: string }) {
   );
 }
 
+function AboutDropdown() {
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isAboutActive =
+    pathname.startsWith("/about");
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
+      <Link href="/about">
+        <Button
+          variant="ghost"
+          size="sm"
+          className={`hover:bg-[#F0F8FF] hover:text-[#1d588a] ${isAboutActive ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"} `}
+        >
+          About
+          <svg
+            className={`ml-1 h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </Button>
+      </Link>
+
+      {isOpen && (
+        <div className="absolute left-0 mt-0 w-48 bg-[#1d588a] border border-[#00427A] shadow-lg z-50">
+          <Link href="/about/mission">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/about/mission" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+            >
+              Our Mission
+            </Button>
+          </Link>
+          <Link href="/about/who-we-are">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/about/who-we-are" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+            >
+              Who We Are
+            </Button>
+          </Link>
+          <Link href="/about/values">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/about/values" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+            >
+              Our Values
+            </Button>
+          </Link>
+          <Link href="/about/teams">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/about/teams" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+            >
+              Our Teams
+            </Button>
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function EventsDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
@@ -123,9 +203,11 @@ function ProfileDropdown() {
         onClick={() => setIsOpen(!isOpen)}
       >
                       {profilePictureUrl ? (
-                <img 
+                <Image 
                   src={profilePictureUrl} 
                   alt="Profile" 
+                  width={40}
+                  height={40}
                   className="w-full h-full object-cover rounded-full"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
@@ -171,6 +253,7 @@ function ProfileDropdown() {
 function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [isEventsOpen, setIsEventsOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
   const pathname = usePathname();
   const { data: session, status } = useSession();
 
@@ -202,8 +285,7 @@ function MobileMenu() {
           <div className="flex flex-col space-y-2 p-4">
             {[
               { href: "/", label: "Home" },
-              { href: "/about", label: "About" },
-              { href: "/courses", label: "Courses" },
+              { href: "/chapters", label: "Chapters" },
               { href: "/donate", label: "Donate" },
               { href: "/contact", label: "Contact Us" },
             ].map(({ href, label }) => (
@@ -221,6 +303,71 @@ function MobileMenu() {
                 </Button>
               </Link>
             ))}
+            {/* About Dropdown for Mobile */}
+            <div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`justify-between w-full hover:bg-[#F0F8FF] rounded-none ${pathname.startsWith("/about") ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                onClick={() => setIsAboutOpen(!isAboutOpen)}
+              >
+                About
+                <svg
+                  className={`h-4 w-4 transition-transform ${isAboutOpen ? "rotate-180" : ""}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </Button>
+              {isAboutOpen && (
+                <div className="mt-1 ml-4 flex flex-col space-y-1">
+                  <Link href="/about/mission">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`justify-start hover:bg-[#F0F8FF] w-full rounded-none ${pathname === "/about/mission" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                    >
+                      Our Mission
+                    </Button>
+                  </Link>
+                  <Link href="/about/who-we-are">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`justify-start hover:bg-[#F0F8FF] w-full rounded-none ${pathname === "/about/who-we-are" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                    >
+                      Who We Are
+                    </Button>
+                  </Link>
+                  <Link href="/about/values">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`justify-start hover:bg-[#F0F8FF] w-full rounded-none ${pathname === "/about/values" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                    >
+                      Our Values
+                    </Button>
+                  </Link>
+                  <Link href="/about/teams">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`justify-start hover:bg-[#F0F8FF] w-full rounded-none ${pathname === "/about/teams" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                    >
+                      Our Teams
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+
             {/* Events Dropdown for Mobile */}
             <div>
               <Button
@@ -348,8 +495,8 @@ export default function Header() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-3">
           <NavLink href="/" label="Home" />
-          <NavLink href="/about" label="About" />
-          <NavLink href="/courses" label="Courses" />
+          <AboutDropdown />
+          <NavLink href="/chapters" label="Chapters" />
           <EventsDropdown />
           <NavLink href="/donate" label="Donate" />
           <NavLink href="/contact" label="Contact Us" />

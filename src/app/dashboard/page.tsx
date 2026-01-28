@@ -1,4 +1,5 @@
 import EventManagement from "@/components/admin/event-management";
+import ChapterManagement from "@/components/admin/chapter-management";
 import { checkAuth } from "@/lib/check-auth";
 import { authOptions } from "@/lib/auth.config";
 import { getServerSession } from "next-auth/next";
@@ -128,6 +129,9 @@ export default async function Page() {
           </p>
         </div>
         <EventManagement />
+        <div className="mt-12">
+          <ChapterManagement />
+        </div>
       </div>
     );
   }

@@ -179,11 +179,8 @@ const ChapterMap = () => {
                 window.open(marker.website, '_blank', 'noopener,noreferrer');
               }
             }}
-            style={{
-              cursor: marker.website ? 'pointer' : 'default'
-            }}
           >
-            <circle r={8} fill="#F5A623" stroke="#fff" strokeWidth={2} />
+            <circle r={8} fill="#F5A623" stroke="#fff" strokeWidth={2} style={{ cursor: marker.website ? 'pointer' : 'default' }} />
           </Marker>
         ))}
       </ComposableMap>

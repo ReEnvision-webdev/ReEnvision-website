@@ -50,49 +50,56 @@ const PARTNERS = [
 function IPadWithApps() {
   const apps = [
     {
-      icon: <Book className="h-8 w-8" />,
+      icon: <Book className="h-6 w-6 md:h-8 md:w-8" />,
       title: "Unleash Learning",
       description: "Bridging educational gaps through innovative technology",
     },
     {
-      icon: <Laptop className="h-8 w-8" />,
+      icon: <Laptop className="h-6 w-6 md:h-8 md:w-8" />,
       title: "Tech Divide",
       description: "Courses & resources for underserved communities",
     },
     {
-      icon: <Lock className="h-8 w-8" />,
+      icon: <Lock className="h-6 w-6 md:h-8 md:w-8" />,
       title: "Digital Safety",
       description: "Teaching online safety and navigation",
     },
     {
-      icon: <Handshake className="h-8 w-8" />,
+      icon: <Handshake className="h-6 w-6 md:h-8 md:w-8" />,
       title: "Give and Grow",
       description: "Volunteer to make an impact in your community",
     },
   ];
+
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
+    <div className="relative w-full max-w-2xl mx-auto px-4 md:px-0">
       <div
-        className="relative bg-white rounded-[30px] shadow-2xl overflow-hidden border-[14px] border-[#1f639e]"
-        style={{ aspectRatio: "4/3" }}
+        className="relative bg-white rounded-[20px] md:rounded-[30px] shadow-2xl overflow-hidden border-[8px] md:border-[14px] border-[#1f639e] flex flex-col"
+        style={{ 
+          aspectRatio: "4/3",
+          maxHeight: "70vh" // Prevents the iPad from being taller than the screen on short viewports
+        }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 p-6 flex flex-col">
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-[#1f639e] rounded-full"></div>
-          <div className="grid grid-cols-2 grid-rows-2 gap-8 h-full w-full place-items-center p-8">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 p-4 md:p-8 flex flex-col items-center justify-center">
+          {/* Home Indicator */}
+          <div className="absolute bottom-2 md:bottom-4 left-1/2 transform -translate-x-1/2 w-16 md:w-24 h-1 bg-[#1f639e] rounded-full opacity-50"></div>
+          
+          {/* Responsive Grid */}
+          <div className="grid grid-cols-2 grid-rows-2 gap-3 md:gap-6 w-full h-full p-2">
             {apps.map((app, index) => (
               <div
                 key={index}
-                className="w-44 h-44 bg-white rounded-xl shadow-lg p-4 flex flex-col items-center justify-center transition-all duration-300 z-10 border border-gray-100 hover:scale-110 hover:shadow-xl animate-float"
+                className="relative group w-full h-full bg-white rounded-lg md:rounded-xl shadow-md flex flex-col items-center justify-center transition-all duration-300 z-10 border border-gray-100 hover:scale-105 hover:shadow-xl animate-float overflow-hidden p-2 md:p-4"
                 style={{
                   animationDelay: `${index * 0.4}s`,
                   animationDuration: "3s",
                 }}
               >
-                <div className="text-[#1f639e] mb-3">{app.icon}</div>
-                <h3 className="font-bold text-sm text-center text-[#1d588a] mb-2">
+                <div className="text-[#1f639e] mb-1 md:mb-3">{app.icon}</div>
+                <h3 className="font-bold text-[10px] sm:text-xs md:text-sm text-center text-[#1d588a] mb-1 leading-tight">
                   {app.title}
                 </h3>
-                <p className="text-xs text-center text-gray-600 px-2">
+                <p className="hidden sm:block text-[9px] md:text-xs text-center text-gray-600 px-1 leading-tight">
                   {app.description}
                 </p>
               </div>
@@ -100,18 +107,13 @@ function IPadWithApps() {
           </div>
         </div>
       </div>
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-[#1f639e] rounded-full"></div>
+      {/* Camera Lens */}
+      <div className="absolute top-2 md:top-4 left-1/2 transform -translate-x-1/2 w-2 h-2 md:w-3 md:h-3 bg-[#1f639e] rounded-full opacity-30"></div>
+      
       <style jsx>{`
         @keyframes float {
-          0% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-10px) rotate(1deg);
-          }
-          100% {
-            transform: translateY(0px) rotate(0deg);
-          }
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-5px) rotate(0.5deg); }
         }
         .animate-float {
           animation: float ease-in-out infinite;
@@ -122,22 +124,31 @@ function IPadWithApps() {
 }
 
 // --- Edge-to-Edge Infinite Partners Carousel (Seamless & Stable) ---
+// --- Edge-to-Edge Infinite Partners Carousel (Seamless & Stable) ---
 function PartnersCarousel() {
-  const animationDuration = `${PARTNERS.length * 7}s`; // Slower, more stable speed
+  // 1. Quadruple the partners to ensure the track is always longer than any screen width
+  const repeatedPartners = [...PARTNERS, ...PARTNERS, ...PARTNERS, ...PARTNERS];
+  
+  // 2. Adjust duration so it doesn't speed up with more items
+  const animationDuration = `${PARTNERS.length * 10}s`; 
 
   return (
     <div
       className="w-full overflow-hidden"
       style={{
-        maskImage:
-          "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
+        // Smooth fade on the edges so it doesn't just "cut off"
+        maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
+        WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
       }}
     >
       <div
         className="flex animate-infinite-scroll"
-        style={{ animationDuration }}
+        style={{ 
+          animationDuration,
+          width: "max-content" 
+        }}
       >
-        {[...PARTNERS, ...PARTNERS].map((partner, index) => (
+        {repeatedPartners.map((partner, index) => (
           <div
             key={`${partner.id}-${index}`}
             className="flex-shrink-0 px-8 flex flex-col items-center"
@@ -149,7 +160,7 @@ function PartnersCarousel() {
                 width={120}
                 height={80}
                 className="object-contain"
-                loading="lazy"
+                priority={index < 10} // Load initial batch immediately
               />
             </div>
             <p className="text-center text-sm font-medium text-[#1d588a] mt-2">
@@ -158,19 +169,25 @@ function PartnersCarousel() {
           </div>
         ))}
       </div>
+
       <style jsx>{`
         @keyframes infinite-scroll {
           from {
             transform: translateX(0);
           }
           to {
-            transform: translateX(-50%);
+            /* 3. Because we have 4 sets of data, moving -25% takes us 
+               exactly to the start of the second set, creating a perfect loop */
+            transform: translateX(-25%);
           }
         }
         .animate-infinite-scroll {
           display: flex;
-          width: max-content;
           animation: infinite-scroll linear infinite;
+        }
+        /* Optional: Pause on hover so people can actually read the names */
+        .animate-infinite-scroll:hover {
+          animation-play-state: paused;
         }
       `}</style>
     </div>

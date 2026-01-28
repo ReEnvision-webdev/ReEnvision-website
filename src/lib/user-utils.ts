@@ -7,7 +7,9 @@ import { eq } from "drizzle-orm";
  * @param userId - The ID of the user
  * @returns The profile picture URL or null if user not found
  */
-export async function getUserProfilePicture(userId: string): Promise<string | null> {
+export async function getUserProfilePicture(
+  userId: string,
+): Promise<string | null> {
   try {
     const [user] = await db
       .select({

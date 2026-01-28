@@ -1,9 +1,52 @@
 {
-  "id": "eb15eecf-1aad-4e15-b96b-9bb755ed50d9",
-  "prevId": "a44b459e-a150-4ab8-8667-33a671e605b2",
+  "id": "79134a75-317a-403a-92d2-16130eaeccc9",
+  "prevId": "eb15eecf-1aad-4e15-b96b-9bb755ed50d9",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.chapters": {
+      "name": "chapters",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "chapter_name": {
+          "name": "chapter_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "chapter_location": {
+          "name": "chapter_location",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "chapter website": {
+          "name": "chapter website",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.events": {
       "name": "events",
       "schema": "",
@@ -165,6 +208,13 @@
         },
         "is_banned": {
           "name": "is_banned",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "is_verified": {
+          "name": "is_verified",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true,

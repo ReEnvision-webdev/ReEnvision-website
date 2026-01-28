@@ -1,6 +1,6 @@
 // src/app/page.tsx
 "use client";
-import { useEffect } from "react"; // Remove useRef if no longer used locally for particles
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -17,18 +17,13 @@ import Link from "next/link";
 import Image from "next/image";
 import AOS from "aos";
 import "aos/dist/aos.css";
-// --- Import ParticlesBackground dynamically ---
 import dynamic from "next/dynamic";
-import Popup from "@/components/Popup";
 
-// Dynamically import ParticlesBackground with SSR disabled
-// This prevents the component (and particles.js) from running during server-side rendering
 const ParticlesBackground = dynamic(
-  () => import("@/components/ParticlesBackground"), // Adjust the path if your component is elsewhere
+  () => import("@/components/ParticlesBackground"),
   { ssr: false },
 );
 
-// --- Partners Array ---
 const PARTNERS = [
   {
     id: 1,
@@ -52,7 +47,6 @@ const PARTNERS = [
   },
 ];
 
-// --- Floating Water Animation for iPad Apps ---
 function IPadWithApps() {
   const apps = [
     {
@@ -127,12 +121,23 @@ function IPadWithApps() {
   );
 }
 
-// --- Edge-to-Edge Infinite Partners Carousel ---
+// --- Edge-to-Edge Infinite Partners Carousel (Seamless & Stable) ---
 function PartnersCarousel() {
+  const animationDuration = `${PARTNERS.length * 7}s`; // Slower, more stable speed
+
   return (
-    <div className="w-full overflow-hidden py-8">
-      <div className="flex animate-infinite-scroll items-center">
-        {[...PARTNERS, ...PARTNERS, ...PARTNERS].map((partner, index) => (
+    <div
+      className="w-full overflow-hidden"
+      style={{
+        maskImage:
+          "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
+      }}
+    >
+      <div
+        className="flex animate-infinite-scroll"
+        style={{ animationDuration }}
+      >
+        {[...PARTNERS, ...PARTNERS].map((partner, index) => (
           <div
             key={`${partner.id}-${index}`}
             className="flex-shrink-0 px-8 flex flex-col items-center"
@@ -155,17 +160,17 @@ function PartnersCarousel() {
       </div>
       <style jsx>{`
         @keyframes infinite-scroll {
-          0% {
+          from {
             transform: translateX(0);
           }
-          100% {
-            transform: translateX(calc(-100% / 3));
+          to {
+            transform: translateX(-50%);
           }
         }
         .animate-infinite-scroll {
           display: flex;
-          width: calc(300%);
-          animation: infinite-scroll 20s linear infinite;
+          width: max-content;
+          animation: infinite-scroll linear infinite;
         }
       `}</style>
     </div>
@@ -193,14 +198,11 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen relative">
-      <Popup />
       {/* Hero Section */}
       <section
         className={`${bgColors.hero} relative w-full overflow-hidden`}
-        style={{ paddingTop: "8rem", paddingBottom: "8rem" }} // py-32 (32 * 0.25rem)
+        style={{ paddingTop: "8rem", paddingBottom: "8rem" }}
       >
-        {/* Use the dynamically imported component */}
-        {/* This will only render on the client side, avoiding the window error */}
         <ParticlesBackground />
         <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-14 items-center relative z-10">
           <div className="space-y-6">
@@ -228,7 +230,7 @@ export default function HomePage() {
               data-aos="fade-up"
               data-aos-delay="400"
             >
-              <Link href="#about1">
+              <Link href="/about">
                 <Button className="bg-[#1f639e] hover:bg-[#00427A] text-[#F0F8FF] px-7 py-3 text-base">
                   Learn More
                 </Button>
@@ -259,13 +261,11 @@ export default function HomePage() {
           <ChevronDown className="h-7 w-7 text-[#1d588a] animate-bounce" />
         </div>
       </section>
+
       {/* Empowering Education - Image on Left, Text on Right */}
       <section className={`${bgColors.empower} py-16`} id="about1">
-        {" "}
-        {/* 2 */}
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Image Column - Now First */}
             <div className="hidden lg:block order-1" data-aos="fade-right">
               <Image
                 src="/images/home/empower-through-tech.jpg"
@@ -275,7 +275,6 @@ export default function HomePage() {
                 className="rounded-lg shadow-lg w-full"
               />
             </div>
-            {/* Text Column - Now Second */}
             <div className="space-y-6 order-2">
               <h2
                 className="text-4xl font-bold text-[#1d588a]"
@@ -326,15 +325,12 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>{" "}
+      </section>
+
       {/* Building Global Communities - Converted to direct TSX, Image on Right */}
       <section className={`${bgColors.community} py-16`}>
-        {" "}
-        {/* 3 */}
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center lg:flex-row-reverse">
-            {" "}
-            {/* Image on right using flex-row-reverse */}
             <div className="space-y-6">
               <h2
                 className="text-4xl font-bold text-[#1d588a]"
@@ -384,8 +380,6 @@ export default function HomePage() {
               </div>
             </div>
             <div className="hidden lg:block" data-aos="fade-left">
-              {" "}
-              {/* Adjusted AOS direction */}
               <Image
                 src="/images/home/building-communities.jpg"
                 alt="Building Global Communities"
@@ -397,10 +391,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
       {/* Our Impact Section */}
       <section className={`${bgColors.impact} py-16`}>
-        {" "}
-        {/* 4 */}
         <div className="container mx-auto px-4">
           <h2
             className="text-3xl font-bold text-center text-[#1d588a] mb-10"
@@ -463,13 +456,10 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
       {/* Partners Carousel - Edge to Edge */}
       <section className={`${bgColors.partners} py-16`}>
-        {" "}
-        {/* 5 - Removed negative margins for edge-to-edge */}
         <div>
-          {" "}
-          {/* Removed px-4 to make content edge-to-edge within the section */}
           <h2
             className="text-3xl font-bold text-center text-[#1d588a] mb-8"
             data-aos="fade-up"

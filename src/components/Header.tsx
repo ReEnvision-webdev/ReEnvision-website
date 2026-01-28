@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -22,6 +21,85 @@ function NavLink({ href, label }: { href: string; label: string }) {
         {label}
       </Button>
     </Link>
+  );
+}
+
+function AboutDropdown() {
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isAboutActive = pathname.startsWith("/about");
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
+      <Link href="/about">
+        <Button
+          variant="ghost"
+          size="sm"
+          className={`hover:bg-[#F0F8FF] hover:text-[#1d588a] ${isAboutActive ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"} `}
+        >
+          About
+          <svg
+            className={`ml-1 h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </Button>
+      </Link>
+
+      {isOpen && (
+        <div className="absolute left-0 mt-0 w-48 bg-[#1d588a] border border-[#00427A] shadow-lg z-50">
+          <Link href="/about/mission">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/about/mission" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+            >
+              Our Mission
+            </Button>
+          </Link>
+          <Link href="/about/who-we-are">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/about/who-we-are" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+            >
+              Who We Are
+            </Button>
+          </Link>
+          <Link href="/about/values">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/about/values" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+            >
+              Our Values
+            </Button>
+          </Link>
+          <Link href="/about/teams">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/about/teams" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+            >
+              Our Teams
+            </Button>
+          </Link>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -94,7 +172,10 @@ function ProfileDropdown() {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
@@ -113,8 +194,11 @@ function ProfileDropdown() {
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
- const profilePictureUrl = user?.image || (user?.profilePicture && user.profilePicture !== "skibiditoilet" ? user.profilePicture : undefined);
-
+  const profilePictureUrl =
+    user?.image ||
+    (user && 'profilePicture' in user && user.profilePicture && user.profilePicture !== "skibiditoilet"
+      ? user.profilePicture
+      : undefined);
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -122,22 +206,25 @@ function ProfileDropdown() {
         className="h-10 w-10 rounded-full bg-gray-300 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-                      {profilePictureUrl ? (
-                <img 
-                  src={profilePictureUrl} 
-                  alt="Profile" 
-                  className="w-full h-full object-cover rounded-full"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.onerror = null; // Prevent infinite loop
-                    target.src = "https://placehold.co/150x150/cccccc/666666?text=Profile"; // Fallback image
-                  }}
-                />
-              ) : (
-                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-500 text-xs">No image</span>
-                </div>
-              )}
+        {profilePictureUrl ? (
+          <Image
+            src={profilePictureUrl as string}
+            alt="Profile"
+            width={40}
+            height={40}
+            className="w-full h-full object-cover rounded-full"
+            onError={e => {
+              const target = e.target as HTMLImageElement;
+              target.onerror = null; // Prevent infinite loop
+              target.src =
+                "https://placehold.co/150x150/cccccc/666666?text=Profile"; // Fallback image
+            }}
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+            <span className="text-gray-500 text-xs">No image</span>
+          </div>
+        )}
       </div>
 
       {isOpen && (
@@ -146,7 +233,8 @@ function ProfileDropdown() {
             <Button
               variant="ghost"
               size="sm"
-              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/settings" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}>
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/settings" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+            >
               User Settings
             </Button>
           </Link>
@@ -171,6 +259,7 @@ function ProfileDropdown() {
 function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [isEventsOpen, setIsEventsOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
   const pathname = usePathname();
   const { data: session, status } = useSession();
 
@@ -202,8 +291,7 @@ function MobileMenu() {
           <div className="flex flex-col space-y-2 p-4">
             {[
               { href: "/", label: "Home" },
-              { href: "/about", label: "About" },
-              { href: "/courses", label: "Courses" },
+              { href: "/chapters", label: "Chapters" },
               { href: "/donate", label: "Donate" },
               { href: "/contact", label: "Contact Us" },
             ].map(({ href, label }) => (
@@ -221,6 +309,71 @@ function MobileMenu() {
                 </Button>
               </Link>
             ))}
+            {/* About Dropdown for Mobile */}
+            <div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className={`justify-between w-full hover:bg-[#F0F8FF] rounded-none ${pathname.startsWith("/about") ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                onClick={() => setIsAboutOpen(!isAboutOpen)}
+              >
+                About
+                <svg
+                  className={`h-4 w-4 transition-transform ${isAboutOpen ? "rotate-180" : ""}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </Button>
+              {isAboutOpen && (
+                <div className="mt-1 ml-4 flex flex-col space-y-1">
+                  <Link href="/about/mission">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`justify-start hover:bg-[#F0F8FF] w-full rounded-none ${pathname === "/about/mission" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                    >
+                      Our Mission
+                    </Button>
+                  </Link>
+                  <Link href="/about/who-we-are">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`justify-start hover:bg-[#F0F8FF] w-full rounded-none ${pathname === "/about/who-we-are" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                    >
+                      Who We Are
+                    </Button>
+                  </Link>
+                  <Link href="/about/values">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`justify-start hover:bg-[#F0F8FF] w-full rounded-none ${pathname === "/about/values" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                    >
+                      Our Values
+                    </Button>
+                  </Link>
+                  <Link href="/about/teams">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`justify-start hover:bg-[#F0F8FF] w-full rounded-none ${pathname === "/about/teams" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                    >
+                      Our Teams
+                    </Button>
+                  </Link>
+                </div>
+              )}
+            </div>
+
             {/* Events Dropdown for Mobile */}
             <div>
               <Button
@@ -280,7 +433,7 @@ function MobileMenu() {
                         : "text-[#F0F8FF]"
                     }`}
                   >
-                    {session?.user?.isAdmin ? "Admin Dashboard" : "Dashboard"}
+                    {session?.user && 'isAdmin' in session.user && session.user.isAdmin ? "Admin Dashboard" : "Dashboard"}
                   </Button>
                 </Link>
                 <Link href="/settings">
@@ -348,8 +501,8 @@ export default function Header() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-3">
           <NavLink href="/" label="Home" />
-          <NavLink href="/about" label="About" />
-          <NavLink href="/courses" label="Courses" />
+          <AboutDropdown />
+          <NavLink href="/chapters" label="Chapters" />
           <EventsDropdown />
           <NavLink href="/donate" label="Donate" />
           <NavLink href="/contact" label="Contact Us" />
@@ -358,19 +511,20 @@ export default function Header() {
         <div className="flex items-center space-x-2">
           {status === "authenticated" ? (
             <div className="hidden md:flex items-center space-x-4">
-                <Link href="/dashboard">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] ${
-                        pathname === "/dashboard"
-                            ? "bg-[#F0F8FF] text-[#1d588a]"
-                            : "text-[#F0F8FF]"
-                        }`}>
-                        {session?.user?.isAdmin ? "Admin Dashboard" : "Dashboard"}
-                    </Button>
-                </Link>
-                <ProfileDropdown />
+              <Link href="/dashboard">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] ${
+                    pathname === "/dashboard"
+                      ? "bg-[#F0F8FF] text-[#1d588a]"
+                      : "text-[#F0F8FF]"
+                  }`}
+                >
+                  {session?.user && 'isAdmin' in session.user && session.user.isAdmin ? "Admin Dashboard" : "Dashboard"}
+                </Button>
+              </Link>
+              <ProfileDropdown />
             </div>
           ) : (
             <Button

@@ -15,6 +15,13 @@
       "when": 1759493963202,
       "tag": "0001_silent_purifiers",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769543353751,
+      "tag": "0002_known_landau",
+      "breakpoints": true
     }
   ]
 }

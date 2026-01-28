@@ -424,7 +424,7 @@ export default function HomePage() {
               data-aos="fade-up"
               data-aos-delay="200"
             >
-              <CardContent className_="space-y-4">
+              <CardContent className="space-y-4">
                 <Link2 className="h-10 w-10 text-[#1f639e] mx-auto" />
                 <div className="text-3xl font-bold text-[#1d588a]">250+</div>
                 <div className="text-[#1d588a] font-medium text-base">

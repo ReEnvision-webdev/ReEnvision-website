@@ -2,6 +2,7 @@ import EventManagement from "@/components/admin/event-management";
 import { checkAuth } from "@/lib/check-auth";
 import { authOptions } from "@/lib/auth.config";
 import { getServerSession } from "next-auth/next";
+import { type Session } from "next-auth";
 import { MessageCircle, Bell } from "lucide-react"; // Corrected import
 import Link from "next/link";
 
@@ -115,7 +116,7 @@ function VerifiedUser() {
 
 export default async function Page() {
   await checkAuth();
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions) as Session | null;
 
   if (session?.user?.isAdmin) {
     return (

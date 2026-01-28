@@ -6,9 +6,10 @@ import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { authOptions } from "@/lib/auth.config";
 import { StandardResponse } from "@/lib/types";
+import { type Session } from "next-auth";
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions) as Session | null;
 
   if (!session || !session.user) {
     const response: StandardResponse = {

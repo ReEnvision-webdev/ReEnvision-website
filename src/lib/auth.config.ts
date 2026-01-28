@@ -1,10 +1,10 @@
 import CredentialsProvider from "next-auth/providers/credentials";
+import type { User } from "next-auth";
 import db from "@/db/database";
 import { usersTable } from "@/db/schema";
 import bcrypt from "bcryptjs";
 import { and, eq } from "drizzle-orm";
-import { Session, User } from "next-auth";
-import { JWT } from "next-auth/jwt";
+
 
 class CredentialError extends Error {
   constructor(message: string) {
@@ -77,13 +77,14 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }: { token: JWT; user?: User }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async jwt({ token, user }: { token: any; user?: any; }) {
       if (user) {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
-        token.isAdmin = user.isAdmin;
-        token.isVerified = user.isVerified;
+        token.isAdmin = (user as User).isAdmin;
+        token.isVerified = (user as User).isVerified;
       } else if (token.id) {
         const dbUser = await db
           .select({
@@ -108,14 +109,13 @@ export const authOptions = {
       }
       return token;
     },
-    async session({ session, token }: { session: Session; token: JWT }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    async session({ session, token }: { session: any; token: any; }) {
       if (token && session.user) {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
-        session.user.profilePicture = token.profilePicture as
-          | string
-          | undefined;
+        session.user.profilePicture = token.profilePicture as string | undefined;
         session.user.isAdmin = token.isAdmin as boolean;
         session.user.isVerified = token.isVerified as boolean;
       }

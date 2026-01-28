@@ -6,10 +6,11 @@ import { and, eq, not } from "drizzle-orm";
 import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { type Session } from "next-auth";
 
 export const POST = async (req: NextRequest) => {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     if (!session?.user?.id) {
       return new NextResponse("Unauthorized", { status: 401 });
     }

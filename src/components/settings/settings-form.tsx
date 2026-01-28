@@ -29,7 +29,15 @@ import {
 import { Pencil } from "lucide-react";
 
 interface SettingsFormProps {
-  user: User | undefined;
+  user?: {
+    id: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    profilePicture?: string;
+    isAdmin: boolean;
+    isVerified: boolean;
+  };
 }
 
 export default function SettingsForm({ user }: SettingsFormProps) {

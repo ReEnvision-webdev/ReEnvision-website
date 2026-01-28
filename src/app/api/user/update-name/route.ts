@@ -4,10 +4,11 @@ import { authOptions } from "@/lib/auth.config";
 import db from "@/db/database";
 import { usersTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { type Session } from "next-auth";
 
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     if (!session || !session.user || !session.user.id) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },

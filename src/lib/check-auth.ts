@@ -1,5 +1,5 @@
 import { authOptions } from "@/lib/auth.config";
-import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 
 export const checkAuth = async () => {

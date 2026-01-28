@@ -218,6 +218,11 @@ export default function EventManagement() {
       }
     }
 
+    const session = await getSession();
+    if (!session?.user || !('id' in session.user) || !session.user.id) {
+      throw new Error("User session not found");
+    }
+    
     const res = await fetch("/api/events", {
       method: "POST",
       headers: {
@@ -229,7 +234,7 @@ export default function EventManagement() {
         event_desc: content.trim(),
         event_date: isoDate,
         image_url: finalImageUrl,
-        user_id: (await getSession())?.user.id,
+        user_id: (session.user as { id: string }).id,
       }),
     });
 

@@ -196,7 +196,7 @@ function ProfileDropdown() {
   }, [pathname]);
   const profilePictureUrl =
     user?.image ||
-    (user?.profilePicture && user.profilePicture !== "skibiditoilet"
+    (user && 'profilePicture' in user && user.profilePicture && user.profilePicture !== "skibiditoilet"
       ? user.profilePicture
       : undefined);
 
@@ -208,7 +208,7 @@ function ProfileDropdown() {
       >
         {profilePictureUrl ? (
           <Image
-            src={profilePictureUrl}
+            src={profilePictureUrl as string}
             alt="Profile"
             width={40}
             height={40}
@@ -433,7 +433,7 @@ function MobileMenu() {
                         : "text-[#F0F8FF]"
                     }`}
                   >
-                    {session?.user?.isAdmin ? "Admin Dashboard" : "Dashboard"}
+                    {session?.user && 'isAdmin' in session.user && session.user.isAdmin ? "Admin Dashboard" : "Dashboard"}
                   </Button>
                 </Link>
                 <Link href="/settings">
@@ -521,7 +521,7 @@ export default function Header() {
                       : "text-[#F0F8FF]"
                   }`}
                 >
-                  {session?.user?.isAdmin ? "Admin Dashboard" : "Dashboard"}
+                  {session?.user && 'isAdmin' in session.user && session.user.isAdmin ? "Admin Dashboard" : "Dashboard"}
                 </Button>
               </Link>
               <ProfileDropdown />

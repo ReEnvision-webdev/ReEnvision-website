@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -29,8 +28,7 @@ function AboutDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  const isAboutActive =
-    pathname.startsWith("/about");
+  const isAboutActive = pathname.startsWith("/about");
 
   return (
     <div
@@ -174,7 +172,10 @@ function ProfileDropdown() {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
@@ -193,8 +194,11 @@ function ProfileDropdown() {
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
- const profilePictureUrl = user?.image || (user?.profilePicture && user.profilePicture !== "skibiditoilet" ? user.profilePicture : undefined);
-
+  const profilePictureUrl =
+    user?.image ||
+    (user?.profilePicture && user.profilePicture !== "skibiditoilet"
+      ? user.profilePicture
+      : undefined);
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -202,24 +206,25 @@ function ProfileDropdown() {
         className="h-10 w-10 rounded-full bg-gray-300 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
       >
-                      {profilePictureUrl ? (
-                <Image 
-                  src={profilePictureUrl} 
-                  alt="Profile" 
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-cover rounded-full"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.onerror = null; // Prevent infinite loop
-                    target.src = "https://placehold.co/150x150/cccccc/666666?text=Profile"; // Fallback image
-                  }}
-                />
-              ) : (
-                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-500 text-xs">No image</span>
-                </div>
-              )}
+        {profilePictureUrl ? (
+          <Image
+            src={profilePictureUrl}
+            alt="Profile"
+            width={40}
+            height={40}
+            className="w-full h-full object-cover rounded-full"
+            onError={e => {
+              const target = e.target as HTMLImageElement;
+              target.onerror = null; // Prevent infinite loop
+              target.src =
+                "https://placehold.co/150x150/cccccc/666666?text=Profile"; // Fallback image
+            }}
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+            <span className="text-gray-500 text-xs">No image</span>
+          </div>
+        )}
       </div>
 
       {isOpen && (
@@ -228,7 +233,8 @@ function ProfileDropdown() {
             <Button
               variant="ghost"
               size="sm"
-              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/settings" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}>
+              className={`w-full justify-start hover:bg-[#F0F8FF] hover:text-[#1d588a] rounded-none ${pathname === "/settings" ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+            >
               User Settings
             </Button>
           </Link>
@@ -505,19 +511,20 @@ export default function Header() {
         <div className="flex items-center space-x-2">
           {status === "authenticated" ? (
             <div className="hidden md:flex items-center space-x-4">
-                <Link href="/dashboard">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] ${
-                        pathname === "/dashboard"
-                            ? "bg-[#F0F8FF] text-[#1d588a]"
-                            : "text-[#F0F8FF]"
-                        }`}>
-                        {session?.user?.isAdmin ? "Admin Dashboard" : "Dashboard"}
-                    </Button>
-                </Link>
-                <ProfileDropdown />
+              <Link href="/dashboard">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className={`bg-transparent border-[#F0F8FF] hover:bg-[#F0F8FF] hover:text-[#1d588a] ${
+                    pathname === "/dashboard"
+                      ? "bg-[#F0F8FF] text-[#1d588a]"
+                      : "text-[#F0F8FF]"
+                  }`}
+                >
+                  {session?.user?.isAdmin ? "Admin Dashboard" : "Dashboard"}
+                </Button>
+              </Link>
+              <ProfileDropdown />
             </div>
           ) : (
             <Button

@@ -1,4 +1,3 @@
-
 // src/app/page.tsx
 "use client";
 import { useEffect } from "react";
@@ -134,7 +133,10 @@ function PartnersCarousel() {
           "linear-gradient(to right, transparent, black 15%, black 85%, transparent)",
       }}
     >
-      <div className="flex animate-infinite-scroll" style={{ animationDuration }}>
+      <div
+        className="flex animate-infinite-scroll"
+        style={{ animationDuration }}
+      >
         {[...PARTNERS, ...PARTNERS].map((partner, index) => (
           <div
             key={`${partner.id}-${index}`}

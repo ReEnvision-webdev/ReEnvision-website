@@ -1,4 +1,3 @@
-
 import { checkAuth } from "@/lib/check-auth";
 import { authOptions } from "@/lib/auth.config";
 import { getServerSession } from "next-auth/next";

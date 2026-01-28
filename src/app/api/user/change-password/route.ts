@@ -9,7 +9,7 @@ import { StandardResponse } from "@/lib/types";
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
-  
+
   if (!session || !session.user) {
     const response: StandardResponse = {
       success: false,
@@ -39,8 +39,6 @@ export async function POST(request: NextRequest) {
       headers: { "Content-Type": "application/json" },
     });
   }
-
-
 
   try {
     // Get the current user from the database using session user id
@@ -106,7 +104,6 @@ export async function POST(request: NextRequest) {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-
   } catch (error) {
     console.error("Error updating password:", error);
 

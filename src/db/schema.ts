@@ -1,4 +1,3 @@
-
 import cuid from "cuid";
 import {
   boolean,
@@ -27,7 +26,7 @@ export const usersTable = pgTable("users", {
   newEmail: varchar("new_email", { length: 255 }),
   newEmailVerificationKey: text("new_email_verification_key"),
   newEmailVerificationKeyExpires: timestamp(
-    "new_email_verification_key_expires"
+    "new_email_verification_key_expires",
   ),
 });
 
@@ -46,9 +45,12 @@ export const eventsTable = pgTable("events", {
 });
 
 export const chaptersTable = pgTable("chapters", {
-    id: text().notNull().primaryKey().$defaultFn(() => cuid()),
-    name: text("chapter_name").notNull(),
-    location: text("chapter_location").notNull(),
-    description: text("description").notNull(),
-    website: text("chapter website"),
+  id: text()
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => cuid()),
+  name: text("chapter_name").notNull(),
+  location: text("chapter_location").notNull(),
+  description: text("description").notNull(),
+  website: text("chapter website"),
 });

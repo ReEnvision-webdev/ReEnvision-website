@@ -11,7 +11,7 @@ export const GET = async (req: NextRequest) => {
     if (!token) {
       return NextResponse.json(
         { success: false, error: "Token is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -28,7 +28,7 @@ export const GET = async (req: NextRequest) => {
       if (user.newEmailVerificationKeyExpires! < new Date()) {
         return NextResponse.json(
           { success: false, error: "Token expired" },
-          { status: 400 }
+          { status: 400 },
         );
       }
 
@@ -60,24 +60,24 @@ export const GET = async (req: NextRequest) => {
       // To distinguish, we could potentially verify based on the raw token
       // But that would be a security risk, so instead we'll just return a message
       // indicating that verification may already be completed
-      
+
       // Let's try to find if there's any user who might have had this token before
       // by checking if the token was recently used for verification.
       // Since we can't identify this directly, we'll return a generic message
       return NextResponse.json(
-        { 
-          success: true, 
-          message: "Email verification already completed or token is invalid", 
-          alreadyVerified: true 
+        {
+          success: true,
+          message: "Email verification already completed or token is invalid",
+          alreadyVerified: true,
         },
-        { status: 200 }
+        { status: 200 },
       );
     }
   } catch (error) {
     console.error("[user/email/verify]", error);
     return NextResponse.json(
       { success: false, error: "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 };

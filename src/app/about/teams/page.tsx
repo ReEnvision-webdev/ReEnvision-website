@@ -1,71 +1,70 @@
-
-'use client';
-import { useEffect } from 'react';
-import Image from 'next/image';
+"use client";
+import { useEffect } from "react";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import AOS from 'aos';
-import 'aos/dist/aos.css';
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const teams = {
   president: {
-    name: 'Sharvin Goyal',
-    role: 'President & Founder',
-    description: 'Leading the vision and strategy of ReEnvision.',
-    image: '/images/about/sharvin.jpg',
+    name: "Sharvin Goyal",
+    role: "President & Founder",
+    description: "Leading the vision and strategy of ReEnvision.",
+    image: "/images/about/sharvin.jpg",
   },
   heads: [
     {
-      name: 'Robert Pierson',
-      role: 'Head of Operations',
-      description: 'Ensuring smooth day-to-day functioning and logistics.',
-      image: '/images/about/robert.jpg',
+      name: "Robert Pierson",
+      role: "Head of Operations",
+      description: "Ensuring smooth day-to-day functioning and logistics.",
+      image: "/images/about/robert.jpg",
     },
     {
-      name: 'Santiago Silva',
-      role: 'Head of Development',
-      description: 'Driving technical projects and team development.',
-      image: '/images/about/santi.jpg',
+      name: "Santiago Silva",
+      role: "Head of Development",
+      description: "Driving technical projects and team development.",
+      image: "/images/about/santi.jpg",
     },
   ],
   leads: [
     {
-      name: 'Elijah Muse-May',
-      role: 'Web Development Lead',
-      description: 'Building and maintaining our digital presence.',
-      image: '/images/about/placeholder.jpg', // Added placeholder
+      name: "Elijah Muse-May",
+      role: "Web Development Lead",
+      description: "Building and maintaining our digital presence.",
+      image: "/images/about/placeholder.jpg", // Added placeholder
     },
     {
-      name: 'Abram Acevado',
-      role: 'Social Media Manager',
-      description: 'Turning our ideas into visuals for the world to see.',
-      image: '/images/about/abram.jpg',
+      name: "Abram Acevado",
+      role: "Social Media Manager",
+      description: "Turning our ideas into visuals for the world to see.",
+      image: "/images/about/abram.jpg",
     },
     {
-      name: 'Azaan Noman',
-      role: 'Organizational Relations and Events Lead',
-      description: 'Connecting with communities and partners.',
-      image: '/images/about/azaan.jpg',
+      name: "Azaan Noman",
+      role: "Organizational Relations and Events Lead",
+      description: "Connecting with communities and partners.",
+      image: "/images/about/azaan.jpg",
     },
     {
-      name: 'Garret Smith',
-      role: 'Finance Lead',
-      description: 'Managing budgets and financial sustainability.',
-      image: '/images/about/garret.jpg',
+      name: "Garret Smith",
+      role: "Finance Lead",
+      description: "Managing budgets and financial sustainability.",
+      image: "/images/about/garret.jpg",
     },
     {
-      name: 'Lily Zhang',
-      role: 'Onboarding and Chapter Management Lead',
-      description: 'Facilitating new member integration and chapter growth.',
-      image: '/images/about/lily.jpg',
-    }
-  ]
-}
+      name: "Lily Zhang",
+      role: "Onboarding and Chapter Management Lead",
+      description: "Facilitating new member integration and chapter growth.",
+      image: "/images/about/lily.jpg",
+    },
+  ],
+};
 
 export default function TeamsPage() {
   useEffect(() => {
     AOS.init({
       duration: 800,
-      easing: 'ease-out-cubic',
+      easing: "ease-out-cubic",
       once: true,
       offset: 100,
     });
@@ -73,13 +72,20 @@ export default function TeamsPage() {
 
   return (
     <div className="flex flex-col min-h-screen items-center pt-[64px] bg-[#f0f8ff]">
-      <div className="h-[50vh] flex flex-col items-center justify-center relative about-hero-img" data-aos="fade-up">
+      <div
+        className="h-[50vh] flex flex-col items-center justify-center relative about-hero-img"
+        data-aos="fade-up"
+      >
         <h1 className="text-3xl md:text-6xl font-bold mb-6 text-[#E0E0E0] mt-8 text-center z-1">
           Our Teams
         </h1>
       </div>
 
-      <div className="w-full max-w-6xl mx-auto p-8" data-aos="fade-up" data-aos-delay="200">
+      <div
+        className="w-full max-w-6xl mx-auto p-8"
+        data-aos="fade-up"
+        data-aos-delay="200"
+      >
         <section id="teams" className="w-full py-8">
           <div className="container mx-auto px-4">
             <h2
@@ -123,7 +129,10 @@ export default function TeamsPage() {
               data-aos-delay="500"
             >
               {teams.heads.map((head, index) => (
-                <Card key={index} className="flex flex-col gap-4 items-center p-4 w-full max-w-xs shadow-md hover:shadow-lg transition-shadow duration-300">
+                <Card
+                  key={index}
+                  className="flex flex-col gap-4 items-center p-4 w-full max-w-xs shadow-md hover:shadow-lg transition-shadow duration-300"
+                >
                   <CardContent className="flex flex-col items-center p-0">
                     <Image
                       src={head.image}
@@ -152,30 +161,33 @@ export default function TeamsPage() {
               data-aos-delay="600"
             >
               {teams.leads.map((lead, index) => (
-                <Card key={index} className={`flex flex-col gap-4 items-center p-4 w-full ${Array.isArray(lead.image) ? 'xl:w-96' : 'xl:w-48'} xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300 ${Array.isArray(lead.image) ? 'sm:col-span-2' : ''}`}>
+                <Card
+                  key={index}
+                  className={`flex flex-col gap-4 items-center p-4 w-full ${Array.isArray(lead.image) ? "xl:w-96" : "xl:w-48"} xl:flex-shrink-0 shadow-md hover:shadow-lg transition-shadow duration-300 ${Array.isArray(lead.image) ? "sm:col-span-2" : ""}`}
+                >
                   <CardContent className="flex flex-col items-center p-0">
-                  {Array.isArray(lead.image) ? (
-                    <div className="flex justify-center gap-4 mb-4">
-                      {lead.image.map((img, i) => (
-                        <Image
-                          key={i}
-                          src={img}
-                          width={112}
-                          height={112}
-                          alt={lead.name}
-                          className="rounded-full border border-[#1f639e] flex-shrink-0"
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    <Image
-                      src={lead.image}
-                      width={112}
-                      height={112}
-                      alt={lead.name}
-                      className="rounded-full mb-3 border border-[#1f639e]"
-                    />
-                  )}
+                    {Array.isArray(lead.image) ? (
+                      <div className="flex justify-center gap-4 mb-4">
+                        {lead.image.map((img, i) => (
+                          <Image
+                            key={i}
+                            src={img}
+                            width={112}
+                            height={112}
+                            alt={lead.name}
+                            className="rounded-full border border-[#1f639e] flex-shrink-0"
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <Image
+                        src={lead.image}
+                        width={112}
+                        height={112}
+                        alt={lead.name}
+                        className="rounded-full mb-3 border border-[#1f639e]"
+                      />
+                    )}
                     <h3 className="text-md font-semibold text-[#1f639e] text-center">
                       {lead.name}
                     </h3>

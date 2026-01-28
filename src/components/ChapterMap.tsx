@@ -1,53 +1,71 @@
-
 "use client";
 
 import React, { useState } from "react";
-import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  Marker,
+} from "react-simple-maps";
 
 const geoUrl = "/maps/world-110m.json";
 
-const markers = [
+interface MarkerType {
+  markerOffset: number;
+  name: string;
+  location: string;
+  description: string;
+  coordinates: [number, number];
+}
+
+const markers: MarkerType[] = [
   {
     markerOffset: -15,
     name: "Main Chapter",
     location: "Houston, TX",
-    description: "Our main chapter, located in Houston, open to all members globally.",
-    coordinates: [-95.3698, 29.7604] as [number, number],
+    description:
+      "Our main chapter, located in Houston, open to all members globally.",
+    coordinates: [-95.3698, 29.7604],
   },
   {
     markerOffset: 25,
     name: "Bogota",
     location: "Bogota, Colombia",
     description: "A growing chapter in the heart of Colombia.",
-    coordinates: [-74.0721, 4.7110] as [number, number],
+    coordinates: [-74.0721, 4.711],
   },
   {
     markerOffset: 25,
     name: "San Diego",
     location: "San Diego, CA",
     description: "Connecting members in Southern California.",
-    coordinates: [-117.1611, 32.7157] as [number, number],
+    coordinates: [-117.1611, 32.7157],
   },
   {
     markerOffset: -15,
     name: "Enterprise",
     location: "Enterprise, AL",
     description: "A hub for innovation in Alabama.",
-    coordinates: [-85.8580, 31.3157] as [number, number],
+    coordinates: [-85.858, 31.3157],
   },
 ];
 
 const ChapterMap = () => {
-  const [tooltip, setTooltip] = useState<any>(null);
+  const [tooltip, setTooltip] = useState<MarkerType | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleMouseMove = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  ) => {
     const { clientX, clientY } = event;
     setMousePosition({ x: clientX, y: clientY });
   };
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }} onMouseMove={handleMouseMove}>
+    <div
+      style={{ position: "relative", width: "100%", height: "100%" }}
+      onMouseMove={handleMouseMove}
+    >
       <ComposableMap
         projection="geoMercator"
         projectionConfig={{
@@ -58,7 +76,7 @@ const ChapterMap = () => {
       >
         <Geographies geography={geoUrl}>
           {({ geographies }) =>
-            geographies.map((geo) => (
+            geographies.map(geo => (
               <Geography
                 key={geo.rsmKey}
                 geography={geo}
@@ -68,7 +86,7 @@ const ChapterMap = () => {
             ))
           }
         </Geographies>
-        {markers.map((marker) => (
+        {markers.map(marker => (
           <Marker
             key={marker.name}
             coordinates={marker.coordinates}

@@ -1,4 +1,3 @@
-
 import EventManagement from "@/components/admin/event-management";
 import { checkAuth } from "@/lib/check-auth";
 import { authOptions } from "@/lib/auth.config";
@@ -27,7 +26,7 @@ function UnverifiedUser({ name }: { name: string }) {
               rel="noopener noreferrer"
               className="flex flex-col items-center text-[#1d588a] hover:text-[#00427A] transition-colors"
             >
-              <MessageCircle className="w-12 h-12 mb-2" /> 
+              <MessageCircle className="w-12 h-12 mb-2" />
               <span>Discord</span>
             </Link>
             <Link

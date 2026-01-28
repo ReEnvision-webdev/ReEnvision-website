@@ -1,4 +1,3 @@
-
 import CredentialsProvider from "next-auth/providers/credentials";
 import db from "@/db/database";
 import { usersTable } from "@/db/schema";
@@ -98,7 +97,7 @@ export const authOptions = {
           .from(usersTable)
           .where(eq(usersTable.id, token.id as string))
           .limit(1);
-        
+
         if (dbUser[0]) {
           token.name = dbUser[0].name;
           token.email = dbUser[0].email;
@@ -114,7 +113,9 @@ export const authOptions = {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
-        session.user.profilePicture = token.profilePicture as string | undefined;
+        session.user.profilePicture = token.profilePicture as
+          | string
+          | undefined;
         session.user.isAdmin = token.isAdmin as boolean;
         session.user.isVerified = token.isVerified as boolean;
       }

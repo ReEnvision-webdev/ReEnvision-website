@@ -187,6 +187,7 @@ export default function AdminApprovalWorkflow() {
 
   const openReviewModal = (entry: any) => {
     setCurrentEntry(entry);
+    setComments(entry.adminComments || ''); // Initialize with existing comment
     setShowReviewModal(true);
   };
 
@@ -335,14 +336,29 @@ export default function AdminApprovalWorkflow() {
                                   ) : (
                                     <p className="text-gray-600 italic">No comments yet</p>
                                   )}
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="mt-2"
-                                    onClick={() => openReviewModal(activity)}
-                                  >
-                                    <MessageSquareIcon className="w-4 h-4 mr-1" /> Add Comment
-                                  </Button>
+                                  <div className="flex gap-2 mt-2">
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => openReviewModal(activity)}
+                                    >
+                                      <MessageSquareIcon className="w-4 h-4 mr-1" /> Add/Edit Comment
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      onClick={() => approveSingle(activity.id)}
+                                      className="bg-green-600 hover:bg-green-700 text-white"
+                                    >
+                                      Approve
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="destructive"
+                                      onClick={() => rejectSingle(activity.id)}
+                                    >
+                                      Deny
+                                    </Button>
+                                  </div>
                                 </div>
                               </div>
                             </td>
@@ -380,15 +396,95 @@ export default function AdminApprovalWorkflow() {
               </thead>
               <tbody>
                 {approvedActivities.map((activity) => (
-                  <tr key={activity.id} className="border-b hover:bg-gray-50">
-                    <td className="py-3 px-4">{activity.studentName}</td>
-                    <td className="py-3 px-4">{activity.activityName}</td>
-                    <td className="py-3 px-4">{formatDate(activity.date)}</td>
-                    <td className="py-3 px-4">{activity.hours} hrs</td>
-                    <td className="py-3 px-4">
-                      <Badge variant="default">Approved</Badge>
-                    </td>
-                  </tr>
+                  <Fragment key={activity.id}>
+                    <tr className="border-b hover:bg-gray-50">
+                      <td className="py-3 px-4">{activity.studentName}</td>
+                      <td className="py-3 px-4">{activity.activityName}</td>
+                      <td className="py-3 px-4">{formatDate(activity.date)}</td>
+                      <td className="py-3 px-4">{activity.hours} hrs</td>
+                      <td className="py-3 px-4">
+                        <Badge variant={activity.approved === true ? 'default' : 'destructive'}>
+                          {activity.approved === true ? 'Approved' : 'Rejected'}
+                        </Badge>
+                      </td>
+                      <td className="py-3 px-4 align-top">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleExpandRow(activity.id)}
+                        >
+                          {expandedRows.includes(activity.id) ?
+                            <ChevronUpIcon className="w-4 h-4" /> :
+                            <ChevronDownIcon className="w-4 h-4" />
+                          }
+                        </Button>
+                      </td>
+                    </tr>
+
+                    {expandedRows.includes(activity.id) && (
+                      <tr>
+                        <td colSpan={6} className="py-4 px-4 bg-gray-50">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                              <h4 className="font-medium text-gray-700 mb-2">Reflection</h4>
+                              <p className="text-gray-600 whitespace-pre-line break-words">{activity.reflection}</p>
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-700 mb-2">Comments</h4>
+                              {activity.adminComments ? (
+                                <p className="text-gray-600 whitespace-pre-line break-words">{activity.adminComments}</p>
+                              ) : (
+                                <p className="text-gray-600 italic">No comments yet</p>
+                              )}
+                              <div className="flex gap-2 mt-2">
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => openReviewModal(activity)}
+                                >
+                                  <MessageSquareIcon className="w-4 h-4 mr-1" /> Add/Edit Comment
+                                </Button>
+                                {activity.approved === true && (
+                                  <Button
+                                    size="sm"
+                                    variant="destructive"
+                                    onClick={async () => {
+                                      // Veto the approval (change to rejected)
+                                      const response = await fetch('/api/hours', {
+                                        method: 'PUT',
+                                        headers: {
+                                          'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify({
+                                          id: activity.id,
+                                          approved: false,
+                                          adminComments: activity.adminComments // Keep existing comments
+                                        }),
+                                      });
+
+                                      if (response.ok) {
+                                        const updatedActivity = await response.json();
+
+                                        // Move from approved list to pending list
+                                        setApprovedActivities(prev =>
+                                          prev.filter(item => item.id !== activity.id)
+                                        );
+                                        setPendingActivities(prev =>
+                                          [...prev, updatedActivity]
+                                        );
+                                      }
+                                    }}
+                                  >
+                                    Veto Approval
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
                 ))}
               </tbody>
             </table>
@@ -427,10 +523,6 @@ export default function AdminApprovalWorkflow() {
                     <Label>Hours</Label>
                     <p>{currentEntry.hours} hrs</p>
                   </div>
-                  <div>
-                    <Label>Supervisor</Label>
-                    <p>{currentEntry.supervisor} ({currentEntry.supervisorEmail})</p>
-                  </div>
                 </div>
               </div>
               
@@ -457,27 +549,46 @@ export default function AdminApprovalWorkflow() {
                     variant="outline"
                     onClick={() => setShowReviewModal(false)}
                   >
-                    Cancel
+                    Close
                   </Button>
                   <Button
-                    className="bg-green-600 hover:bg-green-700"
+                    className="bg-[#1d588a] hover:bg-[#00427A]"
                     onClick={async () => {
-                      await approveSingle(currentEntry.id);
+                      // Update only the comments for the entry
+                      const response = await fetch('/api/hours', {
+                        method: 'PUT',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          id: currentEntry.id,
+                          approved: currentEntry.approved, // Keep the current approval status
+                          adminComments: comments
+                        }),
+                      });
+
+                      if (response.ok) {
+                        const updatedActivity = await response.json();
+
+                        // Update the state with the new comment
+                        if (currentEntry.approved !== null) {
+                          // If it's in the approved list, update it there
+                          setApprovedActivities(prev =>
+                            prev.map(item => item.id === updatedActivity.id ? updatedActivity : item)
+                          );
+                        } else {
+                          // If it's in the pending list, update it there
+                          setPendingActivities(prev =>
+                            prev.map(item => item.id === updatedActivity.id ? updatedActivity : item)
+                          );
+                        }
+                      }
+
                       setShowReviewModal(false);
                       setComments('');
                     }}
                   >
-                    Approve
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    onClick={async () => {
-                      await rejectSingle(currentEntry.id);
-                      setShowReviewModal(false);
-                      setComments('');
-                    }}
-                  >
-                    Reject
+                    Save Comment
                   </Button>
                 </div>
               </div>

@@ -354,9 +354,9 @@ export default function StudentDashboard() {
                                 <p className="text-[#6b7280] whitespace-pre-line break-words">{activity.reflection}</p>
                               </div>
                               <div>
-                                <h4 className="font-medium text-[#1d588a] mb-2">Comments</h4>
-                                {activity.comments ? (
-                                  <p className="text-[#6b7280] whitespace-pre-line break-words">{activity.comments}</p>
+                                <h4 className="font-medium text-[#1d588a] mb-2">Admin Comments</h4>
+                                {activity.adminComments ? (
+                                  <p className="text-[#6b7280] whitespace-pre-line break-words">{activity.adminComments}</p>
                                 ) : (
                                   <p className="text-[#6b7280] italic">No comments from admin</p>
                                 )}

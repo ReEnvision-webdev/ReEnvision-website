@@ -109,9 +109,7 @@ export default function StudentDashboard() {
 
     if (hour >= 5 && hour < 12) {
       return 'Good morning';
-    } else if (hour >= 12 && hour < 14) {
-      return 'Good noon';
-    } else if (hour >= 14 && hour < 18) {
+    } else if (hour >= 12 && hour < 18) {
       return 'Good afternoon';
     } else if (hour >= 18 && hour < 22) {
       return 'Good evening';

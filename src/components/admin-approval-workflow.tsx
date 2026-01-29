@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,13 +25,39 @@ const mockApprovedActivities = [
 ];
 
 export default function AdminApprovalWorkflow() {
-  const [pendingActivities, setPendingActivities] = useState(mockPendingActivities);
-  const [approvedActivities, setApprovedActivities] = useState(mockApprovedActivities);
+  const [pendingActivities, setPendingActivities] = useState<any[]>([]);
+  const [approvedActivities, setApprovedActivities] = useState<any[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [currentEntry, setCurrentEntry] = useState<any>(null);
   const [comments, setComments] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHours = async () => {
+      try {
+        const response = await fetch('/api/hours');
+        if (response.ok) {
+          const data = await response.json();
+          // Separate pending and approved/rejected activities
+          const pending = data.filter((activity: any) => activity.approved === null);
+          const approvedOrRejected = data.filter((activity: any) => activity.approved !== null);
+
+          setPendingActivities(pending);
+          setApprovedActivities(approvedOrRejected);
+        } else {
+          console.error('Failed to fetch hours:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching hours:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHours();
+  }, []);
 
   const toggleSelectAll = () => {
     if (selectedIds.length === pendingActivities.length) {
@@ -57,54 +83,128 @@ export default function AdminApprovalWorkflow() {
     }
   };
 
-  const approveSelected = () => {
-    const updatedActivities = pendingActivities.filter(
-      activity => !selectedIds.includes(activity.id)
-    );
+  const approveSelected = async () => {
+    try {
+      // Process each selected item
+      for (const id of selectedIds) {
+        await fetch('/api/hours', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id, approved: true, adminComments: comments }),
+        });
+      }
 
-    // Move approved activities to approved list
-    const approved = pendingActivities.filter(
-      activity => selectedIds.includes(activity.id)
-    ).map(activity => ({ ...activity, status: 'approved' }));
+      // Update the local state after all approvals
+      const updatedPending = pendingActivities.filter(
+        activity => !selectedIds.includes(activity.id)
+      );
 
-    setPendingActivities(updatedActivities);
-    setApprovedActivities([...approvedActivities, ...approved]);
-    setSelectedIds([]);
+      setPendingActivities(updatedPending);
+      setSelectedIds([]);
+      setComments('');
+    } catch (error) {
+      console.error('Error approving selected hours:', error);
+    }
   };
 
-  const denySelected = () => {
-    const updatedActivities = pendingActivities.filter(
-      activity => !selectedIds.includes(activity.id)
-    );
+  const denySelected = async () => {
+    try {
+      // Process each selected item
+      for (const id of selectedIds) {
+        await fetch('/api/hours', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id, approved: false, adminComments: comments }),
+        });
+      }
 
-    // For denied activities, we can either remove them or add them to a separate denied list
-    // For now, we'll just remove them from pending (similar to rejection)
-    setPendingActivities(updatedActivities);
-    setSelectedIds([]);
+      // Update the local state after all denials
+      const updatedPending = pendingActivities.filter(
+        activity => !selectedIds.includes(activity.id)
+      );
+
+      setPendingActivities(updatedPending);
+      setSelectedIds([]);
+      setComments('');
+    } catch (error) {
+      console.error('Error denying selected hours:', error);
+    }
   };
 
-  const approveSingle = (id: number) => {
-    const activity = pendingActivities.find(a => a.id === id);
-    if (!activity) return;
+  const approveSingle = async (id: number) => {
+    try {
+      const response = await fetch('/api/hours', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id, approved: true, adminComments: comments }),
+      });
 
-    const updatedPending = pendingActivities.filter(a => a.id !== id);
-    setPendingActivities(updatedPending);
-    setApprovedActivities([...approvedActivities, { ...activity, status: 'approved' }]);
+      if (response.ok) {
+        const updatedActivity = await response.json();
+        // Remove from pending and add to approved
+        const updatedPending = pendingActivities.filter(a => a.id !== id);
+        setPendingActivities(updatedPending);
+        setApprovedActivities([...approvedActivities, updatedActivity]);
+        setComments('');
+      } else {
+        console.error('Failed to approve hours:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error approving hours:', error);
+    }
   };
 
-  const rejectSingle = (id: number) => {
-    const activity = pendingActivities.find(a => a.id === id);
-    if (!activity) return;
+  const rejectSingle = async (id: number) => {
+    try {
+      const response = await fetch('/api/hours', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id, approved: false, adminComments: comments }),
+      });
 
-    const updatedPending = pendingActivities.filter(a => a.id !== id);
-    setPendingActivities(updatedPending);
-    // In a real app, we might want to store rejected activities separately
-    // For now, we'll just remove them from the pending list
+      if (response.ok) {
+        const updatedActivity = await response.json();
+        // Remove from pending and add to approved/rejected list
+        const updatedPending = pendingActivities.filter(a => a.id !== id);
+        setPendingActivities(updatedPending);
+        setApprovedActivities([...approvedActivities, updatedActivity]);
+        setComments('');
+      } else {
+        console.error('Failed to reject hours:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error rejecting hours:', error);
+    }
   };
 
   const openReviewModal = (entry: any) => {
     setCurrentEntry(entry);
     setShowReviewModal(true);
+  };
+
+  const formatDate = (dateString: string) => {
+    // Handle ISO date strings properly to prevent timezone shifts
+    // If dateString is in YYYY-MM-DD format, treat it as local date
+    let date: Date;
+    if (dateString.includes('T')) {
+      // If it's an ISO string with time, create date object directly
+      date = new Date(dateString);
+    } else {
+      // If it's just YYYY-MM-DD, treat as local date to avoid timezone shift
+      const [year, month, day] = dateString.split('-').map(Number);
+      date = new Date(year, month - 1, day); // month is 0-indexed
+    }
+
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString(undefined, options);
   };
 
   return (
@@ -180,7 +280,7 @@ export default function AdminApprovalWorkflow() {
                           </td>
                           <td className="py-3 px-4">{activity.studentName}</td>
                           <td className="py-3 px-4">{activity.activityName}</td>
-                          <td className="py-3 px-4">{activity.date}</td>
+                          <td className="py-3 px-4">{formatDate(activity.date)}</td>
                           <td className="py-3 px-4">{activity.hours} hrs</td>
                           <td className="py-3 px-4">
                             <Badge variant={activity.daysPending > 7 ? 'destructive' : 'secondary'}>
@@ -226,11 +326,15 @@ export default function AdminApprovalWorkflow() {
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                   <h4 className="font-medium text-gray-700 mb-2">Reflection</h4>
-                                  <p className="text-gray-600">{activity.reflection}</p>
+                                  <p className="text-gray-600 whitespace-pre-line break-words">{activity.reflection}</p>
                                 </div>
                                 <div>
                                   <h4 className="font-medium text-gray-700 mb-2">Comments</h4>
-                                  <p className="text-gray-600 italic">No comments yet</p>
+                                  {activity.adminComments ? (
+                                    <p className="text-gray-600 whitespace-pre-line break-words">{activity.adminComments}</p>
+                                  ) : (
+                                    <p className="text-gray-600 italic">No comments yet</p>
+                                  )}
                                   <Button
                                     size="sm"
                                     variant="outline"
@@ -279,7 +383,7 @@ export default function AdminApprovalWorkflow() {
                   <tr key={activity.id} className="border-b hover:bg-gray-50">
                     <td className="py-3 px-4">{activity.studentName}</td>
                     <td className="py-3 px-4">{activity.activityName}</td>
-                    <td className="py-3 px-4">{activity.date}</td>
+                    <td className="py-3 px-4">{formatDate(activity.date)}</td>
                     <td className="py-3 px-4">{activity.hours} hrs</td>
                     <td className="py-3 px-4">
                       <Badge variant="default">Approved</Badge>
@@ -317,7 +421,7 @@ export default function AdminApprovalWorkflow() {
                   </div>
                   <div>
                     <Label>Date</Label>
-                    <p>{currentEntry.date}</p>
+                    <p>{formatDate(currentEntry.date)}</p>
                   </div>
                   <div>
                     <Label>Hours</Label>
@@ -332,7 +436,7 @@ export default function AdminApprovalWorkflow() {
               
               <div>
                 <h3 className="font-medium text-lg mb-4">Reflection</h3>
-                <div className="bg-gray-50 p-4 rounded-md min-h-[100px]">
+                <div className="bg-gray-50 p-4 rounded-md min-h-[100px] whitespace-pre-line break-words">
                   {currentEntry.reflection}
                 </div>
 
@@ -349,26 +453,26 @@ export default function AdminApprovalWorkflow() {
                 </div>
                 
                 <div className="flex justify-end gap-2 mt-6">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     onClick={() => setShowReviewModal(false)}
                   >
                     Cancel
                   </Button>
-                  <Button 
+                  <Button
                     className="bg-green-600 hover:bg-green-700"
-                    onClick={() => {
-                      approveSingle(currentEntry.id);
+                    onClick={async () => {
+                      await approveSingle(currentEntry.id);
                       setShowReviewModal(false);
                       setComments('');
                     }}
                   >
                     Approve
                   </Button>
-                  <Button 
+                  <Button
                     variant="destructive"
-                    onClick={() => {
-                      rejectSingle(currentEntry.id);
+                    onClick={async () => {
+                      await rejectSingle(currentEntry.id);
                       setShowReviewModal(false);
                       setComments('');
                     }}

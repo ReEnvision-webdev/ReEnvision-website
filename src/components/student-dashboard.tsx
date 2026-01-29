@@ -4,9 +4,40 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useEffect } from 'react';
 import { PlusIcon, UploadIcon, ClockIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import HoursLogForm from '@/components/hours-log-form';
+import { useSession } from 'next-auth/react';
+
+// Log Hours Form Component
+function LogHoursFormComponent({ onClose, onAddNewHour }: { onClose: () => void; onAddNewHour: (newHour: any) => void }) {
+  const handleSubmit = async (data: any) => {
+    try {
+      const response = await fetch('/api/hours', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        // Refresh the hours data after successful submission
+        const newHour = await response.json();
+        onAddNewHour(newHour);
+        onClose(); // Close the dialog after submission
+      } else {
+        console.error('Failed to submit hours:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error submitting hours:', error);
+    }
+  };
+
+  return (
+    <HoursLogForm onSubmit={handleSubmit} onCancel={onClose} />
+  );
+}
 
 // Mock data for demonstration
 const mockActivities = [
@@ -17,17 +48,43 @@ const mockActivities = [
   { id: 5, name: 'Senior Center Visits', date: '2024-01-05', hours: 3.5, status: 'pending', reflection: 'I visited the senior center and organized various activities including trivia games and craft sessions. Listening to the seniors stories provided valuable insights into history and life experiences I wouldnt have otherwise known. I learned patience and gained appreciation for the wisdom of older generations. The experience highlighted the importance of social connection for elderly individuals and how loneliness can significantly impact their wellbeing. This motivated me to establish a regular visiting schedule and consider organizing intergenerational programs.', comments: '' },
 ];
 
-const totalGoalHours = 50;
-const loggedHours = 25;
 
 export default function StudentDashboard() {
-  const [activities] = useState(mockActivities);
+  const { data: session, status } = useSession();
+  const [activities, setActivities] = useState<any[]>([]);
   const [showLogForm, setShowLogForm] = useState(false);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Calculate progress percentage
-  const progressPercentage = Math.min(100, (loggedHours / totalGoalHours) * 100);
-  const remainingHours = totalGoalHours - loggedHours;
+  useEffect(() => {
+    const fetchHours = async () => {
+      try {
+        const response = await fetch('/api/hours');
+        if (response.ok) {
+          const data = await response.json();
+          setActivities(data);
+        } else {
+          console.error('Failed to fetch hours:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching hours:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHours();
+  }, []);
+
+  // Calculate progress percentage based on approved hours
+  const approvedHours = activities
+    .filter(activity => activity.approved === true)
+    .reduce((sum, activity) => sum + parseFloat(activity.hours || 0), 0);
+
+  // Get total goal hours from user profile (fallback to 50 if not available)
+  const totalGoalHours = 50; // This could come from user profile in the future
+  const progressPercentage = totalGoalHours > 0 ? Math.min(100, (approvedHours / totalGoalHours) * 100) : 0;
+  const remainingHours = totalGoalHours - approvedHours;
 
   const toggleExpandRow = (id: number) => {
     if (expandedRows.includes(id)) {
@@ -37,13 +94,48 @@ export default function StudentDashboard() {
     }
   };
 
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 12) {
+      return 'Good morning';
+    } else if (hour >= 12 && hour < 14) {
+      return 'Good noon';
+    } else if (hour >= 14 && hour < 18) {
+      return 'Good afternoon';
+    } else if (hour >= 18 && hour < 22) {
+      return 'Good evening';
+    } else {
+      return 'Good night';
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    // Handle ISO date strings properly to prevent timezone shifts
+    // If dateString is in YYYY-MM-DD format, treat it as local date
+    let date: Date;
+    if (dateString.includes('T')) {
+      // If it's an ISO string with time, create date object directly
+      date = new Date(dateString);
+    } else {
+      // If it's just YYYY-MM-DD, treat as local date to avoid timezone shift
+      const [year, month, day] = dateString.split('-').map(Number);
+      date = new Date(year, month - 1, day); // month is 0-indexed
+    }
+
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString(undefined, options);
+  };
+
   return (
     <div className="bg-[#F0F8FF] min-h-screen py-8 px-4 pt-30">
       <div className="max-w-6xl mx-auto">
         {/* Header with quick action bar */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-[#1d588a]">Good afternoon, Alex!</h1>
+            <h1 className="text-3xl font-bold text-[#1d588a]">
+              {getGreeting()}, {session?.user?.name || 'User'}!
+            </h1>
             <p className="text-[#6b7280] mt-2">Track your volunteer hours and stay on target with your goals</p>
           </div>
 
@@ -62,7 +154,10 @@ export default function StudentDashboard() {
                     Enter the details of your volunteer activity
                   </DialogDescription>
                 </DialogHeader>
-                <LogHoursForm onClose={() => setShowLogForm(false)} />
+                <LogHoursFormComponent
+                  onClose={() => setShowLogForm(false)}
+                  onAddNewHour={(newHour) => setActivities(prev => [...prev, newHour])}
+                />
               </DialogContent>
             </Dialog>
           </div>
@@ -74,7 +169,7 @@ export default function StudentDashboard() {
           <Card className="bg-white shadow-lg rounded-xl">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg text-[#1d588a]">Hours Completed</CardTitle>
-              <CardDescription className="text-[#6b7280]">You've completed {loggedHours} of {totalGoalHours} required hours</CardDescription>
+              <CardDescription className="text-[#6b7280]">You've completed {approvedHours} of {totalGoalHours} required hours</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -104,7 +199,7 @@ export default function StudentDashboard() {
                     />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-2xl font-bold text-[#1d588a]">{loggedHours}</span>
+                    <span className="text-2xl font-bold text-[#1d588a]">{approvedHours}</span>
                     <span className="text-sm text-[#6b7280]">of {totalGoalHours}</span>
                   </div>
                 </div>
@@ -165,7 +260,7 @@ export default function StudentDashboard() {
                       stroke="#ff6b6b"
                       strokeWidth="8"
                       strokeLinecap="round"
-                      strokeDasharray={`${((totalGoalHours - loggedHours) / totalGoalHours) * 283} 283`}
+                      strokeDasharray={`${((totalGoalHours - approvedHours) / totalGoalHours) * 283} 283`}
                       transform="rotate(-90 50 50)"
                     />
                   </svg>
@@ -222,16 +317,18 @@ export default function StudentDashboard() {
                   {activities.map((activity) => (
                     <Fragment key={activity.id}>
                       <tr className="border-b hover:bg-gray-50">
-                        <td className="py-3 px-4 text-[#1d588a]">{activity.name}</td>
-                        <td className="py-3 px-4 text-[#6b7280]">{activity.date}</td>
+                        <td className="py-3 px-4 text-[#1d588a]">{activity.activityName || activity.name}</td>
+                        <td className="py-3 px-4 text-[#6b7280]">{formatDate(activity.date)}</td>
                         <td className="py-3 px-4 text-[#1d588a]">{activity.hours} hrs</td>
                         <td className="py-3 px-4">
                           <Badge
-                            variant={activity.status === 'approved' ? 'default' :
-                                    activity.status === 'pending' ? 'secondary' :
-                                    'destructive'}
+                            variant={activity.approved === true ? 'default' :  // approved
+                                    activity.approved === false ? 'destructive' :  // rejected
+                                    'secondary'} // pending (when approved is null)
                           >
-                            {activity.status.charAt(0).toUpperCase() + activity.status.slice(1)}
+                            {activity.approved === true ? 'Approved' :
+                             activity.approved === false ? 'Rejected' :
+                             'Pending'}
                           </Badge>
                         </td>
                         <td className="py-3 px-4 align-top">
@@ -254,12 +351,12 @@ export default function StudentDashboard() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                               <div>
                                 <h4 className="font-medium text-[#1d588a] mb-2">Reflection</h4>
-                                <p className="text-[#6b7280]">{activity.reflection}</p>
+                                <p className="text-[#6b7280] whitespace-pre-line break-words">{activity.reflection}</p>
                               </div>
                               <div>
                                 <h4 className="font-medium text-[#1d588a] mb-2">Comments</h4>
                                 {activity.comments ? (
-                                  <p className="text-[#6b7280]">{activity.comments}</p>
+                                  <p className="text-[#6b7280] whitespace-pre-line break-words">{activity.comments}</p>
                                 ) : (
                                   <p className="text-[#6b7280] italic">No comments from admin</p>
                                 )}
@@ -280,15 +377,3 @@ export default function StudentDashboard() {
   );
 }
 
-// Log Hours Form Component
-function LogHoursForm({ onClose }: { onClose: () => void }) {
-  const handleSubmit = (data: any) => {
-    // In a real app, this would submit to the backend
-    console.log('Form submitted:', data);
-    onClose(); // Close the dialog after submission
-  };
-
-  return (
-    <HoursLogForm onSubmit={handleSubmit} onCancel={onClose} />
-  );
-}

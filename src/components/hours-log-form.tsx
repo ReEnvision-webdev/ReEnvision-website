@@ -64,8 +64,6 @@ export default function HoursLogForm({ onSubmit, onCancel, initialData }: HoursL
 
     if (!formData.reflection.trim()) {
       newErrors.reflection = 'Reflection is required';
-    } else if (formData.reflection.trim().length < 120) {
-      newErrors.reflection = 'Reflection must be at least 120 characters';
     }
 
     setErrors(newErrors);
@@ -134,9 +132,15 @@ export default function HoursLogForm({ onSubmit, onCancel, initialData }: HoursL
                       type="date"
                       value={formData.date}
                       onChange={handleChange}
-                      className={`pl-10 ${errors.date ? 'border-red-500' : ''} text-[#1d588a]`}
+                      className={`pr-10 ${errors.date ? 'border-red-500' : ''} text-[#1d588a] [appearance:textfield] [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden`}
                     />
-                    <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#1d588a]" />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#1d588a] cursor-pointer"
+                      onClick={() => document.getElementById('date')?.showPicker()}
+                    >
+                      <CalendarIcon className="w-4 h-4" />
+                    </button>
                   </div>
                   {errors.date && (
                     <p className="text-red-500 text-sm">{errors.date}</p>
@@ -178,7 +182,7 @@ export default function HoursLogForm({ onSubmit, onCancel, initialData }: HoursL
                   <p className="text-red-500 text-sm">{errors.reflection}</p>
                 )}
                 <p className="text-sm text-[#6b7280]">
-                  {formData.reflection.length}/120 characters minimum
+                  {formData.reflection.length} characters
                 </p>
               </div>
             </div>

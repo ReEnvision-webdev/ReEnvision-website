@@ -5,13 +5,34 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useState, Fragment, useEffect } from 'react';
-import { PlusIcon, UploadIcon, ClockIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { PlusIcon, ClockIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import HoursLogForm from '@/components/hours-log-form';
 import { useSession } from 'next-auth/react';
 
+// Define types for the activity objects
+interface Activity {
+  id: number;
+  activityName?: string;
+  name?: string;
+  date: string;
+  hours: string | number;
+  status?: string;
+  approved?: boolean | null;
+  reflection: string;
+  adminComments?: string;
+}
+
+// Define the form data type to match HoursLogForm expectations
+interface HoursLogFormData {
+  activityName: string;
+  date: string;
+  hours: string;
+  reflection: string;
+}
+
 // Log Hours Form Component
-function LogHoursFormComponent({ onClose, onAddNewHour }: { onClose: () => void; onAddNewHour: (newHour: any) => void }) {
-  const handleSubmit = async (data: any) => {
+function LogHoursFormComponent({ onClose, onAddNewHour }: { onClose: () => void; onAddNewHour: (newHour: Activity) => void }) {
+  const handleSubmit = async (data: HoursLogFormData) => {
     try {
       const response = await fetch('/api/hours', {
         method: 'POST',
@@ -23,7 +44,7 @@ function LogHoursFormComponent({ onClose, onAddNewHour }: { onClose: () => void;
 
       if (response.ok) {
         // Refresh the hours data after successful submission
-        const newHour = await response.json();
+        const newHour: Activity = await response.json();
         onAddNewHour(newHour);
         onClose(); // Close the dialog after submission
       } else {
@@ -39,22 +60,11 @@ function LogHoursFormComponent({ onClose, onAddNewHour }: { onClose: () => void;
   );
 }
 
-// Mock data for demonstration
-const mockActivities = [
-  { id: 1, name: 'Community Garden Cleanup', date: '2024-01-15', hours: 3, status: 'approved', reflection: 'During this activity, I had the opportunity to work with children teaching them about sustainable gardening practices. I learned how important it is to engage the younger generation in environmental stewardship. Working with the community members was incredibly rewarding as we planted various vegetables that will be donated to local food banks. This experience reinforced my belief in the power of collective action and community involvement. I felt a deep sense of satisfaction knowing that our efforts will provide fresh produce to families in need.', comments: 'Great work! Your reflection shows real engagement with the community.' },
-  { id: 2, name: 'Food Bank Volunteering', date: '2024-01-12', hours: 4, status: 'pending', reflection: 'At the food bank, I spent my time sorting donations, organizing shelves, and helping distribute food packages to families. It was eye-opening to see the number of people who rely on food assistance. I met several individuals who shared their stories with me, which gave me a deeper understanding of food insecurity in our community. The experience taught me empathy and made me appreciate the resources I often take for granted. I realized how important it is to support organizations that help those in need.', comments: '' },
-  { id: 3, name: 'Local Shelter Support', date: '2024-01-10', hours: 2.5, status: 'approved', reflection: 'I assisted with meal preparation and served dinner to shelter residents. The experience was humbling as I interacted with people from diverse backgrounds facing challenging circumstances. I learned that homelessness affects individuals from all walks of life and that compassion and dignity are essential when providing services. Serving meals face-to-face reminded me of the importance of treating everyone with respect and kindness regardless of their situation. This experience motivated me to continue volunteering and advocating for housing support initiatives.', comments: 'Thank you for your service to the community!' },
-  { id: 4, name: 'Environmental Education Workshop', date: '2024-01-08', hours: 5, status: 'rejected', reflection: 'I led a workshop focusing on recycling and waste reduction techniques for local elementary school students. Preparing for the workshop helped me deepen my own understanding of environmental issues. Seeing the childrens enthusiasm as they learned about composting and reducing plastic waste was inspiring. I realized that education is a powerful tool for creating lasting environmental change. The experience strengthened my passion for environmental advocacy and showed me the impact of engaging young minds in sustainability practices.', comments: 'Unfortunately, we couldn\'t verify this activity. Please provide additional documentation.' },
-  { id: 5, name: 'Senior Center Visits', date: '2024-01-05', hours: 3.5, status: 'pending', reflection: 'I visited the senior center and organized various activities including trivia games and craft sessions. Listening to the seniors stories provided valuable insights into history and life experiences I wouldnt have otherwise known. I learned patience and gained appreciation for the wisdom of older generations. The experience highlighted the importance of social connection for elderly individuals and how loneliness can significantly impact their wellbeing. This motivated me to establish a regular visiting schedule and consider organizing intergenerational programs.', comments: '' },
-];
-
-
 export default function StudentDashboard() {
-  const { data: session, status } = useSession();
-  const [activities, setActivities] = useState<any[]>([]);
+  const { data: session } = useSession();
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [showLogForm, setShowLogForm] = useState(false);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchHours = async () => {
@@ -69,7 +79,7 @@ export default function StudentDashboard() {
       } catch (error) {
         console.error('Error fetching hours:', error);
       } finally {
-        setLoading(false);
+        // Removed setLoading call since loading state was removed
       }
     };
 
@@ -79,7 +89,7 @@ export default function StudentDashboard() {
   // Calculate progress percentage based on approved hours
   const approvedHours = activities
     .filter(activity => activity.approved === true)
-    .reduce((sum, activity) => sum + parseFloat(activity.hours || 0), 0);
+    .reduce((sum, activity) => sum + parseFloat(String(activity.hours || 0)), 0);
 
   // Get total goal hours from user profile (fallback to 50 if not available)
   const totalGoalHours = 50; // This could come from user profile in the future
@@ -169,7 +179,7 @@ export default function StudentDashboard() {
           <Card className="bg-white shadow-lg rounded-xl">
             <CardHeader className="pb-2">
               <CardTitle className="text-lg text-[#1d588a]">Hours Completed</CardTitle>
-              <CardDescription className="text-[#6b7280]">You've completed {approvedHours} of {totalGoalHours} required hours</CardDescription>
+              <CardDescription className="text-[#6b7280]">You&#39;ve completed {approvedHours} of {totalGoalHours} required hours</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
@@ -286,7 +296,7 @@ export default function StudentDashboard() {
 
                   <div className="mt-4">
                     <p className="text-sm text-[#6b7280]">
-                      Keep going! You're {Math.round(progressPercentage)}% of the way to your goal.
+                      Keep going! You&#39;re {Math.round(progressPercentage)}% of the way to your goal.
                     </p>
                   </div>
                 </div>

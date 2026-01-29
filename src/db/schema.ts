@@ -72,8 +72,8 @@ export const hoursTable = pgTable("hours", {
   date: timestamp("date").notNull(),
   hours: numeric().notNull(), // Changed to numeric type
   reflection: text().notNull(),
-  approved: boolean("approved").default(null),
-  adminComments: text("admin_comments").default(null),
+  approved: boolean("approved"),
+  adminComments: text("admin_comments"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   ratedAt: timestamp("rated_at"),
 });

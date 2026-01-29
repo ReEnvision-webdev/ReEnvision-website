@@ -6,33 +6,33 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ChevronDownIcon, ChevronUpIcon, CheckIcon, XIcon, MessageSquareIcon } from 'lucide-react';
 
-// Mock data for demonstration
-const mockPendingActivities = [
-  { id: 1, studentName: 'Alex Johnson', activityName: 'Community Garden Cleanup', date: '2024-01-15', hours: 3, reflection: 'During this activity, I had the opportunity to work with children teaching them about sustainable gardening practices. I learned how important it is to engage the younger generation in environmental stewardship. Working with the community members was incredibly rewarding as we planted various vegetables that will be donated to local food banks. This experience reinforced my belief in the power of collective action and community involvement. I felt a deep sense of satisfaction knowing that our efforts will provide fresh produce to families in need.', status: 'pending', daysPending: 2 },
-  { id: 2, studentName: 'Taylor Smith', activityName: 'Food Bank Volunteering', date: '2024-01-12', hours: 4, reflection: 'At the food bank, I spent my time sorting donations, organizing shelves, and helping distribute food packages to families. It was eye-opening to see the number of people who rely on food assistance. I met several individuals who shared their stories with me, which gave me a deeper understanding of food insecurity in our community. The experience taught me empathy and made me appreciate the resources I often take for granted. I realized how important it is to support organizations that help those in need.', status: 'pending', daysPending: 8 },
-  { id: 3, studentName: 'Morgan Chen', activityName: 'Local Shelter Support', date: '2024-01-10', hours: 2.5, reflection: 'I assisted with meal preparation and served dinner to shelter residents. The experience was humbling as I interacted with people from diverse backgrounds facing challenging circumstances. I learned that homelessness affects individuals from all walks of life and that compassion and dignity are essential when providing services. Serving meals face-to-face reminded me of the importance of treating everyone with respect and kindness regardless of their situation. This experience motivated me to continue volunteering and advocating for housing support initiatives.', status: 'pending', daysPending: 12 },
-  { id: 4, studentName: 'Jamie Davis', activityName: 'Environmental Education Workshop', date: '2024-01-08', hours: 5, reflection: 'I led a workshop focusing on recycling and waste reduction techniques for local elementary school students. Preparing for the workshop helped me deepen my own understanding of environmental issues. Seeing the childrens enthusiasm as they learned about composting and reducing plastic waste was inspiring. I realized that education is a powerful tool for creating lasting environmental change. The experience strengthened my passion for environmental advocacy and showed me the impact of engaging young minds in sustainability practices.', status: 'pending', daysPending: 1 },
-  { id: 5, studentName: 'Jordan Taylor', activityName: 'Senior Center Visits', date: '2024-01-05', hours: 3.5, reflection: 'I visited the senior center and organized various activities including trivia games and craft sessions. Listening to the seniors stories provided valuable insights into history and life experiences I wouldnt have otherwise known. I learned patience and gained appreciation for the wisdom of older generations. The experience highlighted the importance of social connection for elderly individuals and how loneliness can significantly impact their wellbeing. This motivated me to establish a regular visiting schedule and consider organizing intergenerational programs.', status: 'pending', daysPending: 5 },
-];
+// Define types for the activity objects
+interface Activity {
+  id: number;
+  studentName: string;
+  activityName: string;
+  date: string;
+  hours: string | number;
+  reflection: string;
+  approved: boolean | null;
+  adminComments?: string | null;
+  daysPending?: number;
+  supervisor?: string;
+  supervisorEmail?: string;
+}
 
-const mockApprovedActivities = [
-  { id: 6, studentName: 'Casey Wilson', activityName: 'Beach Cleanup', date: '2024-01-01', hours: 6, reflection: 'I participated in a beach cleanup with a team of volunteers, collecting trash along the coastline. The experience was educational as I learned about marine pollution and its impact on wildlife. We collected over 50 pounds of debris which felt incredibly rewarding. This activity reinforced my commitment to environmental conservation and showed me how individual actions can contribute to protecting our natural spaces. I plan to continue participating in similar environmental initiatives.', status: 'approved' },
-  { id: 7, studentName: 'Riley Johnson', activityName: 'Animal Shelter Support', date: '2023-12-28', hours: 4, reflection: 'I spent time walking dogs and cleaning cages at the local animal shelter. The experience was heartwarming as I saw the positive impact on the animals wellbeing. I learned about animal care and the challenges shelters face in caring for abandoned pets. Interacting with the animals reminded me of the importance of compassion and responsibility toward all living beings. This experience inspired me to adopt a pet in the future and support animal welfare organizations.', status: 'approved' },
-];
 
 export default function AdminApprovalWorkflow() {
-  const [pendingActivities, setPendingActivities] = useState<any[]>([]);
-  const [approvedActivities, setApprovedActivities] = useState<any[]>([]);
+  const [pendingActivities, setPendingActivities] = useState<Activity[]>([]);
+  const [approvedActivities, setApprovedActivities] = useState<Activity[]>([]);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [currentEntry, setCurrentEntry] = useState<any>(null);
+  const [currentEntry, setCurrentEntry] = useState<Activity | null>(null);
   const [comments, setComments] = useState('');
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchHours = async () => {
@@ -41,8 +41,8 @@ export default function AdminApprovalWorkflow() {
         if (response.ok) {
           const data = await response.json();
           // Separate pending and approved/rejected activities
-          const pending = data.filter((activity: any) => activity.approved === null);
-          const approvedOrRejected = data.filter((activity: any) => activity.approved !== null);
+          const pending = data.filter((activity: Activity) => activity.approved === null);
+          const approvedOrRejected = data.filter((activity: Activity) => activity.approved !== null);
 
           setPendingActivities(pending);
           setApprovedActivities(approvedOrRejected);
@@ -52,7 +52,7 @@ export default function AdminApprovalWorkflow() {
       } catch (error) {
         console.error('Error fetching hours:', error);
       } finally {
-        setLoading(false);
+        // Removed setLoading call since loading state was removed
       }
     };
 
@@ -146,7 +146,7 @@ export default function AdminApprovalWorkflow() {
       });
 
       if (response.ok) {
-        const updatedActivity = await response.json();
+        const updatedActivity: Activity = await response.json();
         // Remove from pending and add to approved
         const updatedPending = pendingActivities.filter(a => a.id !== id);
         setPendingActivities(updatedPending);
@@ -171,7 +171,7 @@ export default function AdminApprovalWorkflow() {
       });
 
       if (response.ok) {
-        const updatedActivity = await response.json();
+        const updatedActivity: Activity = await response.json();
         // Remove from pending and add to approved/rejected list
         const updatedPending = pendingActivities.filter(a => a.id !== id);
         setPendingActivities(updatedPending);
@@ -185,7 +185,7 @@ export default function AdminApprovalWorkflow() {
     }
   };
 
-  const openReviewModal = (entry: any) => {
+  const openReviewModal = (entry: Activity) => {
     setCurrentEntry(entry);
     setComments(entry.adminComments || ''); // Initialize with existing comment
     setShowReviewModal(true);
@@ -271,7 +271,7 @@ export default function AdminApprovalWorkflow() {
                   <tbody>
                     {pendingActivities.map((activity) => (
                       <Fragment key={activity.id}>
-                        <tr className={`border-b ${activity.daysPending > 7 ? 'bg-red-50' : ''}`}>
+                        <tr className={`border-b ${activity.daysPending && activity.daysPending > 7 ? 'bg-red-50' : ''}`}>
                           <td className="py-3 px-4 align-top">
                             <Checkbox
                               checked={selectedIds.includes(activity.id)}
@@ -284,7 +284,7 @@ export default function AdminApprovalWorkflow() {
                           <td className="py-3 px-4">{formatDate(activity.date)}</td>
                           <td className="py-3 px-4">{activity.hours} hrs</td>
                           <td className="py-3 px-4">
-                            <Badge variant={activity.daysPending > 7 ? 'destructive' : 'secondary'}>
+                            <Badge variant={activity.daysPending && activity.daysPending > 7 ? 'destructive' : 'secondary'}>
                               {activity.daysPending} days
                             </Badge>
                           </td>

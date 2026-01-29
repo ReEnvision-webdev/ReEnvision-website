@@ -137,7 +137,16 @@ export default function HoursLogForm({ onSubmit, onCancel, initialData }: HoursL
                     <button
                       type="button"
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#1d588a] cursor-pointer"
-                      onClick={() => document.getElementById('date')?.showPicker()}
+                      onClick={() => {
+                        const dateInput = document.getElementById('date') as HTMLInputElement & { showPicker?: () => void };
+                        if (dateInput && typeof dateInput.showPicker === 'function') {
+                          dateInput.showPicker();
+                        } else {
+                          // Fallback for browsers that don't support showPicker
+                          dateInput?.focus();
+                          dateInput?.click();
+                        }
+                      }}
                     >
                       <CalendarIcon className="w-4 h-4" />
                     </button>

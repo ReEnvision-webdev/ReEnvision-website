@@ -5,6 +5,7 @@ import {
   pgTable,
   text,
   varchar,
+  numeric,
 } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
@@ -13,6 +14,7 @@ export const usersTable = pgTable("users", {
   password: text().notNull(),
   name: text().notNull(),
   profilePicture: text("profile_picture").default("skibiditoilet").notNull(),
+  hours: numeric().default('0').notNull(), // Added hours field
   createdAt: timestamp("created_at").notNull().defaultNow(),
   resetKey: text("reset_key"),
   resetKeyExpires: timestamp("reset_key_expires"),
@@ -53,4 +55,25 @@ export const chaptersTable = pgTable("chapters", {
   location: text("chapter_location").notNull(),
   description: text("description").notNull(),
   website: text("chapter website"),
+});
+
+export const hoursTable = pgTable("hours", {
+  id: text()
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => cuid()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => usersTable.id),
+  userEmail: varchar("user_email", { length: 255 })
+    .notNull()
+    .references(() => usersTable.email),
+  activityName: text("activity_name").notNull(),
+  date: timestamp("date").notNull(),
+  hours: numeric().notNull(), // Changed to numeric type
+  reflection: text().notNull(),
+  approved: boolean("approved"),
+  adminComments: text("admin_comments"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  ratedAt: timestamp("rated_at"),
 });

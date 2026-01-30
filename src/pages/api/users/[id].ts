@@ -62,6 +62,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ error: 'No fields to update' });
       }
 
+      // If user is being banned, delete their hours entries
+      if (updateData.isBanned === true) {
+        const { hoursTable } = await import('@/db/schema');
+        const { and, eq } = await import('drizzle-orm');
+
+        // Delete all hours entries for this user
+        await db.delete(hoursTable).where(eq(hoursTable.userId, id));
+      }
+
       // Perform the update
       const updatedUsers = await db.update(usersTable)
         .set(updateData)

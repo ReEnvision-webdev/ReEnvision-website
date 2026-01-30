@@ -8,6 +8,7 @@ import { useState, Fragment, useEffect } from 'react';
 import { PlusIcon, ClockIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import HoursLogForm from '@/components/hours-log-form';
 import { useSession } from 'next-auth/react';
+import { useBannedUserLogout } from '@/hooks/use-banned-user-logout';
 
 // Define types for the activity objects
 interface Activity {
@@ -69,6 +70,9 @@ export default function StudentDashboard({ requiredHours = 50 }: StudentDashboar
   const [activities, setActivities] = useState<Activity[]>([]);
   const [showLogForm, setShowLogForm] = useState(false);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
+
+  // Check if user is banned and log them out if they are
+  useBannedUserLogout();
 
   useEffect(() => {
     const fetchHours = async () => {

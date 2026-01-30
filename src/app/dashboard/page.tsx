@@ -2,6 +2,7 @@ import EventManagement from "@/components/admin/event-management";
 import ChapterManagement from "@/components/admin/chapter-management";
 import StudentDashboard from "@/components/student-dashboard";
 import AdminApprovalWorkflow from "@/components/admin-approval-workflow";
+import UserManagementModal from "@/components/admin/user-management-modal";
 import { checkAuth } from "@/lib/check-auth";
 import { authOptions } from "@/lib/auth.config";
 import { getServerSession } from "next-auth/next";
@@ -61,6 +62,11 @@ export default async function Page() {
           <p className="text-muted-foreground">
             Welcome, administrator! You have special access privileges.
           </p>
+        </div>
+
+        {/* User Management Modal - at the top */}
+        <div className="mb-12">
+          <UserManagementModal />
         </div>
 
         <div className="mt-12">

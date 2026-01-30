@@ -9,7 +9,7 @@ import { useSession, signOut } from "next-auth/react";
 
 function NavLink({ href, label }: { href: string; label: string }) {
   const pathname = usePathname();
-  const isActive = pathname === href;
+  const isActive = (pathname ?? '') === href;
 
   return (
     <Link href={href}>
@@ -28,7 +28,7 @@ function AboutDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
-  const isAboutActive = pathname.startsWith("/about");
+  const isAboutActive = pathname?.startsWith("/about") ?? false;
 
   return (
     <div
@@ -108,7 +108,7 @@ function EventsDropdown() {
   const pathname = usePathname();
 
   const isEventsActive =
-    pathname === "/events" || pathname === "/events/search";
+    (pathname === "/events" || pathname === "/events/search") ?? false;
 
   return (
     <div
@@ -314,7 +314,7 @@ function MobileMenu() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={`justify-between w-full hover:bg-[#F0F8FF] rounded-none ${pathname.startsWith("/about") ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                className={`justify-between w-full hover:bg-[#F0F8FF] rounded-none ${(pathname?.startsWith("/about") ?? false) ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
                 onClick={() => setIsAboutOpen(!isAboutOpen)}
               >
                 About
@@ -379,7 +379,7 @@ function MobileMenu() {
               <Button
                 variant="ghost"
                 size="sm"
-                className={`justify-between w-full hover:bg-[#F0F8FF] rounded-none ${pathname.startsWith("/events") ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
+                className={`justify-between w-full hover:bg-[#F0F8FF] rounded-none ${(pathname?.startsWith("/events") ?? false) ? "bg-[#F0F8FF] text-[#1d588a]" : "text-[#F0F8FF]"}`}
                 onClick={() => setIsEventsOpen(!isEventsOpen)}
               >
                 Events

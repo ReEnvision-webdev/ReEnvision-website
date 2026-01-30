@@ -14,7 +14,7 @@ export const usersTable = pgTable("users", {
   password: text().notNull(),
   name: text().notNull(),
   profilePicture: text("profile_picture").default("skibiditoilet").notNull(),
-  hours: numeric().default('0').notNull(), // Added hours field
+  hours: numeric().default('250').notNull(), // Added hours field
   createdAt: timestamp("created_at").notNull().defaultNow(),
   resetKey: text("reset_key"),
   resetKeyExpires: timestamp("reset_key_expires"),
@@ -66,8 +66,7 @@ export const hoursTable = pgTable("hours", {
     .notNull()
     .references(() => usersTable.id),
   userEmail: varchar("user_email", { length: 255 })
-    .notNull()
-    .references(() => usersTable.email),
+    .notNull(),
   activityName: text("activity_name").notNull(),
   date: timestamp("date").notNull(),
   hours: numeric().notNull(), // Changed to numeric type

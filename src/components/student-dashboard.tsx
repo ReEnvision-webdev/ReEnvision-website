@@ -8,6 +8,7 @@ import { useState, Fragment, useEffect } from 'react';
 import { PlusIcon, ClockIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import HoursLogForm from '@/components/hours-log-form';
 import { useSession } from 'next-auth/react';
+import { useBannedUserLogout } from '@/hooks/use-banned-user-logout';
 
 // Define types for the activity objects
 interface Activity {
@@ -60,11 +61,18 @@ function LogHoursFormComponent({ onClose, onAddNewHour }: { onClose: () => void;
   );
 }
 
-export default function StudentDashboard() {
+interface StudentDashboardProps {
+  requiredHours?: number;
+}
+
+export default function StudentDashboard({ requiredHours = 50 }: StudentDashboardProps) {
   const { data: session } = useSession();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [showLogForm, setShowLogForm] = useState(false);
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
+
+  // Check if user is banned and log them out if they are
+  useBannedUserLogout();
 
   useEffect(() => {
     const fetchHours = async () => {
@@ -91,8 +99,8 @@ export default function StudentDashboard() {
     .filter(activity => activity.approved === true)
     .reduce((sum, activity) => sum + parseFloat(String(activity.hours || 0)), 0);
 
-  // Get total goal hours from user profile (fallback to 50 if not available)
-  const totalGoalHours = 50; // This could come from user profile in the future
+  // Use the required hours passed as props
+  const totalGoalHours = requiredHours;
   const progressPercentage = totalGoalHours > 0 ? Math.min(100, (approvedHours / totalGoalHours) * 100) : 0;
   const remainingHours = totalGoalHours - approvedHours;
 
@@ -109,9 +117,7 @@ export default function StudentDashboard() {
 
     if (hour >= 5 && hour < 12) {
       return 'Good morning';
-    } else if (hour >= 12 && hour < 14) {
-      return 'Good noon';
-    } else if (hour >= 14 && hour < 18) {
+    } else if (hour >= 12 && hour < 18) {
       return 'Good afternoon';
     } else if (hour >= 18 && hour < 22) {
       return 'Good evening';

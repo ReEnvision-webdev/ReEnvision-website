@@ -1,5 +1,5 @@
 import db from "@/db/database";
-import { usersTable } from "@/db/schema";
+import { usersTable, hoursTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
@@ -33,17 +33,45 @@ export const GET = async (req: NextRequest) => {
       }
 
       // Token is valid, update the user's email
-      const [updatedUser] = await db
-        .update(usersTable)
-        .set({
-          email: user.newEmail!,
-          newEmail: null,
-          newEmailVerificationKey: null,
-          newEmailVerificationKeyExpires: null,
-          emailVerified: true, // Also verify their email, since they clicked the link
-        })
-        .where(eq(usersTable.id, user.id))
-        .returning();
+      // Use a transaction to ensure both updates happen atomically
+      const result = await db.transaction(async (tx) => {
+        // Temporarily update the hours table to use the new email
+        // This should work because we're in a transaction and the old email
+        // in users table still exists at this point
+        await tx
+          .update(hoursTable)
+          .set({
+            userEmail: user.newEmail!,
+          })
+          .where(eq(hoursTable.userEmail, user.email));
+
+        // Then update the user's email
+        const [updatedUser] = await tx
+          .update(usersTable)
+          .set({
+            email: user.newEmail!,
+            newEmail: null,
+            newEmailVerificationKey: null,
+            newEmailVerificationKeyExpires: null,
+            emailVerified: true, // Also verify their email, since they clicked the link
+          })
+          .where(eq(usersTable.id, user.id))
+          .returning();
+
+        return updatedUser;
+      });
+
+      const updatedUser = result;
+
+      return NextResponse.json({
+        success: true,
+        data: {
+          id: updatedUser.id,
+          name: updatedUser.name,
+          email: updatedUser.email,
+          isAdmin: updatedUser.isAdmin,
+        },
+      });
 
       return NextResponse.json({
         success: true,

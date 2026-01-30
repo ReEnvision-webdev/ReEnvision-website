@@ -42,8 +42,8 @@ export default function EventsSearch() {
 
   // Initialize from URL params
   useEffect(() => {
-    const query = searchParams.get("q") || "";
-    const page = Number.parseInt(searchParams.get("page") || "1");
+    const query = searchParams?.get("q") || "";
+    const page = Number.parseInt(searchParams?.get("page") || "1");
     setSearchQuery(query);
     setCurrentPage(page);
   }, [searchParams]);

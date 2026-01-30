@@ -27,54 +27,166 @@ export default function UserManagementModal() {
   const [requiredHours, setRequiredHours] = useState(0);
   const [adminDialogOpen, setAdminDialogOpen] = useState(false);
 
-  const handleSearch = () => {
-    // Simulate API call to fetch user data
+  const handleSearch = async () => {
+    if (!email) return;
+
     setLoading(true);
-    
-    // Mock user data - in real implementation this would come from an API
-    setTimeout(() => {
-      setUser({
-        id: "1",
-        email,
-        name: "John Doe",
-        profilePicture: "/placeholder-avatar.jpg",
-        isVerified: false,
-        isAdmin: false,
-        requiredHours: 20,
-      });
-      setRequiredHours(20);
+
+    try {
+      // Fetch user by email
+      const response = await fetch(`/api/users/by-email?email=${encodeURIComponent(email)}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('User not found');
+        }
+        throw new Error(`Failed to fetch user: ${response.statusText}`);
+      }
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Response is not JSON');
+      }
+
+      const userData = await response.json();
+      setUser(userData);
+      setRequiredHours(userData.requiredHours || 0);
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      // Optionally show an error message to the user
+      alert(error instanceof Error ? error.message : 'An error occurred while fetching the user');
+    } finally {
       setLoading(false);
-    }, 500);
-  };
-
-  const handleVerifyToggle = () => {
-    if (user) {
-      setUser({
-        ...user,
-        isVerified: !user.isVerified,
-      });
     }
   };
 
-  const handleMakeAdmin = () => {
-    if (user) {
-      setUser({
-        ...user,
-        isAdmin: !user.isAdmin,
+  const handleVerifyToggle = async () => {
+    if (!user) return;
+
+    try {
+      const response = await fetch(`/api/users/${user.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          isVerified: !user.isVerified,
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update verification status: ${response.statusText}`);
+      }
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Response is not JSON');
+      }
+
+      const updatedUser = await response.json();
+      setUser(updatedUser);
+    } catch (error) {
+      console.error('Error updating verification status:', error);
+      alert('An error occurred while updating verification status');
     }
-    setAdminDialogOpen(false); // Close the dialog
   };
 
-  const handleBan = () => {
-    // In real implementation, this would call an API to ban the user
-    console.log(`User ${user?.email} has been banned`);
+  const handleMakeAdmin = async () => {
+    if (!user) return;
+
+    try {
+      const response = await fetch(`/api/users/${user.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          isAdmin: !user.isAdmin,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update admin status: ${response.statusText}`);
+      }
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Response is not JSON');
+      }
+
+      const updatedUser = await response.json();
+      setUser(updatedUser);
+      setAdminDialogOpen(false); // Close the dialog
+    } catch (error) {
+      console.error('Error updating admin status:', error);
+      alert('An error occurred while updating admin status');
+    }
   };
 
-  const handleSaveChanges = () => {
-    // In real implementation, this would call an API to save changes
-    console.log("Saving changes:", { ...user, requiredHours });
-    alert("Successfully saved!");
+  const handleBan = async () => {
+    if (!user) return;
+
+    try {
+      const response = await fetch(`/api/users/${user.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          isBanned: true,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to ban user: ${response.statusText}`);
+      }
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Response is not JSON');
+      }
+
+      const updatedUser = await response.json();
+      setUser(updatedUser);
+      alert(`User ${user.email} has been banned`);
+    } catch (error) {
+      console.error('Error banning user:', error);
+      alert('An error occurred while banning the user');
+    }
+  };
+
+  const handleSaveChanges = async () => {
+    if (!user) return;
+
+    try {
+      const response = await fetch(`/api/users/${user.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          requiredHours,
+          isVerified: user.isVerified,
+          isAdmin: user.isAdmin,
+          isBanned: user.isBanned,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to save changes: ${response.statusText}`);
+      }
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Response is not JSON');
+      }
+
+      const updatedUser = await response.json();
+      setUser(updatedUser); // Update the local state with the response
+      alert("Successfully saved!");
+    } catch (error) {
+      console.error('Error saving changes:', error);
+      alert('An error occurred while saving changes');
+    }
   };
 
   return (
@@ -147,7 +259,42 @@ export default function UserManagementModal() {
                       id="hours"
                       type="number"
                       value={requiredHours}
-                      onChange={(e) => setRequiredHours(Number(e.target.value))}
+                      onChange={async (e) => {
+                        const newHours = Number(e.target.value);
+                        setRequiredHours(newHours);
+
+                        // Update the user's hours in the database
+                        if (user) {
+                          try {
+                            const response = await fetch(`/api/users/${user.id}`, {
+                              method: 'PUT',
+                              headers: {
+                                'Content-Type': 'application/json',
+                              },
+                              body: JSON.stringify({
+                                requiredHours: newHours,
+                              }),
+                            });
+
+                            if (!response.ok) {
+                              throw new Error(`Failed to update hours: ${response.statusText}`);
+                            }
+
+                            const contentType = response.headers.get('content-type');
+                            if (!contentType || !contentType.includes('application/json')) {
+                              throw new Error('Response is not JSON');
+                            }
+
+                            const updatedUser = await response.json();
+                            setUser(updatedUser);
+                          } catch (error) {
+                            console.error('Error updating hours:', error);
+                            alert('An error occurred while updating hours');
+                            // Revert the change if there was an error
+                            setRequiredHours(user.requiredHours);
+                          }
+                        }
+                      }}
                       min="0"
                       className="border-gray-300 focus:border-[#1f639e] focus:ring-[#1f639e]"
                     />

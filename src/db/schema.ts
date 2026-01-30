@@ -66,8 +66,7 @@ export const hoursTable = pgTable("hours", {
     .notNull()
     .references(() => usersTable.id),
   userEmail: varchar("user_email", { length: 255 })
-    .notNull()
-    .references(() => usersTable.email),
+    .notNull(),
   activityName: text("activity_name").notNull(),
   date: timestamp("date").notNull(),
   hours: numeric().notNull(), // Changed to numeric type

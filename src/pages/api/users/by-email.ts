@@ -34,8 +34,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     };
 
     return res.status(200).json(userData);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching user by email:', error);
-    return res.status(500).json({ error: 'Internal server error', details: error.message });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return res.status(500).json({ error: 'Internal server error', details: errorMessage });
   }
 }

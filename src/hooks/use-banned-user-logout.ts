@@ -4,6 +4,22 @@ import { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { signOut } from 'next-auth/react';
 
+// Define the session user type based on our auth config
+interface SessionUser {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  isAdmin?: boolean;
+  isVerified?: boolean;
+  profilePicture?: string;
+}
+
+interface Session {
+  user?: SessionUser;
+  expires: string;
+}
+
 /**
  * Hook to automatically log out banned users
  */
@@ -11,11 +27,11 @@ export function useBannedUserLogout() {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (status === 'authenticated' && session?.user) {
+    if (status === 'authenticated' && (session as Session | null)?.user?.id) {
       const checkBannedStatus = async () => {
         try {
           // Check if the user is banned by fetching their info from the API
-          const response = await fetch(`/api/users/${session.user.id}`);
+          const response = await fetch(`/api/users/${(session as Session).user!.id}`);
 
           if (response.ok) {
             const userData = await response.json();
@@ -41,5 +57,5 @@ export function useBannedUserLogout() {
       // Check immediately when component mounts
       checkBannedStatus();
     }
-  }, [status, session?.user?.id]);
+  }, [status, (session as Session | null)?.user?.id]);
 }

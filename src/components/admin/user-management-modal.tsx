@@ -17,6 +17,7 @@ interface User {
   profilePicture?: string;
   isVerified: boolean;
   isAdmin: boolean;
+  isBanned: boolean;
   requiredHours: number;
 }
 

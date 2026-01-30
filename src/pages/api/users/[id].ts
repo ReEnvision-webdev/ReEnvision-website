@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const { requiredHours, isVerified, isAdmin, isBanned } = req.body;
 
       // Build update object based on provided fields
-      const updateData: any = {};
+      const updateData: Partial<typeof usersTable.$inferInsert> = {};
 
       if (typeof requiredHours !== 'undefined') {
         updateData.hours = requiredHours.toString(); // Convert to string as expected by numeric type
@@ -65,7 +65,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // If user is being banned, delete their hours entries
       if (updateData.isBanned === true) {
         const { hoursTable } = await import('@/db/schema');
-        const { and, eq } = await import('drizzle-orm');
 
         // Delete all hours entries for this user
         await db.delete(hoursTable).where(eq(hoursTable.userId, id));

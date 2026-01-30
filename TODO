@@ -1,2 +1,2 @@
-2. make dynamic hours requirement
-3. auto delete all entries when user gets deleted/re-email
+1. log user out when banned
+2. auto delete all entries when user gets banned and change email value when email changes.

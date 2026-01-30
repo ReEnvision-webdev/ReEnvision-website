@@ -60,7 +60,11 @@ function LogHoursFormComponent({ onClose, onAddNewHour }: { onClose: () => void;
   );
 }
 
-export default function StudentDashboard() {
+interface StudentDashboardProps {
+  requiredHours?: number;
+}
+
+export default function StudentDashboard({ requiredHours = 50 }: StudentDashboardProps) {
   const { data: session } = useSession();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [showLogForm, setShowLogForm] = useState(false);
@@ -91,8 +95,8 @@ export default function StudentDashboard() {
     .filter(activity => activity.approved === true)
     .reduce((sum, activity) => sum + parseFloat(String(activity.hours || 0)), 0);
 
-  // Get total goal hours from user profile (fallback to 50 if not available)
-  const totalGoalHours = 50; // This could come from user profile in the future
+  // Use the required hours passed as props
+  const totalGoalHours = requiredHours;
   const progressPercentage = totalGoalHours > 0 ? Math.min(100, (approvedHours / totalGoalHours) * 100) : 0;
   const remainingHours = totalGoalHours - approvedHours;
 

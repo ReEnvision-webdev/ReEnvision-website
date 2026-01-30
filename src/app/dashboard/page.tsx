@@ -85,7 +85,27 @@ export default async function Page() {
   }
 
   if (session?.user?.isVerified) {
-    return <StudentDashboard />;
+    // Fetch the user's required hours from the database directly
+    let requiredHours = 50; // Default fallback
+
+    try {
+      // Import the database and schema directly in the server component
+      const { default: db } = await import('@/db/database');
+      const { usersTable } = await import('@/db/schema');
+      const { eq } = await import('drizzle-orm');
+
+      const userId = session.user.id;
+      const userResult = await db.select().from(usersTable).where(eq(usersTable.id, userId)).limit(1);
+
+      if (userResult.length > 0) {
+        requiredHours = parseFloat(userResult[0].hours) || 50;
+      }
+    } catch (error) {
+      console.error('Error fetching user required hours:', error);
+      // Use default value if database call fails
+    }
+
+    return <StudentDashboard requiredHours={requiredHours} />;
   }
 
   return <UnverifiedUser name={session?.user?.name || "Member"} />;
